@@ -3,7 +3,9 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0c10">
 <title>Portfolio Research — Institutional Grade</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -402,6 +404,12 @@ main { padding: 24px; }
   </div>
 </header>
 
+<div style="background:#050709;border-bottom:1px solid #1e2530;padding:0 20px;height:36px;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;">
+  <a href="Index.html" style="color:#6b7a8d;text-decoration:none;">← Accueil</a>
+  <span style="color:#3d4a5c">|</span>
+  <span style="color:#c9a84c;letter-spacing:1px;">🔬 Research Terminal</span>
+</div>
+
 <div class="tabs">
   <button class="tab active" onclick="showSection('overview')">Vue d'ensemble</button>
   <button class="tab" onclick="showSection('goldman')">GS Fundamental</button>
@@ -409,6 +417,7 @@ main { padding: 24px; }
   <button class="tab" onclick="showSection('bridgewater')">BW Risk</button>
   <button class="tab" onclick="showSection('citadel')">Citadel Macro</button>
   <button class="tab" onclick="showSection('watchlist')" style="border-bottom:2px solid #c9a84c">⚡ Watchlist PEA/PME</button>
+  <button class="tab" onclick="showSection('portfolio-editor')" style="border-bottom:2px solid #00c875">✏️ Mes Positions</button>
 </div>
 
 <main>
@@ -2078,6 +2087,169 @@ function showSection(id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
+  if(id==='portfolio-editor') loadEditor();
+}
+</script>
+
+<!-- ══════════════════════════════════════════
+     PORTFOLIO EDITOR SECTION
+══════════════════════════════════════════ -->
+
+<style>
+#portfolio-editor { padding: 32px 48px; }
+@media(max-width:700px){ #portfolio-editor { padding: 20px 16px; } }
+.pe-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); margin-bottom: 4px; }
+.pe-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+.pe-info { background: rgba(0,200,117,0.07); border: 1px solid rgba(0,200,117,0.2); border-radius: 6px; padding: 12px 16px; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green); line-height: 1.6; }
+.pe-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.pe-table thead th { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.pe-table tbody tr { border-bottom: 1px solid var(--border); }
+.pe-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.pe-table td { padding: 6px 6px; vertical-align: middle; }
+.pe-name { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: var(--text); }
+.pe-ticker { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-muted); }
+.pe-input { background: #141920; border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text); width: 90px; outline: none; transition: border-color .2s; text-align: right; }
+.pe-input:focus { border-color: var(--gold); }
+.pe-account { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
+.pe-account.PEA { background: rgba(74,144,217,0.15); color: #4a90d9; }
+.pe-account.CTO { background: rgba(201,168,76,0.15); color: var(--gold); }
+.pe-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.pe-btn-save { background: var(--gold); color: #0a0c10; border: none; border-radius: 6px; padding: 12px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 1px; cursor: pointer; transition: background .2s; }
+.pe-btn-save:hover { background: var(--gold-light); }
+.pe-btn-reset { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; padding: 12px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; transition: all .2s; }
+.pe-btn-reset:hover { color: var(--text); border-color: var(--text-muted); }
+.pe-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green); display: none; margin-top: 12px; }
+.pe-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.pe-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+.pe-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.pe-stat-value { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold); }
+</style>
+
+<div class="section" id="portfolio-editor">
+  <div class="pe-title">✏️ Mes Positions — Édition</div>
+  <div class="pe-sub">Mettre à jour PRU et quantités · Synchronisé avec le Live Tracker</div>
+  <div class="pe-info">
+    ✅ Les modifications sont sauvegardées dans votre navigateur (localStorage).<br>
+    🔄 Le Live Tracker récupère automatiquement ces données à chaque actualisation.<br>
+    ⚠️ Ces données restent uniquement sur votre appareil — elles ne sont jamais envoyées sur un serveur.
+  </div>
+
+  <div class="pe-summary" id="peSummary"></div>
+
+  <table class="pe-table">
+    <thead>
+      <tr>
+        <th>Valeur</th>
+        <th>Ticker</th>
+        <th>Compte</th>
+        <th>PRU (€)</th>
+        <th>Quantité</th>
+        <th>Investi €</th>
+      </tr>
+    </thead>
+    <tbody id="peTableBody"></tbody>
+  </table>
+
+  <div class="pe-btns">
+    <button class="pe-btn-save" onclick="savePortfolio()">💾 Sauvegarder les modifications</button>
+    <button class="pe-btn-reset" onclick="resetPortfolio()">↺ Réinitialiser aux valeurs d'origine</button>
+  </div>
+  <div class="pe-saved" id="peSaved">✅ Sauvegardé ! Le Live Tracker utilisera ces nouvelles valeurs.</div>
+</div>
+
+<script>
+const PE_DEFAULT = [
+  {name:'Aramis Group',ticker:'ARAMI',fhTicker:'ARAMI.PA',pru:5.78,qty:69,sector:'Automobile',account:'CTO'},
+  {name:'Entech',ticker:'ENTECH',fhTicker:'ENTECH.PA',pru:7.86,qty:25,sector:'Énergie',account:'CTO'},
+  {name:'Abeo',ticker:'ABEO',fhTicker:'ABEO.PA',pru:8.74,qty:22,sector:'Loisirs',account:'CTO'},
+  {name:'TF1',ticker:'TFI',fhTicker:'TFI.PA',pru:7.14,qty:21,sector:'Médias',account:'CTO'},
+  {name:'Rising Stone',ticker:'RISING',fhTicker:'RISING.PA',pru:58.30,qty:3,sector:'Immobilier',account:'CTO'},
+  {name:'Semco Tech.',ticker:'SMCO',fhTicker:'SMCO.PA',pru:15.00,qty:4,sector:'Industrie',account:'CTO'},
+  {name:'iShares MSCI World',ticker:'SWDA',fhTicker:'EWLD.PA',pru:5.80,qty:440,sector:'ETF Monde',account:'PEA'},
+  {name:'Publicis Groupe',ticker:'PUB',fhTicker:'PUB.PA',pru:78.47,qty:29,sector:'Communication',account:'PEA'},
+  {name:'Accor',ticker:'AC',fhTicker:'AC.PA',pru:37.30,qty:30,sector:'Hôtellerie',account:'PEA'},
+  {name:'Eiffage',ticker:'FGR',fhTicker:'FGR.PA',pru:114.09,qty:8,sector:'Construction',account:'PEA'},
+  {name:'Amundi EM ESG',ticker:'PAEEM',fhTicker:'PAEEM.PA',pru:29.67,qty:36,sector:'ETF Émergents',account:'PEA'},
+  {name:'Amundi Russell 2000',ticker:'RS2K',fhTicker:'RS2K.PA',pru:308.55,qty:3,sector:'ETF US',account:'PEA'},
+  {name:'BNP Paribas',ticker:'BNP',fhTicker:'BNP.PA',pru:68.68,qty:11,sector:'Finance',account:'PEA'},
+  {name:'SEB',ticker:'SK',fhTicker:'SK.PA',pru:66.80,qty:18,sector:'Conso.',account:'PEA'},
+  {name:'Amundi Healthcare',ticker:'BLTH',fhTicker:'BLTH.PA',pru:159.08,qty:5,sector:'Santé',account:'PEA'},
+  {name:'iShares Banks',ticker:'EXV1',fhTicker:'EXV1.PA',pru:14.75,qty:42,sector:'Finance',account:'PEA'},
+  {name:'Amundi LatAm',ticker:'PLEM',fhTicker:'PLEM.PA',pru:25.08,qty:24,sector:'ETF Émergents',account:'PEA'},
+  {name:'Capgemini',ticker:'CAP',fhTicker:'CAP.PA',pru:105.34,qty:6,sector:'Tech/IT',account:'PEA'},
+  {name:'SPIE',ticker:'SPIE',fhTicker:'SPIE.PA',pru:51.50,qty:12,sector:'Industrie',account:'PEA'},
+  {name:'TotalEnergies',ticker:'TTE',fhTicker:'TTE.PA',pru:52.64,qty:9,sector:'Énergie',account:'PEA'},
+  {name:'BNP Easy S&P500',ticker:'ESE',fhTicker:'ESE.PA',pru:25.54,qty:19,sector:'ETF US',account:'PEA'},
+  {name:'Wendel',ticker:'MF',fhTicker:'MF.PA',pru:80.33,qty:5,sector:'Finance',account:'PEA'},
+  {name:'FDJ United',ticker:'FDJU',fhTicker:'FDJU.PA',pru:28.13,qty:15,sector:'Loisirs',account:'PEA'},
+  {name:'Mersen',ticker:'MRN',fhTicker:'MRN.PA',pru:22.63,qty:14,sector:'Industrie',account:'PEA'},
+  {name:'Arkema',ticker:'AKE',fhTicker:'AKE.PA',pru:69.61,qty:5,sector:'Chimie',account:'PEA'},
+  {name:'Renault',ticker:'RNO',fhTicker:'RNO.PA',pru:37.10,qty:7,sector:'Automobile',account:'PEA'},
+];
+
+function getPEData(){
+  try{ const s=localStorage.getItem('portfolio_data'); if(s) return JSON.parse(s); }catch(e){}
+  return PE_DEFAULT.map(p=>({...p}));
+}
+
+function loadEditor(){
+  const data = getPEData();
+  // Summary
+  const totalInvested = data.reduce((sum,p)=>sum+p.pru*p.qty, 0);
+  const pea = data.filter(p=>p.account==='PEA').reduce((s,p)=>s+p.pru*p.qty,0);
+  const cto = data.filter(p=>p.account==='CTO').reduce((s,p)=>s+p.pru*p.qty,0);
+  const fmt = v => v.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+'€';
+  document.getElementById('peSummary').innerHTML = `
+    <div class="pe-stat"><div class="pe-stat-label">Total investi</div><div class="pe-stat-value">${fmt(totalInvested)}</div></div>
+    <div class="pe-stat"><div class="pe-stat-label">PEA</div><div class="pe-stat-value">${fmt(pea)}</div></div>
+    <div class="pe-stat"><div class="pe-stat-label">CTO</div><div class="pe-stat-value">${fmt(cto)}</div></div>
+    <div class="pe-stat"><div class="pe-stat-label">Nb positions</div><div class="pe-stat-value">${data.length}</div></div>
+  `;
+  // Table
+  document.getElementById('peTableBody').innerHTML = data.map((p,i)=>{
+    const inv = (p.pru*p.qty).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    return `<tr>
+      <td><div class="pe-name">${p.name}</div></td>
+      <td><div class="pe-ticker">${p.ticker}</div></td>
+      <td><span class="pe-account ${p.account}">${p.account}</span></td>
+      <td><input class="pe-input" type="number" id="pru_${i}" value="${p.pru}" step="0.01" min="0" oninput="updateInvested(${i})"></td>
+      <td><input class="pe-input" type="number" id="qty_${i}" value="${p.qty}" step="1" min="0" oninput="updateInvested(${i})"></td>
+      <td><span id="inv_${i}" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b7a8d">${inv}€</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateInvested(i){
+  const pru = parseFloat(document.getElementById('pru_'+i).value)||0;
+  const qty = parseFloat(document.getElementById('qty_'+i).value)||0;
+  const inv = (pru*qty).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('inv_'+i).textContent = inv+'€';
+}
+
+function savePortfolio(){
+  const data = getPEData();
+  const updated = data.map((p,i)=>({
+    ...p,
+    pru: parseFloat(document.getElementById('pru_'+i).value)||p.pru,
+    qty: parseInt(document.getElementById('qty_'+i).value)||p.qty
+  }));
+  try{
+    localStorage.setItem('portfolio_data', JSON.stringify(updated));
+    const saved = document.getElementById('peSaved');
+    saved.style.display='block';
+    setTimeout(()=>saved.style.display='none', 3000);
+    loadEditor(); // refresh summary
+  }catch(e){alert('Erreur localStorage : '+e.message);}
+}
+
+function resetPortfolio(){
+  if(!confirm('Réinitialiser toutes les positions aux valeurs d\'origine ?')) return;
+  try{ localStorage.removeItem('portfolio_data'); }catch(e){}
+  loadEditor();
+  const saved = document.getElementById('peSaved');
+  saved.textContent = '↺ Réinitialisé aux valeurs d\'origine.';
+  saved.style.display='block';
+  setTimeout(()=>{ saved.style.display='none'; saved.textContent='✅ Sauvegardé ! Le Live Tracker utilisera ces nouvelles valeurs.'; },3000);
 }
 </script>
 
