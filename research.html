@@ -39,6 +39,18 @@ min-height: 100vh;
 overflow-x: hidden;
 }
 
+/* Force all text to be visible */
+p, div, span, td, th, li, h1, h2, h3, h4, label {
+color: inherit;
+}
+main, .section, .section * {
+color: #e8eaf0;
+}
+.section-title { color: #e8eaf0 !important; }
+.section-subtitle { color: #6b7a8d !important; }
+table { color: #e8eaf0; }
+td, th { color: #e8eaf0; }
+
 /* HEADER */
 header {
 border-bottom: 1px solid var(–border);
@@ -428,28 +440,28 @@ main { padding: 24px; }
 
 <div class="section active" id="overview">
   <div class="section-title">Vue d'ensemble du Portefeuille</div>
-  <div class="section-subtitle">Allocation · Consensus institutionnel · Verdicts achat / vente / allégement · 26 positions</div>
+  <div class="section-subtitle" id="ovSubtitle">Allocation · Consensus institutionnel · Verdicts achat / vente / allégement · 26 positions</div>
 
   <div class="overview-grid">
     <div class="stat-card">
       <div class="stat-label">Compte CTO</div>
-      <div class="stat-value">1 453 €</div>
-      <div class="stat-sub">6 positions · Small/Mid caps</div>
+      <div class="stat-value" id="ovCTO">—</div>
+      <div class="stat-sub" id="ovCTOsub">— positions</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Compte PEA</div>
-      <div class="stat-value">17 549 €</div>
-      <div class="stat-sub">20 positions · ETF + Large caps</div>
+      <div class="stat-value" id="ovPEA">—</div>
+      <div class="stat-sub" id="ovPEAsub">— positions</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Gains Latents</div>
-      <div class="stat-value" style="color:var(--green)">+1 577 €</div>
-      <div class="stat-sub">Positions gagnantes</div>
+      <div class="stat-label">Total investi</div>
+      <div class="stat-value" id="ovTotal">—</div>
+      <div class="stat-sub" id="ovTotalSub">— positions au total</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Pertes Latentes</div>
-      <div class="stat-value" style="color:var(--red)">−1 079 €</div>
-      <div class="stat-sub">Positions perdantes</div>
+      <div class="stat-label">Valeur estimée</div>
+      <div class="stat-value" id="ovValeur">—</div>
+      <div class="stat-sub">Basé sur PRU (sans prix live)</div>
     </div>
   </div>
 
@@ -528,319 +540,17 @@ main { padding: 24px; }
     <thead>
       <tr>
         <th style="width:180px">Valeur</th>
-        <th>Cours · PRU</th>
-        <th>P&L €</th>
+        <th>PRU · Investi</th>
+        <th>P&L vs PRU</th>
         <th>Verdict Consensus</th>
         <th>GS · MS · DB · ODDO · JPM</th>
         <th>Target 12M</th>
-        <th>Upside</th>
         <th>Rationale & Action</th>
       </tr>
     </thead>
-    <tbody>
-
-```
-  <!-- ═══ ACHETER / RENFORCER ═══ -->
-  <tr><td colspan="8" class="section-group-header" style="background:rgba(0,200,117,0.06);color:var(--green);font-size:9px;letter-spacing:2px;padding:8px 10px;border-bottom:1px solid var(--border)">▲ ACHETER / RENFORCER — 8 positions</td></tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">BNP PARIBAS</div><div class="ct-sub">BNP.PA · Banque · CAC 40</div></td>
-    <td><span style="color:var(--text)">89,32 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 68,68 €</span></td>
-    <td class="ct-pnl pos">+227 €<br><span style="font-size:9px">+30,1%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-buy">DB ▲</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-buy">JPM ▲</span></div></td>
-    <td class="ct-target">~105 €</td>
-    <td class="ct-upside upside-pos">+17,5%</td>
-    <td><div class="ct-rationale">P/B 0,72x sous valeur comptable · Dividende 6,2% · ROE 11,5%. Consensus 5/5 banques à l'achat. Renforcer sous 85 €.</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">EIFFAGE</div><div class="ct-sub">FGR.PA · Construction/Concessions</div></td>
-    <td><span style="color:var(--text)">140,35 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 114,09 €</span></td>
-    <td class="ct-pnl pos">+210 €<br><span style="font-size:9px">+23,0%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-buy">DB ▲</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-buy">JPM ▲</span></div></td>
-    <td class="ct-target">~165 €</td>
-    <td class="ct-upside upside-pos">+17,6%</td>
-    <td><div class="ct-rationale">Concessions autoroutes = moat défensif · FCF yield 8% · Carnet >22 Md€. Décote conglomérat injustifiée. Conserver et renforcer les replis.</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">ACCOR</div><div class="ct-sub">AC.PA · Hôtellerie · CAC 40</div></td>
-    <td><span style="color:var(--text)">45,45 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 37,30 €</span></td>
-    <td class="ct-pnl pos">+245 €<br><span style="font-size:9px">+21,9%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-buy">JPM ▲</span></div></td>
-    <td class="ct-target">~56 €</td>
-    <td class="ct-upside upside-pos">+23,2%</td>
-    <td><div class="ct-rationale">Modèle asset-light non valorisé · Tourisme Asie en reprise · Rachat d'actions. Renforcer sous 42 €. Stop à 38 €.</div><div class="stop-level">Stop suggéré : 38,00 €</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">TOTALENERGIES</div><div class="ct-sub">TTE.PA · Énergie intégrée · CAC 40</div></td>
-    <td><span style="color:var(--text)">66,86 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 52,64 €</span></td>
-    <td class="ct-pnl pos">+128 €<br><span style="font-size:9px">+27,0%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Conserver+</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~78 €</td>
-    <td class="ct-upside upside-pos">+16,7%</td>
-    <td><div class="ct-rationale">Dividende 5,8% + rachat d'actions massif · Transition GNL bien engagée · FCF exceptionnel. Renforcer si pétrole repasse sous 70$/b.</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">SPIE</div><div class="ct-sub">SPIE.PA · Services techniques</div></td>
-    <td><span style="color:var(--text)">51,50 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU ~43 €</span></td>
-    <td class="ct-pnl pos">+95 €<br><span style="font-size:9px">+18,3%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-buy">DB ▲</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~62 €</td>
-    <td class="ct-upside upside-pos">+20,4%</td>
-    <td><div class="ct-rationale">Leader décarbonation bâtiments EU · Contrats longue durée · Visibilité >3 ans. Bénéficiaire direct du plan de rénovation énergétique européen.</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">SEMCO TECHNOLOGIES</div><div class="ct-sub">SMCO.PA · H2 / GNL · Small Cap</div></td>
-    <td><span style="color:var(--text)">32,96 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 15,00 €</span></td>
-    <td class="ct-pnl pos">+72 €<br><span style="font-size:9px">+119,7%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Trailing Stop</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-na">DB n/a</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-na">JPM n/a</span></div></td>
-    <td class="ct-target">~50 €</td>
-    <td class="ct-upside upside-pos">+51,8%</td>
-    <td><div class="ct-rationale">+120% depuis PRU. Thèse H2 intacte. Protéger les gains avec un trailing stop remonté à 26 €. Ne pas renforcer à ces niveaux.</div><div class="stop-level">Trailing Stop : 26,00 €</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">ENTECH</div><div class="ct-sub">ENTECH.PA · Énergie verte · Small Cap</div></td>
-    <td><span style="color:var(--text)">9,47 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 7,86 €</span></td>
-    <td class="ct-pnl pos">+40 €<br><span style="font-size:9px">+20,5%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-na">DB n/a</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-na">JPM n/a</span></div></td>
-    <td class="ct-target">~13 €</td>
-    <td class="ct-upside upside-pos">+37,3%</td>
-    <td><div class="ct-rationale">Pure player stockage énergie EU · Croissance CA >30% · Carnet de commandes en forte hausse. Renforcer sous 8,50 €.</div></td>
-  </tr>
-
-  <tr class="buy-row">
-    <td><div class="ct-name">MERSEN</div><div class="ct-sub">MRN.PA · Industrie spécialisée</div></td>
-    <td><span style="color:var(--text)">25,65 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 22,63 €</span></td>
-    <td class="ct-pnl pos">+42 €<br><span style="font-size:9px">+13,4%</span></td>
-    <td><span class="verdict-pill vp-buy">▲ Renforcer</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-buy">DB ▲</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~32 €</td>
-    <td class="ct-upside upside-pos">+24,8%</td>
-    <td><div class="ct-rationale">Composants graphite indispensables aux VE et semi-conducteurs · Niche défensive à forte valeur ajoutée · Dividende régulier.</div></td>
-  </tr>
-
-  <!-- ═══ CONSERVER ═══ -->
-  <tr><td colspan="8" style="background:rgba(74,144,217,0.06);color:var(--blue);font-size:9px;letter-spacing:2px;padding:8px 10px;border-bottom:1px solid var(--border)">→ CONSERVER — 8 positions</td></tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">iSHARES MSCI WORLD</div><div class="ct-sub">SWDA · ETF PEA · 440 parts</div></td>
-    <td><span style="color:var(--text)">6,24 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 5,80 €</span></td>
-    <td class="ct-pnl pos">+194 €<br><span style="font-size:9px">+7,6%</span></td>
-    <td><span class="verdict-pill vp-hold">→ Conserver</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Long terme</td>
-    <td><div class="ct-rationale">ETF cœur de portefeuille. Conserver indéfiniment et renforcer en DCA mensuel. Aucune raison de vendre sauf besoin de liquidités.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">PUBLICIS GROUPE</div><div class="ct-sub">PUB.PA · Communication · CAC 40</div></td>
-    <td><span style="color:var(--text)">74,10 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 78,47 €</span></td>
-    <td class="ct-pnl neg">−127 €<br><span style="font-size:9px">−5,6%</span></td>
-    <td><span class="verdict-pill vp-hold">→ Conserver</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~86 €</td>
-    <td class="ct-upside upside-pos">+16,1%</td>
-    <td><div class="ct-rationale">Leader pub digitale · IA intégrée dans les offres · Reprise budgets pub attendue H2. Conserver, ne pas renforcer avant retour au-dessus du PRU.</div><div class="stop-level">Stop suggéré : 65,00 €</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">CAPGEMINI</div><div class="ct-sub">CAP.PA · IT Services · CAC 40</div></td>
-    <td><span style="color:var(--text)">107,10 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 105,34 €</span></td>
-    <td class="ct-pnl pos">+11 €<br><span style="font-size:9px">+1,7%</span></td>
-    <td><span class="verdict-pill vp-hold">→ Conserver</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~125 €</td>
-    <td class="ct-upside upside-pos">+16,7%</td>
-    <td><div class="ct-rationale">Repositionnement IA en cours · Demande IT soft à court terme. Conserver — attendre catalyseur résultats avant renforcement.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">WENDEL</div><div class="ct-sub">MF.PA · Holding d'investissement</div></td>
-    <td><span style="color:var(--text)">84,80 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 80,33 €</span></td>
-    <td class="ct-pnl pos">+22 €<br><span style="font-size:9px">+5,6%</span></td>
-    <td><span class="verdict-pill vp-hold">→ Conserver</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-buy">DB ▲</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~95 €</td>
-    <td class="ct-upside upside-pos">+12,0%</td>
-    <td><div class="ct-rationale">Décote de holding ~25% vs NAV · Portefeuille diversifié de qualité. Conserver — la décote devrait se réduire avec la reprise du Private Equity.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">BNP EASY S&P 500</div><div class="ct-sub">ESE.PA · ETF S&P 500 PEA</div></td>
-    <td><span style="color:var(--text)">29,80 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 25,54 €</span></td>
-    <td class="ct-pnl pos">+81 €<br><span style="font-size:9px">+16,7%</span></td>
-    <td><span class="verdict-pill vp-hold">→ DCA</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Long terme</td>
-    <td><div class="ct-rationale">ETF US core. Conserver et renforcer via le plan DCA mensuel. Bénéficie de la dynamique des large caps américaines et de l'IA.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">AMUNDI RUSSELL 2000</div><div class="ct-sub">RS2K · ETF Small Caps US PEA</div></td>
-    <td><span style="color:var(--text)">339,17 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 308,55 €</span></td>
-    <td class="ct-pnl pos">+92 €<br><span style="font-size:9px">+9,9%</span></td>
-    <td><span class="verdict-pill vp-hold">→ DCA</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-buy">MS ▲</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Long terme</td>
-    <td><div class="ct-rationale">Small caps US bénéficient des baisses Fed attendues. Conserver et renforcer en DCA. Upside structurel si atterrissage en douceur US confirmé.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">AMUNDI PEA ÉMERGENTS</div><div class="ct-sub">PAEEM · ETF EM ESG PEA</div></td>
-    <td><span style="color:var(--text)">30,88 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 29,67 €</span></td>
-    <td class="ct-pnl pos">+43 €<br><span style="font-size:9px">+4,1%</span></td>
-    <td><span class="verdict-pill vp-hold">→ DCA</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-buy">GS ▲</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Long terme</td>
-    <td><div class="ct-rationale">Diversification EM nécessaire au portefeuille. Stimulus Chine + reprise Inde soutiennent la thèse. Conserver et renforcer en DCA.</div></td>
-  </tr>
-
-  <tr class="hold-row">
-    <td><div class="ct-name">ABEO</div><div class="ct-sub">ABEO.PA · Sport & Loisirs · Small Cap</div></td>
-    <td><span style="color:var(--text)">8,52 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 8,74 €</span></td>
-    <td class="ct-pnl neg">−5 €<br><span style="font-size:9px">−2,5%</span></td>
-    <td><span class="verdict-pill vp-hold">→ Conserver</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-na">DB n/a</span><span class="bank-dot bd-buy">ODDO ▲</span><span class="bank-dot bd-na">JPM n/a</span></div></td>
-    <td class="ct-target">~10 €</td>
-    <td class="ct-upside upside-pos">+17,4%</td>
-    <td><div class="ct-rationale">Quasi à l'équilibre. Spécialiste équipements sportifs professionnels — niche défensive. Conserver mais ne pas renforcer avant clarté sur les marges.</div><div class="stop-level">Stop suggéré : 7,50 €</div></td>
-  </tr>
-
-  <!-- ═══ ALLÉGER ═══ -->
-  <tr><td colspan="8" style="background:rgba(255,140,0,0.06);color:#ff8c00;font-size:9px;letter-spacing:2px;padding:8px 10px;border-bottom:1px solid var(--border)">◆ ALLÉGER — 6 positions</td></tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">SEB</div><div class="ct-sub">SK.PA · Électroménager · Mid Cap</div></td>
-    <td><span style="color:var(--text)">46,50 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 66,80 €</span></td>
-    <td class="ct-pnl neg">−365 €<br><span style="font-size:9px">−30,4%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger 50%</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-light">GS ◆</span><span class="bank-dot bd-sell">MS ▼</span><span class="bank-dot bd-light">DB ◆</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-sell">JPM ▼</span></div></td>
-    <td class="ct-target">~52 €</td>
-    <td class="ct-upside upside-pos">+11,8%</td>
-    <td><div class="ct-rationale">Perte la plus lourde du portefeuille (−365 €, −30%). Pression structurelle en Chine. Alléger 50% maintenant pour réduire l'exposition. Garder le solde avec stop à 40 €.</div><div class="stop-level">Stop absolu : 40,00 €</div></td>
-  </tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">ARKEMA</div><div class="ct-sub">AKE.PA · Chimie spécialisée · SBF 120</div></td>
-    <td><span style="color:var(--text)">56,90 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 69,61 €</span></td>
-    <td class="ct-pnl neg">−64 €<br><span style="font-size:9px">−18,3%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-light">MS ◆</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-light">ODDO ◆</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~65 €</td>
-    <td class="ct-upside upside-pos">+14,2%</td>
-    <td><div class="ct-rationale">Cycle chimie mondial toujours déprimé. −18% vs PRU sans catalyseur visible. Alléger la moitié pour libérer du capital vers les convictions fortes.</div><div class="stop-level">Stop suggéré : 50,00 €</div></td>
-  </tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">FDJ UNITED</div><div class="ct-sub">FDJU.PA · Jeux / Loterie</div></td>
-    <td><span style="color:var(--text)">25,30 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 28,13 €</span></td>
-    <td class="ct-pnl neg">−42 €<br><span style="font-size:9px">−10,1%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-light">MS ◆</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-light">JPM ◆</span></div></td>
-    <td class="ct-target">~29 €</td>
-    <td class="ct-upside upside-pos">+14,6%</td>
-    <td><div class="ct-rationale">Intégration Kindred toujours en cours. Synergies attendues mais incertaines à court terme. Alléger et réallouer vers des convictions plus fortes.</div><div class="stop-level">Stop suggéré : 22,00 €</div></td>
-  </tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">TF1</div><div class="ct-sub">TFI.PA · Médias / TV Linéaire</div></td>
-    <td><span style="color:var(--text)">7,18 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 7,14 €</span></td>
-    <td class="ct-pnl pos">+1 €<br><span style="font-size:9px">+0,6%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-light">GS ◆</span><span class="bank-dot bd-sell">MS ▼</span><span class="bank-dot bd-light">DB ◆</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-light">JPM ◆</span></div></td>
-    <td class="ct-target">~7,50 €</td>
-    <td class="ct-upside upside-pos">+4,5%</td>
-    <td><div class="ct-rationale">TV linéaire sous pression structurelle du streaming. Upside très limité. Presque à l'équilibre — bonne opportunité de sortir proprement et réallouer.</div></td>
-  </tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">AMUNDI LATAM ETF</div><div class="ct-sub">PLEM.PA · ETF Amérique Latine PEA</div></td>
-    <td><span style="color:var(--text)">27,48 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 25,08 €</span></td>
-    <td class="ct-pnl pos">+58 €<br><span style="font-size:9px">+9,6%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-light">MS ◆</span><span class="bank-dot bd-light">DB ◆</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Volatile</td>
-    <td><div class="ct-rationale">Volatilité politique Brésil/Mexique élevée. +9,6% — prendre une partie des gains et réallouer vers PAEEM (émergents plus diversifiés).</div></td>
-  </tr>
-
-  <tr class="lighten-row">
-    <td><div class="ct-name">AMUNDI HEALTHCARE ETF</div><div class="ct-sub">BLTH.PA · ETF Santé Europe</div></td>
-    <td><span style="color:var(--text)">156,26 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 159,08 €</span></td>
-    <td class="ct-pnl neg">−14 €<br><span style="font-size:9px">−1,8%</span></td>
-    <td><span class="verdict-pill vp-light">◆ Alléger</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-hold">MS →</span><span class="bank-dot bd-light">DB ◆</span><span class="bank-dot bd-hold">ODDO →</span><span class="bank-dot bd-light">JPM ◆</span></div></td>
-    <td class="ct-target">—</td>
-    <td class="ct-upside" style="color:var(--text-muted)">Défensif</td>
-    <td><div class="ct-rationale">Secteur défensif mais sous-performance en phase early recovery. Légèrement en perte. Alléger pour surpondérer les ETF cycliques (Banks, Russell).</div></td>
-  </tr>
-
-  <!-- ═══ VENDRE / COUPER ═══ -->
-  <tr><td colspan="8" style="background:rgba(255,71,87,0.06);color:var(--red);font-size:9px;letter-spacing:2px;padding:8px 10px;border-bottom:1px solid var(--border)">▼ VENDRE / COUPER — 4 positions</td></tr>
-
-  <tr class="sell-row">
-    <td><div class="ct-name">RENAULT</div><div class="ct-sub">RNO.PA · Automobile · CAC 40</div></td>
-    <td><span style="color:var(--text)">29,01 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 37,10 €</span></td>
-    <td class="ct-pnl neg">−57 €<br><span style="font-size:9px">−21,8%</span></td>
-    <td><span class="verdict-pill vp-sell">▼ Vendre</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-sell">GS ▼</span><span class="bank-dot bd-sell">MS ▼</span><span class="bank-dot bd-light">DB ◆</span><span class="bank-dot bd-sell">ODDO ▼</span><span class="bank-dot bd-sell">JPM ▼</span></div></td>
-    <td class="ct-target">~27 €</td>
-    <td class="ct-upside upside-neg">−6,9%</td>
-    <td><div class="ct-rationale">Disruption chinoise · transition VE coûteuse · Alliance Nissan fragilisée · −22% vs PRU. 4/5 banques à la vente. Couper la position et réallouer vers BNP ou Eiffage.</div><div class="stop-level">⚠ Action immédiate recommandée</div></td>
-  </tr>
-
-  <tr class="sell-row">
-    <td><div class="ct-name">ARAMIS GROUP</div><div class="ct-sub">ARAMI.PA · Vente auto en ligne · CTO</div></td>
-    <td><span style="color:var(--text)">3,96 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 5,78 €</span></td>
-    <td class="ct-pnl neg">−126 €<br><span style="font-size:9px">−31,5%</span></td>
-    <td><span class="verdict-pill vp-sell">▼ Vendre</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-sell">GS ▼</span><span class="bank-dot bd-sell">MS ▼</span><span class="bank-dot bd-na">DB n/a</span><span class="bank-dot bd-sell">ODDO ▼</span><span class="bank-dot bd-na">JPM n/a</span></div></td>
-    <td class="ct-target">~4,50 €</td>
-    <td class="ct-upside upside-pos">+13,6%</td>
-    <td><div class="ct-rationale">−31,5% vs PRU · Secteur auto en ligne sous pression · Modèle économique non profitable · Thèse invalidée. Vendre et réallouer vers Entech ou Mersen.</div><div class="stop-level">⚠ Cession recommandée dès que possible</div></td>
-  </tr>
-
-  <tr class="sell-row">
-    <td><div class="ct-name">RISING STONE</div><div class="ct-sub">RISING.PA · Immobilier · Small Cap · CTO</div></td>
-    <td><span style="color:var(--text)">48,50 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 58,30 €</span></td>
-    <td class="ct-pnl neg">−29 €<br><span style="font-size:9px">−16,8%</span></td>
-    <td><span class="verdict-pill vp-sell">▼ Vendre</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-sell">GS ▼</span><span class="bank-dot bd-light">MS ◆</span><span class="bank-dot bd-na">DB n/a</span><span class="bank-dot bd-sell">ODDO ▼</span><span class="bank-dot bd-na">JPM n/a</span></div></td>
-    <td class="ct-target">~44 €</td>
-    <td class="ct-upside upside-neg">−9,3%</td>
-    <td><div class="ct-rationale">Immobilier small cap sans catalyseur. −17% vs PRU avec target analyst inférieur au cours actuel. Vendre et réallouer vers des convictions mieux documentées.</div><div class="stop-level">⚠ Target analyst sous le cours actuel</div></td>
-  </tr>
-
-  <tr class="sell-row">
-    <td><div class="ct-name">iSHARES EURO STOXX BANKS</div><div class="ct-sub">EXV1.PA · ETF Banques EU PEA</div></td>
-    <td><span style="color:var(--text)">16,47 €</span><br><span style="color:var(--text-muted);font-size:9px">PRU 14,75 €</span></td>
-    <td class="ct-pnl pos">+72 €<br><span style="font-size:9px">+11,7%</span></td>
-    <td><span class="verdict-pill vp-sell">▼ Prendre profit 50%</span></td>
-    <td><div class="bank-dots"><span class="bank-dot bd-hold">GS →</span><span class="bank-dot bd-light">MS ◆</span><span class="bank-dot bd-hold">DB →</span><span class="bank-dot bd-light">ODDO ◆</span><span class="bank-dot bd-hold">JPM →</span></div></td>
-    <td class="ct-target">~18 €</td>
-    <td class="ct-upside upside-pos">+9,3%</td>
-    <td><div class="ct-rationale">+72 € de gain · +64% sur 1 an. Vous avez déjà BNP en direct = double exposition bancaire. Prendre 50% des profits et réallouer vers PAEEM ou RS2K pour diversifier.</div></td>
-  </tr>
-
-</tbody>
-```
-
+    <tbody id="overviewTableBody">
+      <tr><td colspan="7" style="text-align:center;padding:20px;color:#6b7a8d;font-family:'IBM Plex Mono',monospace;font-size:11px;">Chargement des données...</td></tr>
+    </tbody>
   </table>
 
   <!-- PRIORITY ACTION BOX -->
@@ -2090,7 +1800,156 @@ function showSection(id) {
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
   if(id==='portfolio-editor') loadEditor();
+  if(id==='overview') renderOverview();
 }
+
+// ══ OVERVIEW DYNAMIC DATA ══
+// Institutional consensus per ticker (static qualitative data)
+const CONSENSUS = {
+  'BNP':  {name:'BNP PARIBAS',     sub:'BNP.PA · Banque · CAC 40',        verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-buy,bd-buy,bd-buy', labels:'GS▲,MS▲,DB▲,ODDO▲,JPM▲', target:'~105€', rationale:'P/B 0,72x · Dividende 6,2% · ROE 11,5%. Consensus 5/5 à l\'achat.', row:'buy-row'},
+  'FGR':  {name:'EIFFAGE',         sub:'FGR.PA · Construction/Concessions', verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-buy,bd-hold,bd-buy', labels:'GS▲,MS▲,DB▲,ODDO→,JPM▲', target:'~165€', rationale:'Concessions autoroutes · FCF yield 8% · Carnet >22 Md€.', row:'buy-row'},
+  'AC':   {name:'ACCOR',           sub:'AC.PA · Hôtellerie · CAC 40',       verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-hold,bd-buy,bd-buy', labels:'GS▲,MS▲,DB→,ODDO▲,JPM▲', target:'~56€',  rationale:'Modèle asset-light · Tourisme Asie en reprise. Stop 38€.', row:'buy-row', stop:'Stop : 38,00 €'},
+  'TTE':  {name:'TOTALENERGIES',   sub:'TTE.PA · Énergie · CAC 40',         verdict:'vp-buy',  label:'▲ Conserver+',     banks:'bd-buy,bd-buy,bd-hold,bd-buy,bd-hold',labels:'GS▲,MS▲,DB→,ODDO▲,JPM→', target:'~78€',  rationale:'Dividende 5,8% + rachat massif · Transition GNL engagée.', row:'buy-row'},
+  'SPIE': {name:'SPIE',            sub:'SPIE.PA · Services techniques',      verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-buy,bd-buy,bd-hold', labels:'GS▲,MS▲,DB▲,ODDO▲,JPM→', target:'~62€',  rationale:'Leader décarbonation EU · Contrats longue durée.', row:'buy-row'},
+  'SMCO': {name:'SEMCO TECH.',     sub:'SMCO.PA · H2/GNL · Small Cap',      verdict:'vp-buy',  label:'▲ Trailing Stop',  banks:'bd-buy,bd-buy,bd-na,bd-buy,bd-na',    labels:'GS▲,MS▲,DB n/a,ODDO▲,JPM n/a', target:'~50€', rationale:'Thèse H2 intacte. Trailing stop à 26€.', row:'buy-row', stop:'Trailing Stop : 26,00 €'},
+  'ENTECH':{name:'ENTECH',         sub:'ENTECH.PA · Énergie verte',         verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-na,bd-buy,bd-na',    labels:'GS▲,MS▲,DB n/a,ODDO▲,JPM n/a', target:'~13€', rationale:'Pure player stockage EU · Croissance CA >30%.', row:'buy-row'},
+  'MRN':  {name:'MERSEN',          sub:'MRN.PA · Industrie spécialisée',    verdict:'vp-buy',  label:'▲ Renforcer',      banks:'bd-buy,bd-buy,bd-buy,bd-buy,bd-hold', labels:'GS▲,MS▲,DB▲,ODDO▲,JPM→', target:'~30€',  rationale:'Matériaux avancés · Semi-conducteurs + énergie propre.', row:'buy-row'},
+  // CONSERVER
+  'SWDA': {name:'iSHARES MSCI WORLD',sub:'EWLD.PA · ETF Monde PEA',        verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-hold,bd-hold,bd-hold',labels:'GS→,MS→,DB→,ODDO→,JPM→', target:'—', rationale:'Cœur de portefeuille long terme. DCA mensuel recommandé.', row:'hold-row'},
+  'PUB':  {name:'PUBLICIS',        sub:'PUB.PA · Communication',             verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-buy,bd-hold,bd-buy,bd-hold', labels:'GS→,MS▲,DB→,ODDO▲,JPM→', target:'~86€',  rationale:'Leader publicité digitale EU · IA intégrée dans les offres.', row:'hold-row'},
+  'CAP':  {name:'CAPGEMINI',       sub:'CAP.PA · IT Services',              verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-buy,bd-hold,bd-hold',labels:'GS→,MS→,DB▲,ODDO→,JPM→', target:'~120€', rationale:'Leader ESN EU · IA générative = nouveau moteur de croissance.', row:'hold-row'},
+  'MF':   {name:'WENDEL',          sub:'MF.PA · Holding/Private equity',    verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-hold,bd-buy,bd-hold',labels:'GS→,MS→,DB→,ODDO▲,JPM→', target:'~92€',  rationale:'Décote holding 20% vs NAV injustifiée. Catalyseur : IPO filiales.', row:'hold-row'},
+  'PAEEM':{name:'AMUNDI EM ESG',   sub:'PAEEM.PA · ETF Émergents PEA',     verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-buy,bd-hold,bd-buy', labels:'GS→,MS→,DB▲,ODDO→,JPM▲', target:'—', rationale:'Diversification émergents. Inde et Asie du Sud-Est sous-valorisées.', row:'hold-row'},
+  'RS2K': {name:'AMUNDI RUSSELL 2000',sub:'RS2K.PA · ETF Small Cap US PEA',verdict:'vp-hold', label:'→ Conserver',      banks:'bd-buy,bd-hold,bd-hold,bd-hold,bd-buy', labels:'GS▲,MS→,DB→,ODDO→,JPM▲', target:'—', rationale:'Small caps US décotées vs large caps. Fed pivot = catalyseur potentiel.', row:'hold-row'},
+  'ESE':  {name:'BNP EASY S&P500', sub:'ESE.PA · ETF S&P500 PEA',          verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-hold,bd-hold,bd-hold',labels:'GS→,MS→,DB→,ODDO→,JPM→', target:'—', rationale:'Exposition US nécessaire dans tout portefeuille long terme.', row:'hold-row'},
+  'FDJU': {name:'FDJ UNITED',      sub:'FDJU.PA · Jeux/Loisirs',           verdict:'vp-hold', label:'→ Surveiller',     banks:'bd-hold,bd-hold,bd-na,bd-hold,bd-na',  labels:'GS→,MS→,DB n/a,ODDO→,JPM n/a', target:'~28€', rationale:'Monopole régulé défensif. Intégration United en cours.', row:'hold-row'},
+  'AKE':  {name:'ARKEMA',          sub:'AKE.PA · Chimie spécialisée',       verdict:'vp-hold', label:'→ Surveiller',     banks:'bd-hold,bd-hold,bd-hold,bd-light,bd-hold',labels:'GS→,MS→,DB→,ODDO◆,JPM→', target:'~65€', rationale:'Cycle chimie difficile. Matériaux haute performance = relais futur.', row:'hold-row'},
+  'ABEO': {name:'ABEO',            sub:'ABEO.PA · Sport/Loisirs · Small',   verdict:'vp-hold', label:'→ Conserver',      banks:'bd-hold,bd-hold,bd-na,bd-hold,bd-na',  labels:'GS→,MS→,DB n/a,ODDO→,JPM n/a', target:'~9.5€', rationale:'Niche équipements sportifs. Small cap peu suivie par les grandes banques.', row:'hold-row'},
+  'TFI':  {name:'TF1',             sub:'TFI.PA · Médias',                   verdict:'vp-hold', label:'→ Surveiller',     banks:'bd-hold,bd-light,bd-hold,bd-hold,bd-na',labels:'GS→,MS◆,DB→,ODDO→,JPM n/a',target:'~8€',   rationale:'Secteur médias structurellement sous pression. Streaming = risque.', row:'hold-row'},
+  // ALLÉGER
+  'PLEM': {name:'AMUNDI LATAM',    sub:'PLEM.PA · ETF Amérique Latine PEA', verdict:'vp-light',label:'◆ Alléger partiellement',banks:'bd-hold,bd-light,bd-hold,bd-light,bd-hold',labels:'GS→,MS◆,DB→,ODDO◆,JPM→',target:'—', rationale:'Volatilité politique Brésil/Mexique. Prendre une partie des gains.', row:'lighten-row'},
+  'BLTH': {name:'AMUNDI HEALTHCARE',sub:'BLTH.PA · ETF Santé EU PEA',      verdict:'vp-light',label:'◆ Alléger',         banks:'bd-hold,bd-hold,bd-light,bd-hold,bd-light',labels:'GS→,MS→,DB◆,ODDO→,JPM◆',target:'—', rationale:'Sous-performance en phase early recovery. Réallouer vers ETF cycliques.', row:'lighten-row'},
+  'SK':   {name:'SEB',             sub:'SK.PA · Biens de conso.',           verdict:'vp-light',label:'◆ Alléger 50%',     banks:'bd-hold,bd-light,bd-sell,bd-light,bd-sell',labels:'GS→,MS◆,DB▼,ODDO◆,JPM▼', target:'~52€', rationale:'Pire perte relative du portef. Alléger 50%, stop absolu à 40€.', row:'lighten-row', stop:'Stop absolu : 40,00 €'},
+  // VENDRE
+  'RNO':  {name:'RENAULT',         sub:'RNO.PA · Automobile · CAC 40',      verdict:'vp-sell', label:'▼ Vendre',          banks:'bd-sell,bd-sell,bd-light,bd-sell,bd-sell',labels:'GS▼,MS▼,DB◆,ODDO▼,JPM▼', target:'~27€', rationale:'Disruption chinoise · VE coûteuse · Alliance Nissan fragilisée. 4/5 à la vente.', row:'sell-row', stop:'⚠ Action immédiate'},
+  'ARAMI':{name:'ARAMIS GROUP',    sub:'ARAMI.PA · Vente auto en ligne',    verdict:'vp-sell', label:'▼ Vendre',          banks:'bd-sell,bd-sell,bd-na,bd-sell,bd-na',  labels:'GS▼,MS▼,DB n/a,ODDO▼,JPM n/a', target:'~4.5€', rationale:'Modèle non profitable · Thèse invalidée. Réallouer vers Entech.', row:'sell-row', stop:'⚠ Cession recommandée'},
+  'RISING':{name:'RISING STONE',   sub:'RISING.PA · Immobilier Small Cap',  verdict:'vp-sell', label:'▼ Vendre',          banks:'bd-sell,bd-light,bd-na,bd-sell,bd-na', labels:'GS▼,MS◆,DB n/a,ODDO▼,JPM n/a', target:'~44€', rationale:'Small cap immo sans catalyseur. Target analyst sous cours actuel.', row:'sell-row', stop:'⚠ Target < cours'},
+  'EXV1': {name:'iSHARES BANKS',   sub:'EXV1.PA · ETF Banques EU PEA',     verdict:'vp-sell', label:'▼ Prendre profit 50%',banks:'bd-hold,bd-light,bd-hold,bd-light,bd-hold',labels:'GS→,MS◆,DB→,ODDO◆,JPM→',target:'~18€', rationale:'Double exposition bancaire avec BNP. +11% gains — prendre 50% des profits.', row:'sell-row'},
+};
+
+const OV_DEFAULT = [
+  {name:'Aramis Group',ticker:'ARAMI',fhTicker:'ARAMI.PA',pru:5.78,qty:69,sector:'Automobile',account:'CTO'},
+  {name:'Entech',ticker:'ENTECH',fhTicker:'ENTECH.PA',pru:7.86,qty:25,sector:'Énergie',account:'CTO'},
+  {name:'Abeo',ticker:'ABEO',fhTicker:'ABEO.PA',pru:8.74,qty:22,sector:'Loisirs',account:'CTO'},
+  {name:'TF1',ticker:'TFI',fhTicker:'TFI.PA',pru:7.14,qty:21,sector:'Médias',account:'CTO'},
+  {name:'Rising Stone',ticker:'RISING',fhTicker:'RISING.PA',pru:58.30,qty:3,sector:'Immobilier',account:'CTO'},
+  {name:'Semco Tech.',ticker:'SMCO',fhTicker:'SMCO.PA',pru:15.00,qty:4,sector:'Industrie',account:'CTO'},
+  {name:'iShares MSCI World',ticker:'SWDA',fhTicker:'EWLD.PA',pru:5.80,qty:440,sector:'ETF Monde',account:'PEA'},
+  {name:'Publicis Groupe',ticker:'PUB',fhTicker:'PUB.PA',pru:78.47,qty:29,sector:'Communication',account:'PEA'},
+  {name:'Accor',ticker:'AC',fhTicker:'AC.PA',pru:37.30,qty:30,sector:'Hôtellerie',account:'PEA'},
+  {name:'Eiffage',ticker:'FGR',fhTicker:'FGR.PA',pru:114.09,qty:8,sector:'Construction',account:'PEA'},
+  {name:'Amundi EM ESG',ticker:'PAEEM',fhTicker:'PAEEM.PA',pru:29.67,qty:36,sector:'ETF Émergents',account:'PEA'},
+  {name:'Amundi Russell 2000',ticker:'RS2K',fhTicker:'RS2K.PA',pru:308.55,qty:3,sector:'ETF US',account:'PEA'},
+  {name:'BNP Paribas',ticker:'BNP',fhTicker:'BNP.PA',pru:68.68,qty:11,sector:'Finance',account:'PEA'},
+  {name:'SEB',ticker:'SK',fhTicker:'SK.PA',pru:66.80,qty:18,sector:'Conso.',account:'PEA'},
+  {name:'Amundi Healthcare',ticker:'BLTH',fhTicker:'BLTH.PA',pru:159.08,qty:5,sector:'Santé',account:'PEA'},
+  {name:'iShares Banks',ticker:'EXV1',fhTicker:'EXV1.PA',pru:14.75,qty:42,sector:'Finance',account:'PEA'},
+  {name:'Amundi LatAm',ticker:'PLEM',fhTicker:'PLEM.PA',pru:25.08,qty:24,sector:'ETF Émergents',account:'PEA'},
+  {name:'Capgemini',ticker:'CAP',fhTicker:'CAP.PA',pru:105.34,qty:6,sector:'Tech/IT',account:'PEA'},
+  {name:'SPIE',ticker:'SPIE',fhTicker:'SPIE.PA',pru:51.50,qty:12,sector:'Industrie',account:'PEA'},
+  {name:'TotalEnergies',ticker:'TTE',fhTicker:'TTE.PA',pru:52.64,qty:9,sector:'Énergie',account:'PEA'},
+  {name:'BNP Easy S&P500',ticker:'ESE',fhTicker:'ESE.PA',pru:25.54,qty:19,sector:'ETF US',account:'PEA'},
+  {name:'Wendel',ticker:'MF',fhTicker:'MF.PA',pru:80.33,qty:5,sector:'Finance',account:'PEA'},
+  {name:'FDJ United',ticker:'FDJU',fhTicker:'FDJU.PA',pru:28.13,qty:15,sector:'Loisirs',account:'PEA'},
+  {name:'Mersen',ticker:'MRN',fhTicker:'MRN.PA',pru:22.63,qty:14,sector:'Industrie',account:'PEA'},
+  {name:'Arkema',ticker:'AKE',fhTicker:'AKE.PA',pru:69.61,qty:5,sector:'Chimie',account:'PEA'},
+  {name:'Renault',ticker:'RNO',fhTicker:'RNO.PA',pru:37.10,qty:7,sector:'Automobile',account:'PEA'},
+];
+
+function getOVData(){
+  try{ const s=localStorage.getItem('portfolio_data'); if(s) return JSON.parse(s); }catch(e){}
+  return OV_DEFAULT.map(p=>({...p}));
+}
+
+function renderOverview(){
+  const data = getOVData();
+  const fmtE = v => v.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+'€';
+  const fmtE2 = v => v.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+'€';
+
+  // Stats
+  const pea = data.filter(p=>p.account==='PEA');
+  const cto = data.filter(p=>p.account==='CTO');
+  const peaVal = pea.reduce((s,p)=>s+p.pru*p.qty,0);
+  const ctoVal = cto.reduce((s,p)=>s+p.pru*p.qty,0);
+  const total = peaVal + ctoVal;
+
+  document.getElementById('ovCTO').textContent = fmtE(ctoVal);
+  document.getElementById('ovCTOsub').textContent = cto.length+' position'+(cto.length>1?'s':'')+' · Small/Mid caps';
+  document.getElementById('ovPEA').textContent = fmtE(peaVal);
+  document.getElementById('ovPEAsub').textContent = pea.length+' position'+(pea.length>1?'s':'')+' · ETF + Large caps';
+  document.getElementById('ovTotal').textContent = fmtE(total);
+  document.getElementById('ovTotalSub').textContent = data.length+' positions au total';
+  document.getElementById('ovValeur').textContent = fmtE(total);
+  document.getElementById('ovSubtitle').textContent = 'Allocation · Consensus institutionnel · '+data.length+' positions';
+
+  // Build table — group by verdict
+  const groups = {
+    buy:    { label:'▲ ACHETER / RENFORCER', color:'rgba(0,200,117,0.06)', textColor:'var(--green)',  rows:[] },
+    hold:   { label:'→ CONSERVER / SURVEILLER', color:'rgba(74,144,217,0.06)', textColor:'var(--blue)', rows:[] },
+    lighten:{ label:'◆ ALLÉGER',            color:'rgba(255,140,0,0.06)',   textColor:'#ff8c00',     rows:[] },
+    sell:   { label:'▼ VENDRE / COUPER',    color:'rgba(255,71,87,0.06)',   textColor:'var(--red)',   rows:[] },
+    new:    { label:'✦ NOUVELLES POSITIONS', color:'rgba(201,168,76,0.06)', textColor:'var(--gold)', rows:[] },
+  };
+
+  data.forEach(pos => {
+    const c = CONSENSUS[pos.ticker];
+    const inv = pos.pru * pos.qty;
+
+    if(!c) {
+      // New position not in consensus — add to new group
+      groups.new.rows.push(`
+        <tr class="hold-row">
+          <td><div class="ct-name">${pos.name}</div><div class="ct-sub">${pos.ticker} · ${pos.sector} · ${pos.account}</div></td>
+          <td><span style="color:#e8eaf0">${fmtE2(pos.pru)}</span><br><span style="color:#6b7a8d;font-size:9px">${pos.qty} actions · ${fmtE(inv)}</span></td>
+          <td class="ct-pnl" style="color:#6b7a8d">— <br><span style="font-size:9px">Pas de cours live</span></td>
+          <td><span class="verdict-pill" style="background:rgba(201,168,76,0.1);color:#c9a84c;border:1px solid rgba(201,168,76,0.3)">✦ Nouvelle</span></td>
+          <td><div class="bank-dots"><span class="bank-dot bd-na">Pas d'analyse</span></div></td>
+          <td class="ct-target" style="color:#6b7a8d">—</td>
+          <td><div class="ct-rationale">Position récemment ajoutée — analyse institutionnelle non disponible.</div></td>
+        </tr>`);
+      return;
+    }
+
+    const bankList = c.banks.split(',');
+    const labelList = c.labels.split(',');
+    const bankDots = bankList.map((cls,i) => `<span class="bank-dot ${cls.trim()}">${labelList[i].trim()}</span>`).join('');
+    const groupKey = c.verdict==='vp-buy'?'buy':c.verdict==='vp-hold'?'hold':c.verdict==='vp-light'?'lighten':'sell';
+
+    groups[groupKey].rows.push(`
+      <tr class="${c.row}">
+        <td><div class="ct-name">${c.name}</div><div class="ct-sub">${c.sub}</div></td>
+        <td><span style="color:#e8eaf0">${fmtE2(pos.pru)}</span><br><span style="color:#6b7a8d;font-size:9px">${pos.qty} actions · ${fmtE(inv)}</span></td>
+        <td class="ct-pnl" style="color:#6b7a8d">—<br><span style="font-size:9px">Sans prix live</span></td>
+        <td><span class="verdict-pill ${c.verdict}">${c.label}</span></td>
+        <td><div class="bank-dots">${bankDots}</div></td>
+        <td class="ct-target">${c.target}</td>
+        <td><div class="ct-rationale">${c.rationale}</div>${c.stop?`<div class="stop-level">${c.stop}</div>`:''}</td>
+      </tr>`);
+  });
+
+  let html = '';
+  ['buy','hold','lighten','sell','new'].forEach(key => {
+    const g = groups[key];
+    if(g.rows.length === 0) return;
+    html += `<tr><td colspan="7" style="background:${g.color};color:${g.textColor};font-size:9px;letter-spacing:2px;padding:8px 10px;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;text-transform:uppercase">${g.label} — ${g.rows.length} position${g.rows.length>1?'s':''}</td></tr>`;
+    html += g.rows.join('');
+  });
+
+  document.getElementById('overviewTableBody').innerHTML = html;
+}
+
+// Auto-render on page load
+window.addEventListener('DOMContentLoaded', () => renderOverview());
 </script>
 
 <!-- ══════════════════════════════════════════
