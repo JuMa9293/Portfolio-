@@ -3,7 +3,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portfolio JM">
+<meta name="theme-color" content="#050709">
 <title>Portfolio Dashboard — JM</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -12,18 +16,25 @@
 /* ══ RESET & NAV ══ */
 
 - { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
+  html, body {
+  scroll-behavior: smooth;
+  background: #07090d !important;
+  -webkit-text-size-adjust: 100%;
+  }
 
+/* PWA safe area for iPhone notch */
 #mainNav {
 position: fixed;
 top: 0; left: 0; right: 0;
 z-index: 99999;
-height: 46px;
+height: calc(46px + env(safe-area-inset-top));
+padding-top: env(safe-area-inset-top);
 display: flex;
 align-items: center;
 background: #050709;
 border-bottom: 1px solid #1c2535;
-padding: 0 12px;
+padding-left: 12px;
+padding-right: 12px;
 }
 .mnav-logo {
 font-family: ‘DM Mono’, monospace;
@@ -59,13 +70,13 @@ animation: bl 1.5s infinite; vertical-align:middle;
 /* ══ APP WRAPPERS ══ */
 #appTracker {
 display: block;
-padding-top: 46px;
+padding-top: calc(46px + env(safe-area-inset-top));
 min-height: 100vh;
 background: #07090d;
 }
 #appResearch {
 display: none;
-padding-top: 46px;
+padding-top: calc(46px + env(safe-area-inset-top));
 min-height: 100vh;
 background: #0a0c10;
 }
@@ -2744,15 +2755,15 @@ async function initApp() {
     return;
   }
   apiKey = key;
-  // Quick validation
+  // Validate with a simple US stock (always works on free plan)
   try {
-    const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=BNP.PA&token=${apiKey}`);
+    const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=AAPL&token=${apiKey}`);
     const d = await r.json();
     if (d.error) { showError('Clé invalide: ' + d.error); return; }
-    
+    if (!d.c && d.c !== 0) { showError('Clé invalide ou quota dépassé. Vérifiez sur finnhub.io'); return; }
     showApp();
   } catch(e) {
-    showError('Erreur réseau — vérifiez votre connexion.');
+    showError('Erreur réseau — vérifiez votre connexion internet.');
   }
 }
 
