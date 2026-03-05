@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portfolio JM">
+<meta name="theme-color" content="#050709">
+<title>Portfolio JM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  min-height:100vh;
+  background:#07090d;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  font-family:'DM Mono', monospace;
+  padding: 40px 24px;
+  padding-top: calc(40px + env(safe-area-inset-top));
+}
+
+.logo {
+font-family:‘DM Serif Display’, serif;
+font-size: 32px;
+color: #d4a843;
+margin-bottom: 8px;
+text-align: center;
+}
+.sub {
+font-size: 10px;
+color: #5a6e8a;
+letter-spacing: 3px;
+text-transform: uppercase;
+margin-bottom: 60px;
+text-align: center;
+}
+
+.btn {
+display: block;
+width: 100%;
+max-width: 380px;
+padding: 22px 28px;
+margin-bottom: 16px;
+background: #0c0f15;
+border: 1px solid #243044;
+border-radius: 8px;
+text-decoration: none;
+transition: all 0.2s;
+cursor: pointer;
+}
+.btn:hover { border-color: #d4a843; background: #111620; }
+
+.btn-icon { font-size: 24px; margin-bottom: 8px; }
+.btn-title {
+font-family: ‘DM Mono’, monospace;
+font-size: 14px;
+color: #dde4f0;
+font-weight: 500;
+margin-bottom: 4px;
+}
+.btn-desc {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+color: #5a6e8a;
+letter-spacing: 1px;
+}
+
+.dot {
+display:inline-block; width:7px; height:7px;
+border-radius:50%; background:#1adb8a;
+margin-left:6px; vertical-align:middle;
+animation: bl 1.5s infinite;
+}
+@keyframes bl { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.footer {
+margin-top: 48px;
+font-size: 9px;
+color: #2a3547;
+letter-spacing: 2px;
+text-transform: uppercase;
+text-align: center;
+}
+</style>
+
+</head>
+<body>
+
+<div class="logo">Portfolio JM</div>
+<div class="sub">Institutional Grade Dashboard · PEA + CTO</div>
+
+<a href="tracker.html" class="btn">
+  <div class="btn-icon">⚡ <span class="dot"></span></div>
+  <div class="btn-title">Live Tracker</div>
+  <div class="btn-desc">Prix en direct · Signaux · 26 positions</div>
+</a>
+
+<a href="research.html" class="btn">
+  <div class="btn-icon">🔬</div>
+  <div class="btn-title">Research & Analyse</div>
+  <div class="btn-desc">GS · MS · Bridgewater · Citadel · Watchlist PEA</div>
+</a>
+
+<div class="footer">JuMa9293 · GitHub Pages · 2026</div>
+
+</body>
+</html>
