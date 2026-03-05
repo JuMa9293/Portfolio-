@@ -297,21 +297,162 @@ margin-bottom: 8px;
 hr.divider { border: none; border-top: 1px solid #1e2530; margin: 32px 0; }
 
 @media (max-width: 900px) {
-header { padding: 20px 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
-.tabs { padding: 0 24px; }
-main { padding: 24px; }
-.header-stats { gap: 20px; }
+header { padding: 16px 16px 12px; flex-direction: column; gap: 10px; align-items: flex-start; }
+.logo { font-size: 16px; }
+.logo span { font-size: 9px; }
+.header-stats { gap: 16px; width: 100%; justify-content: space-between; }
+.hstat-value { font-size: 15px; }
+.tabs { padding: 0 12px; gap: 0; }
+.tab { padding: 12px 10px; font-size: 9px; letter-spacing: 0.5px; }
+main { padding: 16px; }
 .cards-grid { grid-template-columns: 1fr; }
 .sector-matrix { grid-template-columns: repeat(2, 1fr); }
 .overview-grid { grid-template-columns: repeat(2, 1fr); }
 .tech-signal-grid { grid-template-columns: repeat(3, 1fr); }
 .trade-setup { grid-template-columns: repeat(2, 1fr); }
 .risk-dashboard { grid-template-columns: 1fr; }
+.section-title { font-size: 22px; }
+
+```
+/* ── Consensus table → card layout on mobile ── */
+.consensus-table thead { display: none; }
+.consensus-table, .consensus-table tbody, .consensus-table tr, .consensus-table td { display: block; width: 100%; }
+.consensus-table tr { 
+  border: 1px solid #1e2530; 
+  border-radius: 6px; 
+  margin-bottom: 10px; 
+  padding: 12px;
+  background: #0a0c10;
+}
+.consensus-table tr.buy-row  { border-left: 3px solid #00c875; }
+.consensus-table tr.hold-row { border-left: 3px solid #4a90d9; }
+.consensus-table tr.lighten-row { border-left: 3px solid #ff8c00; }
+.consensus-table tr.sell-row { border-left: 3px solid #ff4757; }
+.consensus-table td { 
+  padding: 3px 0; 
+  border: none; 
+  font-size: 11px;
+}
+.consensus-table td:nth-child(1) { margin-bottom: 6px; }
+.consensus-table td:nth-child(3) { display: inline-block; margin-right: 8px; }
+.consensus-table td:nth-child(4) { display: inline-block; }
+.consensus-table td:nth-child(5) { margin-top: 4px; }
+.consensus-table td:nth-child(6) { display: inline-block; margin-right: 8px; }
+.consensus-table td[class="ct-target"] { display: inline-block; }
+.consensus-table td:nth-child(7) { display: block; margin-top: 6px; border-top: 1px solid #1e2530; padding-top: 6px; }
+.ct-rationale { max-width: 100% !important; font-size: 10px; }
+.bank-dots { margin-top: 4px; }
+
+/* Section group header full width */
+.consensus-table tr td[colspan] { 
+  border-radius: 4px; 
+  margin-bottom: 4px;
+  padding: 6px 10px !important;
+}
+
+/* Overview grid 2 cols on mobile */
+.overview-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-card { padding: 14px; }
+.stat-value { font-size: 20px; }
+
+/* Wl-stats bar 2 cols */
+.wl-stats-bar { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* Watchlist table → cards */
+.wl-table thead { display: none; }
+.wl-table, .wl-table tbody, .wl-table tr, .wl-table td { display: block; width: 100%; }
+.wl-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
+.wl-table td { padding: 3px 0; border: none; }
+.wl-table td:nth-child(n+2):nth-child(-n+4) { display: inline-block; margin-right: 10px; font-size: 10px; }
+
+/* Rating table → cards */
+.rating-table thead { display: none; }
+.rating-table, .rating-table tbody, .rating-table tr, .rating-table td { display: block; width: 100%; }
+.rating-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
+.rating-table td { padding: 3px 0; border: none; font-size: 11px; }
+
+/* Tech cards */
+.tech-header { grid-template-columns: 1fr; gap: 12px; }
+.trade-setup { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+/* PE table → cards */
+.pe-table thead { display: none; }
+.pe-table, .pe-table tbody, .pe-table tr, .pe-table td { display: block; width: 100%; }
+.pe-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
+.pe-table td { padding: 3px 0; border: none; font-size: 11px; }
+
+/* Add form on mobile */
+.pe-add-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+.pe-add-btn { width: 100%; margin-top: 8px; }
+
+/* Wl filters scroll */
+.wl-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+.wl-filter { white-space: nowrap; flex-shrink: 0; }
+
+/* Hide nav bar refresh label, show only icon */
+#refreshLabel { display: none; }
+#globalRefreshBtn { padding: 5px 10px; }
+
+/* Bottom fixed refresh bar */
+#mobileRefreshBar { display: flex !important; }
+```
+
+}
+
+/* Mobile sticky bottom bar */
+#mobileRefreshBar {
+display: none;
+position: fixed;
+bottom: 0; left: 0; right: 0;
+background: #0a0c10;
+border-top: 1px solid #1e2530;
+padding: 10px 16px;
+padding-bottom: max(10px, env(safe-area-inset-bottom));
+z-index: 999;
+gap: 8px;
+align-items: center;
+justify-content: space-between;
+}
+#mobileRefreshBar .mrb-date {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 9px;
+color: #3d4a5c;
+letter-spacing: 1px;
+}
+#mobileRefreshBar button {
+background: #c9a84c;
+color: #0a0c10;
+border: none;
+border-radius: 6px;
+padding: 10px 20px;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 1px;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 6px;
+flex: 1;
+justify-content: center;
+}
+/* Add bottom padding on mobile so content doesn’t hide behind bar */
+@media (max-width: 900px) {
+body { padding-bottom: 70px; }
 }
 </style>
 
 </head>
 <body>
+
+<!-- Mobile sticky bottom bar -->
+
+<div id="mobileRefreshBar">
+  <div class="mrb-date" id="mrbDate">—</div>
+  <button onclick="refreshAll()">
+    <span id="mrbIcon">↻</span> ACTUALISER TOUT
+  </button>
+</div>
 
 <header>
   <div class="logo">
@@ -1997,22 +2138,25 @@ function initHeaderStats(){
   }catch(e){}
   const today=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
   document.getElementById('hdrDate').textContent=today;
+  const mrbDate=document.getElementById('mrbDate');
+  if(mrbDate) mrbDate.textContent='MàJ : '+today;
 }
 
 async function refreshAll(){
   const btn=document.getElementById('globalRefreshBtn');
   const icon=document.getElementById('refreshIcon');
   const label=document.getElementById('refreshLabel');
-  btn.style.borderColor='rgba(0,200,117,0.5)';
-  btn.style.color='#00c875';
-  icon.style.animation='spin2 1s linear infinite';
-  label.textContent='ACTUALISATION...';
+  const mrbBtn=document.querySelector('#mobileRefreshBar button');
+
+  if(btn){ btn.style.borderColor='rgba(0,200,117,0.5)'; btn.style.color='#00c875'; }
+  if(icon) icon.style.animation='spin2 1s linear infinite';
+  if(label) label.textContent='ACTUALISATION...';
+  if(mrbBtn){ mrbBtn.style.background='#00c875'; mrbBtn.innerHTML='⏳ En cours...'; mrbBtn.disabled=true; }
 
   initHeaderStats();
   renderOverview();
   generatePriorityActions();
 
-  // Regenerate whichever section is currently active
   const active=document.querySelector('.section.active');
   if(active){
     const id=active.id;
@@ -2027,10 +2171,10 @@ async function refreshAll(){
   }
 
   setTimeout(()=>{
-    btn.style.borderColor='rgba(201,168,76,0.35)';
-    btn.style.color='#c9a84c';
-    icon.style.animation='';
-    label.textContent='ACTUALISER LES DONNÉES';
+    if(btn){ btn.style.borderColor='rgba(201,168,76,0.35)'; btn.style.color='#c9a84c'; }
+    if(icon) icon.style.animation='';
+    if(label) label.textContent='ACTUALISER LES DONNÉES';
+    if(mrbBtn){ mrbBtn.style.background='#c9a84c'; mrbBtn.innerHTML='↻ ACTUALISER TOUT'; mrbBtn.disabled=false; }
   },600);
 }
 
