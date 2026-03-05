@@ -297,12 +297,57 @@ margin-bottom: 8px;
 hr.divider { border: none; border-top: 1px solid #1e2530; margin: 32px 0; }
 
 /* ══ iOS BOTTOM TAB BAR ══ */
-#iosTabBar { display: none; }
+/* iOS tab bar: visible on mobile, hidden on desktop */
+#iosTabBar {
+display: flex;
+position: fixed;
+bottom: 0; left: 0; right: 0;
+z-index: 9999;
+background: rgba(10,12,16,0.97);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-top: 1px solid #1e2530;
+padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.ios-tab {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 7px 2px 5px;
+background: none;
+border: none;
+cursor: pointer;
+gap: 2px;
+-webkit-tap-highlight-color: transparent;
+min-width: 0;
+}
+.ios-tab-icon { font-size: 18px; line-height: 1; display: block; }
+.ios-tab-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 8px;
+color: #6b7a8d;
+display: block;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 100%;
+letter-spacing: 0.3px;
+}
+.ios-tab.active .ios-tab-label { color: #c9a84c; }
+.ios-tab.active .ios-tab-icon { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
+
+/* Hide on desktop — show desktop tabs instead */
+@media (min-width: 901px) {
+#iosTabBar { display: none !important; }
+}
 
 @media (max-width: 900px) {
-/* Hide desktop tabs, show iOS bottom bar */
+/* Hide desktop tabs */
 #desktopTabs { display: none !important; }
 #mobileRefreshBar { display: none !important; }
+body { padding-bottom: calc(65px + env(safe-area-inset-bottom, 16px)) !important; }
 
 ```
 #iosTabBar {
@@ -492,39 +537,6 @@ main { padding: 14px 12px !important; max-width: 100%; }
   <button class="tab" onclick="showSection('watchlist',this)">⚡ Watchlist</button>
   <button class="tab" onclick="showSection('portfolio-editor',this)">✏️ Positions</button>
 </div>
-
-<!-- iOS bottom tab bar -->
-
-<nav id="iosTabBar">
-  <button class="ios-tab active" onclick="showSection('overview',this)" data-section="overview">
-    <span class="ios-tab-icon">📊</span>
-    <span class="ios-tab-label">Aperçu</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('goldman',this)" data-section="goldman">
-    <span class="ios-tab-icon">🏦</span>
-    <span class="ios-tab-label">GS</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('morgan',this)" data-section="morgan">
-    <span class="ios-tab-icon">📈</span>
-    <span class="ios-tab-label">MS</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('bridgewater',this)" data-section="bridgewater">
-    <span class="ios-tab-icon">🛡️</span>
-    <span class="ios-tab-label">Risk</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('citadel',this)" data-section="citadel">
-    <span class="ios-tab-icon">🌍</span>
-    <span class="ios-tab-label">Macro</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('watchlist',this)" data-section="watchlist">
-    <span class="ios-tab-icon">⚡</span>
-    <span class="ios-tab-label">Watchlist</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('portfolio-editor',this)" data-section="portfolio-editor">
-    <span class="ios-tab-icon">✏️</span>
-    <span class="ios-tab-label">Positions</span>
-  </button>
-</nav>
 
 <main>
 
@@ -2225,6 +2237,25 @@ window.addEventListener('DOMContentLoaded',()=>{
   initHeaderStats();
   renderOverview();
   if(!loadCachedPriority()) generatePriorityActions();
+  // Force tab bar visibility: hide on wide screens
+  function handleTabBarVisibility(){
+    const bar=document.getElementById('iosTabBar');
+    if(!bar) return;
+    if(window.innerWidth>900){
+      bar.style.display='none';
+      // Show desktop tabs
+      const dt=document.getElementById('desktopTabs');
+      if(dt) dt.style.display='flex';
+    } else {
+      bar.style.display='flex';
+      const dt=document.getElementById('desktopTabs');
+      if(dt) dt.style.display='none';
+      // Ensure body has padding
+      document.body.style.paddingBottom='calc(65px + env(safe-area-inset-bottom,16px))';
+    }
+  }
+  handleTabBarVisibility();
+  window.addEventListener('resize', handleTabBarVisibility);
 });
 
 // ══ PRIORITY ACTIONS — AI generated from real portfolio ══
@@ -2284,8 +2315,16 @@ Réponds UNIQUEMENT en JSON valide sans markdown :
       })
     });
     const d=await resp.json();
-    const raw=d.content?.map(b=>b.text||'').join('').trim().replace(/\`\`\`json|\`\`\`/g,'').trim();
+    let raw=d.content?.map(b=>b.text||'').join('').trim()||'';
+    // Strip markdown fences
+    raw=raw.replace(/```json|```/g,'').trim();
+    // Extract JSON object if wrapped in other text
+    const jsonStart=raw.indexOf('{');
+    const jsonEnd=raw.lastIndexOf('}');
+    if(jsonStart>=0&&jsonEnd>jsonStart) raw=raw.slice(jsonStart,jsonEnd+1);
+    if(!raw) throw new Error('Réponse vide de l\'API');
     const result=JSON.parse(raw);
+    if(!result.actions||!Array.isArray(result.actions)) throw new Error('Format inattendu');
 
     const colorMap={
       vendre:{bg:'rgba(255,71,87,0.06)',border:'rgba(255,71,87,0.2)',num:'#ff4757'},
@@ -2349,6 +2388,39 @@ function loadCachedPriority(){
 }
 
 </script>
+
+<!-- ══ iOS BOTTOM TAB BAR ══ -->
+
+<nav id="iosTabBar" style="display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(10,12,16,0.97);border-top:1px solid #1e2530;padding-bottom:env(safe-area-inset-bottom,0px);">
+  <button class="ios-tab active" onclick="showSection('overview',this)" data-section="overview">
+    <span class="ios-tab-icon">📊</span>
+    <span class="ios-tab-label">Aperçu</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('goldman',this)" data-section="goldman">
+    <span class="ios-tab-icon">🏦</span>
+    <span class="ios-tab-label">GS</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('morgan',this)" data-section="morgan">
+    <span class="ios-tab-icon">📈</span>
+    <span class="ios-tab-label">MS</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('bridgewater',this)" data-section="bridgewater">
+    <span class="ios-tab-icon">🛡️</span>
+    <span class="ios-tab-label">Risk</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('citadel',this)" data-section="citadel">
+    <span class="ios-tab-icon">🌍</span>
+    <span class="ios-tab-label">Macro</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('watchlist',this)" data-section="watchlist">
+    <span class="ios-tab-icon">⚡</span>
+    <span class="ios-tab-label">Watchlist</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('portfolio-editor',this)" data-section="portfolio-editor">
+    <span class="ios-tab-icon">✏️</span>
+    <span class="ios-tab-label">Positions</span>
+  </button>
+</nav>
 
 </body>
 </html>
