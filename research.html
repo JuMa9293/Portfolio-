@@ -296,149 +296,131 @@ margin-bottom: 8px;
 
 hr.divider { border: none; border-top: 1px solid #1e2530; margin: 32px 0; }
 
+/* ══ iOS BOTTOM TAB BAR ══ */
+#iosTabBar { display: none; }
+
 @media (max-width: 900px) {
-header { padding: 16px 16px 12px; flex-direction: column; gap: 10px; align-items: flex-start; }
-.logo { font-size: 16px; }
-.logo span { font-size: 9px; }
-.header-stats { gap: 16px; width: 100%; justify-content: space-between; }
-.hstat-value { font-size: 15px; }
-.tabs { padding: 0 12px; gap: 0; }
-.tab { padding: 12px 10px; font-size: 9px; letter-spacing: 0.5px; }
-main { padding: 16px; }
-.cards-grid { grid-template-columns: 1fr; }
-.sector-matrix { grid-template-columns: repeat(2, 1fr); }
-.overview-grid { grid-template-columns: repeat(2, 1fr); }
-.tech-signal-grid { grid-template-columns: repeat(3, 1fr); }
-.trade-setup { grid-template-columns: repeat(2, 1fr); }
-.risk-dashboard { grid-template-columns: 1fr; }
-.section-title { font-size: 22px; }
+/* Hide desktop tabs, show iOS bottom bar */
+#desktopTabs { display: none !important; }
+#mobileRefreshBar { display: none !important; }
 
 ```
-/* ── Consensus table → card layout on mobile ── */
-.consensus-table thead { display: none; }
-.consensus-table, .consensus-table tbody, .consensus-table tr, .consensus-table td { display: block; width: 100%; }
-.consensus-table tr { 
-  border: 1px solid #1e2530; 
-  border-radius: 6px; 
-  margin-bottom: 10px; 
-  padding: 12px;
-  background: #0a0c10;
+#iosTabBar {
+  display: flex;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: rgba(10,12,16,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid #1e2530;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+.ios-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 2px 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 2px;
+  -webkit-tap-highlight-color: transparent;
+  min-width: 0;
+}
+.ios-tab-icon { font-size: 18px; line-height: 1; display: block; }
+.ios-tab-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: #6b7a8d;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  letter-spacing: 0.3px;
+}
+.ios-tab.active .ios-tab-label { color: #c9a84c; }
+.ios-tab.active .ios-tab-icon { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
+
+body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 16px)) !important; }
+
+/* Header */
+header { padding: 10px 14px 8px !important; flex-direction: column; gap: 8px; align-items: flex-start; }
+.logo { font-size: 15px !important; }
+.logo span { font-size: 8px !important; letter-spacing: 1px; }
+.header-stats { gap: 0 !important; width: 100%; justify-content: space-between; margin-top: 4px; }
+.hstat { text-align: left; }
+.hstat-label { font-size: 8px !important; letter-spacing: 1px; }
+.hstat-value { font-size: 15px !important; }
+#globalRefreshBtn { padding: 4px 10px !important; font-size: 9px !important; }
+#refreshLabel { display: none !important; }
+
+/* Main */
+main { padding: 14px 12px !important; max-width: 100%; }
+.section-title { font-size: 20px !important; margin-bottom: 4px !important; }
+.section-subtitle { font-size: 9px !important; margin-bottom: 18px !important; letter-spacing: 1px; }
+
+/* Overview */
+.overview-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+.stat-card { padding: 12px 12px !important; }
+.stat-label { font-size: 8px !important; }
+.stat-value { font-size: 20px !important; }
+.stat-sub { font-size: 9px !important; }
+
+/* Consensus table → cards */
+.consensus-table thead { display: none !important; }
+.consensus-table, .consensus-table tbody, .consensus-table tr, .consensus-table td { display: block !important; width: 100% !important; }
+.consensus-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
 .consensus-table tr.buy-row  { border-left: 3px solid #00c875; }
 .consensus-table tr.hold-row { border-left: 3px solid #4a90d9; }
 .consensus-table tr.lighten-row { border-left: 3px solid #ff8c00; }
 .consensus-table tr.sell-row { border-left: 3px solid #ff4757; }
-.consensus-table td { 
-  padding: 3px 0; 
-  border: none; 
-  font-size: 11px;
-}
-.consensus-table td:nth-child(1) { margin-bottom: 6px; }
-.consensus-table td:nth-child(3) { display: inline-block; margin-right: 8px; }
-.consensus-table td:nth-child(4) { display: inline-block; }
-.consensus-table td:nth-child(5) { margin-top: 4px; }
-.consensus-table td:nth-child(6) { display: inline-block; margin-right: 8px; }
-.consensus-table td[class="ct-target"] { display: inline-block; }
-.consensus-table td:nth-child(7) { display: block; margin-top: 6px; border-top: 1px solid #1e2530; padding-top: 6px; }
+.consensus-table td { padding: 3px 0 !important; border: none !important; font-size: 11px !important; }
 .ct-rationale { max-width: 100% !important; font-size: 10px; }
 .bank-dots { margin-top: 4px; }
 
-/* Section group header full width */
-.consensus-table tr td[colspan] { 
-  border-radius: 4px; 
-  margin-bottom: 4px;
-  padding: 6px 10px !important;
-}
-
-/* Overview grid 2 cols on mobile */
-.overview-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-.stat-card { padding: 14px; }
-.stat-value { font-size: 20px; }
-
-/* Wl-stats bar 2 cols */
-.wl-stats-bar { grid-template-columns: 1fr 1fr; gap: 10px; }
-
-/* Watchlist table → cards */
-.wl-table thead { display: none; }
-.wl-table, .wl-table tbody, .wl-table tr, .wl-table td { display: block; width: 100%; }
-.wl-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
-.wl-table td { padding: 3px 0; border: none; }
-.wl-table td:nth-child(n+2):nth-child(-n+4) { display: inline-block; margin-right: 10px; font-size: 10px; }
+/* Watchlist */
+.wl-stats-bar { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+.wl-filters { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; padding-bottom: 6px !important; gap: 6px !important; }
+.wl-filter { white-space: nowrap !important; flex-shrink: 0 !important; font-size: 10px !important; }
+.wl-table thead { display: none !important; }
+.wl-table, .wl-table tbody, .wl-table tr, .wl-table td { display: block !important; width: 100% !important; }
+.wl-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
+.wl-table td { padding: 3px 0 !important; border: none !important; }
 
 /* Rating table → cards */
-.rating-table thead { display: none; }
-.rating-table, .rating-table tbody, .rating-table tr, .rating-table td { display: block; width: 100%; }
-.rating-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
-.rating-table td { padding: 3px 0; border: none; font-size: 11px; }
+.rating-table thead { display: none !important; }
+.rating-table, .rating-table tbody, .rating-table tr, .rating-table td { display: block !important; width: 100% !important; }
+.rating-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
+.rating-table td { padding: 3px 0 !important; border: none !important; font-size: 11px !important; }
 
-/* Tech cards */
-.tech-header { grid-template-columns: 1fr; gap: 12px; }
-.trade-setup { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+/* Tech */
+.tech-card { padding: 14px !important; }
+.tech-header { grid-template-columns: 1fr !important; gap: 10px !important; }
+.tech-signal-grid { grid-template-columns: repeat(3,1fr) !important; gap: 8px !important; }
+.trade-setup { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+
+/* Risk */
+.risk-dashboard { grid-template-columns: 1fr !important; gap: 16px !important; }
+.sector-matrix { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
 
 /* PE table → cards */
-.pe-table thead { display: none; }
-.pe-table, .pe-table tbody, .pe-table tr, .pe-table td { display: block; width: 100%; }
-.pe-table tr { border: 1px solid #1e2530; border-radius: 6px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
-.pe-table td { padding: 3px 0; border: none; font-size: 11px; }
+.pe-table thead { display: none !important; }
+.pe-table, .pe-table tbody, .pe-table tr, .pe-table td { display: block !important; width: 100% !important; }
+.pe-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
+.pe-table td { padding: 4px 0 !important; border: none !important; font-size: 11px !important; }
+.pe-input { width: 100% !important; }
+.pe-add-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+.pe-add-btn { width: 100% !important; margin-top: 8px !important; }
 
-/* Add form on mobile */
-.pe-add-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
-.pe-add-btn { width: 100%; margin-top: 8px; }
-
-/* Wl filters scroll */
-.wl-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
-.wl-filter { white-space: nowrap; flex-shrink: 0; }
-
-/* Hide nav bar refresh label, show only icon */
-#refreshLabel { display: none; }
-#globalRefreshBtn { padding: 5px 10px; }
-
-/* Bottom fixed refresh bar */
-#mobileRefreshBar { display: flex !important; }
+/* Other */
+.cards-grid { grid-template-columns: 1fr !important; }
+#priorityBox { padding: 14px !important; }
 ```
 
-}
-
-/* Mobile sticky bottom bar */
-#mobileRefreshBar {
-display: none;
-position: fixed;
-bottom: 0; left: 0; right: 0;
-background: #0a0c10;
-border-top: 1px solid #1e2530;
-padding: 10px 16px;
-padding-bottom: max(10px, env(safe-area-inset-bottom));
-z-index: 999;
-gap: 8px;
-align-items: center;
-justify-content: space-between;
-}
-#mobileRefreshBar .mrb-date {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 9px;
-color: #3d4a5c;
-letter-spacing: 1px;
-}
-#mobileRefreshBar button {
-background: #c9a84c;
-color: #0a0c10;
-border: none;
-border-radius: 6px;
-padding: 10px 20px;
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 11px;
-font-weight: 700;
-letter-spacing: 1px;
-cursor: pointer;
-display: flex;
-align-items: center;
-gap: 6px;
-flex: 1;
-justify-content: center;
-}
-/* Add bottom padding on mobile so content doesn’t hide behind bar */
-@media (max-width: 900px) {
-body { padding-bottom: 70px; }
 }
 </style>
 
@@ -499,15 +481,50 @@ body { padding-bottom: 70px; }
   </button>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="showSection('overview')">Vue d'ensemble</button>
-  <button class="tab" onclick="showSection('goldman')">GS Fundamental</button>
-  <button class="tab" onclick="showSection('morgan')">MS Technical</button>
-  <button class="tab" onclick="showSection('bridgewater')">BW Risk</button>
-  <button class="tab" onclick="showSection('citadel')">Citadel Macro</button>
-  <button class="tab" onclick="showSection('watchlist')" style="border-bottom:2px solid #c9a84c">⚡ Watchlist PEA/PME</button>
-  <button class="tab" onclick="showSection('portfolio-editor')" style="border-bottom:2px solid #00c875">✏️ Mes Positions</button>
+<!-- Desktop top tabs (hidden on mobile) -->
+
+<div class="tabs" id="desktopTabs">
+  <button class="tab active" onclick="showSection('overview',this)">Vue d'ensemble</button>
+  <button class="tab" onclick="showSection('goldman',this)">GS Fundamental</button>
+  <button class="tab" onclick="showSection('morgan',this)">MS Technical</button>
+  <button class="tab" onclick="showSection('bridgewater',this)">BW Risk</button>
+  <button class="tab" onclick="showSection('citadel',this)">Citadel Macro</button>
+  <button class="tab" onclick="showSection('watchlist',this)">⚡ Watchlist</button>
+  <button class="tab" onclick="showSection('portfolio-editor',this)">✏️ Positions</button>
 </div>
+
+<!-- iOS bottom tab bar -->
+
+<nav id="iosTabBar">
+  <button class="ios-tab active" onclick="showSection('overview',this)" data-section="overview">
+    <span class="ios-tab-icon">📊</span>
+    <span class="ios-tab-label">Aperçu</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('goldman',this)" data-section="goldman">
+    <span class="ios-tab-icon">🏦</span>
+    <span class="ios-tab-label">GS</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('morgan',this)" data-section="morgan">
+    <span class="ios-tab-icon">📈</span>
+    <span class="ios-tab-label">MS</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('bridgewater',this)" data-section="bridgewater">
+    <span class="ios-tab-icon">🛡️</span>
+    <span class="ios-tab-label">Risk</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('citadel',this)" data-section="citadel">
+    <span class="ios-tab-icon">🌍</span>
+    <span class="ios-tab-label">Macro</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('watchlist',this)" data-section="watchlist">
+    <span class="ios-tab-icon">⚡</span>
+    <span class="ios-tab-label">Watchlist</span>
+  </button>
+  <button class="ios-tab" onclick="showSection('portfolio-editor',this)" data-section="portfolio-editor">
+    <span class="ios-tab-icon">✏️</span>
+    <span class="ios-tab-label">Positions</span>
+  </button>
+</nav>
 
 <main>
 
@@ -1096,11 +1113,22 @@ function renderWatchlist(wl) {
 </script>
 
 <script>
-function showSection(id) {
+function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Update desktop tabs
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  // Update iOS tab bar
+  document.querySelectorAll('.ios-tab').forEach(t => t.classList.remove('active'));
+  // Activate clicked button (works on both iOS and desktop)
+  if(btn) btn.classList.add('active');
+  // Also sync the other nav (desktop↔ios)
+  document.querySelectorAll('[data-section="'+id+'"]').forEach(t => t.classList.add('active'));
+  document.querySelectorAll('.tab[onclick*=\''+id+'\']').forEach(t => t.classList.add('active'));
+  // Show section
+  const section = document.getElementById(id);
+  if(section) section.classList.add('active');
+  // Scroll to top on mobile
+  window.scrollTo({top:0,behavior:'smooth'});
   if(id==='portfolio-editor') loadEditor();
   if(id==='overview') renderOverview();
 }
@@ -2179,11 +2207,12 @@ async function refreshAll(){
 }
 
 // Also trigger generation when switching to a tab that hasn't been generated yet
+// Extend showSection to auto-generate AI tabs on first visit
 const _origShowSection=showSection;
-function showSection(id){
-  _origShowSection.call(this,id);
-  const content=document.getElementById(id+'Content');
-  if(content && content.style.display==='none' && !document.getElementById(id+'Loading')?.style.display?.includes('block')){
+function showSection(id, btn){
+  _origShowSection(id, btn);
+  const aiContent=document.getElementById(id+'Content');
+  if(aiContent && aiContent.style.display==='none' && !document.getElementById(id+'Loading')?.style.display?.includes('block')){
     if(id==='goldman') generateGoldman();
     else if(id==='morgan') generateMorgan();
     else if(id==='bridgewater') generateBridgewater();
