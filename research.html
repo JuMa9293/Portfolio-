@@ -321,23 +321,41 @@ main { padding: 24px; }
   <div class="header-stats">
     <div class="hstat">
       <div class="hstat-label">Valeur Totale</div>
-      <div class="hstat-value">19 002,69 €</div>
-    </div>
-    <div class="hstat">
-      <div class="hstat-label">P&L Latent Net</div>
-      <div class="hstat-value pos">+497,68 €</div>
+      <div class="hstat-value" id="hdrTotal">—</div>
     </div>
     <div class="hstat">
       <div class="hstat-label">Positions</div>
-      <div class="hstat-value">26</div>
+      <div class="hstat-value" id="hdrPositions">—</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-label">Dernière MàJ</div>
+      <div class="hstat-value" id="hdrDate" style="font-size:13px">—</div>
     </div>
   </div>
 </header>
 
-<div style="background:#050709;border-bottom:1px solid #1e2530;padding:0 20px;height:36px;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;">
-  <a href="Index.html" style="color:#6b7a8d;text-decoration:none;">← Accueil</a>
-  <span style="color:#3d4a5c">|</span>
-  <span style="color:#c9a84c;letter-spacing:1px;">🔬 Research Terminal</span>
+<div style="background:#050709;border-bottom:1px solid #1e2530;padding:0 20px;height:40px;display:flex;align-items:center;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="Index.html" style="color:#6b7a8d;text-decoration:none;">← Accueil</a>
+    <span style="color:#3d4a5c">|</span>
+    <span style="color:#c9a84c;letter-spacing:1px;">🔬 Research Terminal</span>
+  </div>
+  <button onclick="refreshAll()" id="globalRefreshBtn" style="
+    display:flex;align-items:center;gap:7px;
+    background:rgba(201,168,76,0.12);
+    border:1px solid rgba(201,168,76,0.35);
+    border-radius:5px;
+    padding:5px 16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;letter-spacing:1px;
+    color:#c9a84c;cursor:pointer;
+    transition:all .2s;
+  "
+  onmouseover="this.style.background='rgba(201,168,76,0.22)'"
+  onmouseout="this.style.background='rgba(201,168,76,0.12)'">
+    <span id="refreshIcon">↻</span>
+    <span id="refreshLabel">ACTUALISER LES DONNÉES</span>
+  </button>
 </div>
 
 <div class="tabs">
@@ -452,30 +470,18 @@ main { padding: 24px; }
     </tbody>
   </table>
 
-  <!-- PRIORITY ACTION BOX -->
+  <!-- PRIORITY ACTION BOX — Dynamic -->
 
-  <div style="background:#0f1318;border:1px solid #1e2530;border-radius:4px;padding:24px;margin-bottom:32px;">
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">⚡ Actions prioritaires recommandées — Dans l'ordre d'urgence</div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:4px;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;min-width:20px;">1</span>
-        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>VENDRE Renault (RNO)</strong> — −22% vs PRU, 4/5 banques à la vente, thèse auto invalidée. Réallouer les ~203 € vers BNP Paribas.</div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:4px;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;min-width:20px;">2</span>
-        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>VENDRE Aramis Group (ARAMI)</strong> — −31% vs PRU, modèle non prouvé. Réallouer les ~273 € vers Entech ou Mersen.</div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.2);border-radius:4px;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff8c00;min-width:20px;">3</span>
-        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>ALLÉGER SEB de 50%</strong> — Pire perte du portefeuille (−365 €). Garder 9 titres, vendre 9 titres. Stop absolu sur le solde à 40 €.</div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.2);border-radius:4px;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff8c00;min-width:20px;">4</span>
-        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>PRENDRE PROFIT 50% sur EXV1</strong> — +72 € de gain, double exposition bancaire avec BNP. Réallouer vers RS2K ou PAEEM.</div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:10px;background:rgba(0,200,117,0.06);border:1px solid rgba(0,200,117,0.2);border-radius:4px;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00c875;min-width:20px;">5</span>
-        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>RENFORCER BNP Paribas</strong> — P/B 0,72x, dividende 6,2%, consensus 5/5 à l'achat. Utiliser les liquidités dégagées des ventes ci-dessus.</div>
+  <div style="background:#0f1318;border:1px solid #1e2530;border-radius:6px;padding:24px;margin-bottom:32px;" id="priorityBox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;">⚡ Actions prioritaires recommandées — Dans l'ordre d'urgence</div>
+      <button onclick="generatePriorityActions()" id="priorityRefreshBtn" style="background:transparent;border:1px solid #1e2530;border-radius:4px;padding:4px 12px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#6b7a8d;cursor:pointer;transition:all .2s;"
+        onmouseover="this.style.borderColor='#c9a84c';this.style.color='#c9a84c'"
+        onmouseout="this.style.borderColor='#1e2530';this.style.color='#6b7a8d'">↻ Regénérer</button>
+    </div>
+    <div id="priorityContent">
+      <div style="text-align:center;padding:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;">
+        Chargement des actions prioritaires...
       </div>
     </div>
   </div>
@@ -486,511 +492,99 @@ main { padding: 24px; }
 
 <div class="section" id="goldman">
   <div class="section-title">Goldman Sachs — Fundamental Analysis</div>
-  <div class="section-subtitle">Equity Research Division · Senior Analyst Report · 26 Positions</div>
+  <div class="section-subtitle" id="goldmanSub">Equity Research Division · Analyse fondamentale · Généré par IA · Portefeuille en temps réel</div>
 
-  <table class="rating-table">
-    <thead>
-      <tr>
-        <th>Ticker</th>
-        <th>Secteur</th>
-        <th>P&L Latent</th>
-        <th>Verdict</th>
-        <th>Conviction</th>
-        <th>Target 12M</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td class="ticker">MSCI WORLD ETF</td><td>ETF Monde</td><td class="pos">+194 €</td><td><span class="badge badge-buy">Conserver</span></td><td>Haute</td><td>—</td></tr>
-      <tr><td class="ticker">PUBLICIS</td><td>Communication</td><td class="neg">−127 €</td><td><span class="badge badge-hold">Renforcer</span></td><td>Moyenne</td><td>~86 €</td></tr>
-      <tr><td class="ticker">ACCOR</td><td>Hôtellerie</td><td class="pos">+245 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~52 €</td></tr>
-      <tr><td class="ticker">EIFFAGE</td><td>Construction</td><td class="pos">+210 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~165 €</td></tr>
-      <tr><td class="ticker">BNP PARIBAS</td><td>Banque</td><td class="pos">+227 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~105 €</td></tr>
-      <tr><td class="ticker">SEB</td><td>Biens de conso.</td><td class="neg">−365 €</td><td><span class="badge badge-watch">Surveillance</span></td><td>Faible</td><td>~52 €</td></tr>
-      <tr><td class="ticker">CAPGEMINI</td><td>IT Services</td><td class="pos">+11 €</td><td><span class="badge badge-hold">Conservation</span></td><td>Moyenne</td><td>~120 €</td></tr>
-      <tr><td class="ticker">TOTALENERGIES</td><td>Énergie</td><td class="pos">+128 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~78 €</td></tr>
-      <tr><td class="ticker">WENDEL</td><td>Holding</td><td class="pos">+22 €</td><td><span class="badge badge-hold">Conservation</span></td><td>Moyenne</td><td>~92 €</td></tr>
-      <tr><td class="ticker">MERSEN</td><td>Industrie</td><td class="pos">+42 €</td><td><span class="badge badge-buy">Achat</span></td><td>Moyenne</td><td>~30 €</td></tr>
-      <tr><td class="ticker">SPIE</td><td>Services Tech.</td><td class="pos">+95 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~60 €</td></tr>
-      <tr><td class="ticker">ARKEMA</td><td>Chimie</td><td class="neg">−64 €</td><td><span class="badge badge-hold">Conservation</span></td><td>Faible</td><td>~65 €</td></tr>
-      <tr><td class="ticker">RENAULT</td><td>Automobile</td><td class="neg">−57 €</td><td><span class="badge badge-avoid">Évitement</span></td><td>Faible</td><td>~28 €</td></tr>
-      <tr><td class="ticker">FDJ UNITED</td><td>Loisirs</td><td class="neg">−42 €</td><td><span class="badge badge-hold">Conservation</span></td><td>Moyenne</td><td>~28 €</td></tr>
-      <tr><td class="ticker">SEMCO TECH</td><td>Industrie</td><td class="pos">+72 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~38 €</td></tr>
-      <tr><td class="ticker">ENTECH</td><td>Énergie verte</td><td class="pos">+40 €</td><td><span class="badge badge-buy">Achat</span></td><td>Haute</td><td>~12 €</td></tr>
-      <tr><td class="ticker">ARAMIS GROUP</td><td>Automobile/Tech</td><td class="neg">−126 €</td><td><span class="badge badge-avoid">Évitement</span></td><td>Faible</td><td>~4,5 €</td></tr>
-      <tr><td class="ticker">RISING STONE</td><td>Immobilier</td><td class="neg">−29 €</td><td><span class="badge badge-avoid">Évitement</span></td><td>Faible</td><td>~44 €</td></tr>
-      <tr><td class="ticker">ABEO</td><td>Sport/Loisirs</td><td class="neg">−5 €</td><td><span class="badge badge-hold">Conservation</span></td><td>Moyenne</td><td>~9,5 €</td></tr>
-    </tbody>
-  </table>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div id="goldmanStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;letter-spacing:1px;">Non généré</div>
+    <button onclick="generateGoldman()" id="goldmanBtn"
+      style="display:flex;align-items:center;gap:7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:7px 18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#c9a84c;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(201,168,76,0.2)'"
+      onmouseout="this.style.background='rgba(201,168,76,0.1)'">
+      🏦 Générer l'analyse GS
+    </button>
+  </div>
 
-  <hr class="divider">
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;">Analyses détaillées — Top Holdings</div>
-
-  <div class="cards-grid">
-    <!-- ACCOR -->
-    <div class="card">
-      <div class="card-header">
-        <div><div class="card-ticker">ACCOR</div><div class="card-name">AC.PA · Hôtellerie · CAC 40</div></div>
-        <span class="badge badge-buy">Achat</span>
-      </div>
-      <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">Accor est le leader européen de l'hôtellerie avec ~5 800 hôtels et 40+ marques (Sofitel, Novotel, ibis). Le modèle asset-light post-2019 réduit le capex et améliore le ROIC. La reprise du tourisme mondial post-Covid soutient des RevPAR records.</div>
-      <div class="card-metrics">
-        <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">45,45 €</div></div>
-        <div class="metric"><div class="metric-label">P/E estimé</div><div class="metric-value">18x</div></div>
-        <div class="metric"><div class="metric-label">EV/EBITDA</div><div class="metric-value">9,5x</div></div>
-        <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value pos">+245 €</div></div>
-        <div class="metric"><div class="metric-label">Marge EBITDA</div><div class="metric-value">~28%</div></div>
-        <div class="metric"><div class="metric-label">Dette nette/EBITDA</div><div class="metric-value">2,1x</div></div>
-      </div>
-      <hr class="card-divider">
-      <div class="moat-bars">
-        <div class="moat-item"><span class="moat-label">Pouvoir de marque</span><div class="moat-bar-container"><div class="moat-bar" style="width:85%"></div></div><span class="moat-score">8.5</span></div>
-        <div class="moat-item"><span class="moat-label">Réseau / Échelle</span><div class="moat-bar-container"><div class="moat-bar" style="width:80%"></div></div><span class="moat-score">8.0</span></div>
-        <div class="moat-item"><span class="moat-label">Barrières entrée</span><div class="moat-bar-container"><div class="moat-bar" style="width:60%"></div></div><span class="moat-score">6.0</span></div>
-        <div class="moat-item"><span class="moat-label">Loyalty program (ALL)</span><div class="moat-bar-container"><div class="moat-bar" style="width:75%"></div></div><span class="moat-score">7.5</span></div>
-      </div>
-      <div class="scenarios">
-        <div class="scenario scenario-bull"><div class="scenario-label">Bull Case</div><div class="scenario-price">~56 €</div><div class="scenario-note">Rebond RevPAR Asie + acquisitions boutiques premium</div></div>
-        <div class="scenario scenario-bear"><div class="scenario-label">Bear Case</div><div class="scenario-price">~36 €</div><div class="scenario-note">Ralentissement tourisme affaires + récession Europe</div></div>
-      </div>
-      <div class="verdict-box"><p><strong style="color:#c9a84c">ACHAT — Conviction Haute.</strong> Accor se négocie à décote vs pairs (Marriott à 22x PE). Le virage asset-light non pleinement valorisé. Le programme de rachat d'actions et le levier opérationnel soutiennent la thèse haussière. Renforcement recommandé sous 42 €.</p></div>
-    </div>
-
-```
-<!-- EIFFAGE -->
-<div class="card">
-  <div class="card-header">
-    <div><div class="card-ticker">EIFFAGE</div><div class="card-name">FGR.PA · Construction & Concessions</div></div>
-    <span class="badge badge-buy">Achat</span>
+  <div id="goldmanLoading" style="display:none;text-align:center;padding:48px 20px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9a84c;letter-spacing:2px;margin-bottom:12px;">🏦 ANALYSE EN COURS...</div>
+    <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;margin-bottom:16px;">L'IA génère l'analyse complète basée sur votre portefeuille réel.<br>~15 secondes.</div>
+    <div id="goldmanProg" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;letter-spacing:1px;">Initialisation...</div>
   </div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">Eiffage combine construction (BTP, génie civil) et concessions d'autoroutes (APRR, ~2 100 km). Les concessions génèrent des flux récurrents et protègent de l'inflation via indexation. Carnet de commandes record >22 Md€.</div>
-  <div class="card-metrics">
-    <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">140,35 €</div></div>
-    <div class="metric"><div class="metric-label">P/E estimé</div><div class="metric-value">10x</div></div>
-    <div class="metric"><div class="metric-label">EV/EBITDA</div><div class="metric-value">7,8x</div></div>
-    <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value pos">+210 €</div></div>
-    <div class="metric"><div class="metric-label">Div. yield</div><div class="metric-value">3,5%</div></div>
-    <div class="metric"><div class="metric-label">FCF yield</div><div class="metric-value">~8%</div></div>
-  </div>
-  <hr class="card-divider">
-  <div class="moat-bars">
-    <div class="moat-item"><span class="moat-label">Concessions (moat)</span><div class="moat-bar-container"><div class="moat-bar" style="width:90%"></div></div><span class="moat-score">9.0</span></div>
-    <div class="moat-item"><span class="moat-label">Carnet commandes</span><div class="moat-bar-container"><div class="moat-bar" style="width:85%"></div></div><span class="moat-score">8.5</span></div>
-    <div class="moat-item"><span class="moat-label">Diversification</span><div class="moat-bar-container"><div class="moat-bar" style="width:75%"></div></div><span class="moat-score">7.5</span></div>
-  </div>
-  <div class="scenarios">
-    <div class="scenario scenario-bull"><div class="scenario-label">Bull Case</div><div class="scenario-price">~175 €</div><div class="scenario-note">Réinvestissement FCF + extension concessions + ramp énergies</div></div>
-    <div class="scenario scenario-bear"><div class="scenario-label">Bear Case</div><div class="scenario-price">~110 €</div><div class="scenario-note">Hausse taux de longue durée + pression marges construction</div></div>
-  </div>
-  <div class="verdict-box"><p><strong style="color:#c9a84c">ACHAT — Conviction Haute.</strong> Valeur défensive de qualité à prix raisonnable. Les concessions autoroutes offrent un rendement quasi obligataire mais avec une croissance. Décote de conglomérat injustifiée par rapport à la somme des parties. À conserver et renforcer.</p></div>
+  <div id="goldmanError" style="display:none;padding:16px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;"></div>
+  <div id="goldmanContent" style="display:none;"></div>
 </div>
-
-<!-- SEB -->
-<div class="card">
-  <div class="card-header">
-    <div><div class="card-ticker">SEB</div><div class="card-name">SK.PA · Électroménager · Mid Cap</div></div>
-    <span class="badge badge-watch">Surveillance</span>
-  </div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">SEB (Tefal, Rowenta, Moulinex) est le leader mondial de l'électroménager. Cependant, la division Supor (Chine) fait face à une pression concurrentielle accrue des marques locales. La restructuration est en cours mais le stock de dettes reste élevé.</div>
-  <div class="card-metrics">
-    <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">46,50 €</div></div>
-    <div class="metric"><div class="metric-label">Px. Revient</div><div class="metric-value">66,80 €</div></div>
-    <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value neg">−365 €</div></div>
-    <div class="metric"><div class="metric-label">P/E estimé</div><div class="metric-value">12x</div></div>
-    <div class="metric"><div class="metric-label">Endettement</div><div class="metric-value" style="color:#ff4757">Élevé</div></div>
-    <div class="metric"><div class="metric-label">Perte vs PRU</div><div class="metric-value neg">−30%</div></div>
-  </div>
-  <hr class="card-divider">
-  <div class="moat-bars">
-    <div class="moat-item"><span class="moat-label">Force de marque</span><div class="moat-bar-container"><div class="moat-bar" style="width:70%"></div></div><span class="moat-score">7.0</span></div>
-    <div class="moat-item"><span class="moat-label">Innovation produit</span><div class="moat-bar-container"><div class="moat-bar" style="width:65%"></div></div><span class="moat-score">6.5</span></div>
-    <div class="moat-item"><span class="moat-label">Distribution globale</span><div class="moat-bar-container"><div class="moat-bar" style="width:60%"></div></div><span class="moat-score">6.0</span></div>
-  </div>
-  <div class="scenarios">
-    <div class="scenario scenario-bull"><div class="scenario-label">Bull Case</div><div class="scenario-price">~62 €</div><div class="scenario-note">Redressement Chine + désendettement + repricing marques premium</div></div>
-    <div class="scenario scenario-bear"><div class="scenario-label">Bear Case</div><div class="scenario-price">~35 €</div><div class="scenario-note">Pression structurelle marques chinoises + récession conso. EU</div></div>
-  </div>
-  <div class="verdict-box"><p><strong style="color:#c9a84c">SURVEILLANCE — Conviction Faible.</strong> La perte latente de -365 € est la plus lourde du portefeuille. L'action s'est dépréciée de ~30% vs PRU. Avant tout renforcement, attendre confirmation d'un retournement du cycle électroménager et baisse de l'endettement. Stop-loss mental: 40 €.</p></div>
-</div>
-
-<!-- BNP PARIBAS -->
-<div class="card">
-  <div class="card-header">
-    <div><div class="card-ticker">BNP PARIBAS</div><div class="card-name">BNP.PA · Banque · CAC 40</div></div>
-    <span class="badge badge-buy">Achat</span>
-  </div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">BNP Paribas est la première banque de la zone euro par bilan (>3 000 Md€). Diversification géographique unique (40+ pays), forte BFI et banque de détail résiliente. Bénéficiaire structurel de la hausse des taux depuis 2022.</div>
-  <div class="card-metrics">
-    <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">89,32 €</div></div>
-    <div class="metric"><div class="metric-label">P/B ratio</div><div class="metric-value">0,72x</div></div>
-    <div class="metric"><div class="metric-label">ROE estimé</div><div class="metric-value pos">11,5%</div></div>
-    <div class="metric"><div class="metric-label">Div. yield</div><div class="metric-value">6,2%</div></div>
-    <div class="metric"><div class="metric-label">CET1 ratio</div><div class="metric-value pos">13,2%</div></div>
-    <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value pos">+227 €</div></div>
-  </div>
-  <hr class="card-divider">
-  <div class="moat-bars">
-    <div class="moat-item"><span class="moat-label">Échelle systémique</span><div class="moat-bar-container"><div class="moat-bar" style="width:95%"></div></div><span class="moat-score">9.5</span></div>
-    <div class="moat-item"><span class="moat-label">Réseau distribution</span><div class="moat-bar-container"><div class="moat-bar" style="width:85%"></div></div><span class="moat-score">8.5</span></div>
-    <div class="moat-item"><span class="moat-label">Coûts de transfert</span><div class="moat-bar-container"><div class="moat-bar" style="width:80%"></div></div><span class="moat-score">8.0</span></div>
-  </div>
-  <div class="scenarios">
-    <div class="scenario scenario-bull"><div class="scenario-price">~110 €</div><div class="scenario-label">Bull Case</div><div class="scenario-note">Maintien taux BCE + poursuite rachats actions + expansion BFI</div></div>
-    <div class="scenario scenario-bear"><div class="scenario-price">~65 €</div><div class="scenario-label">Bear Case</div><div class="scenario-note">Crise crédit immobilier EU + baisse taux BCE agressive</div></div>
-  </div>
-  <div class="verdict-box"><p><strong style="color:#c9a84c">ACHAT — Conviction Haute.</strong> Se négocie toujours sous la valeur comptable (P/B 0,72x) malgré une rentabilité solide et un dividende généreux de 6%+. La normalisation du P/B vers 1,0x implique +40% de potentiel. Une des meilleures opportunités risk/reward du CAC 40.</p></div>
-</div>
-
-<!-- SEMCO TECH -->
-<div class="card">
-  <div class="card-header">
-    <div><div class="card-ticker">SEMCO TECH</div><div class="card-name">SMCO.PA · Industrie · Small Cap</div></div>
-    <span class="badge badge-buy">Achat</span>
-  </div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">Semco Technologies est spécialisé dans la technologie de gestion des fluides gazeux (H2, GNL). Positionnement unique sur la transition énergétique. Carnet de commandes en forte croissance avec l'essor de l'hydrogène industriel en Europe.</div>
-  <div class="card-metrics">
-    <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">32,96 €</div></div>
-    <div class="metric"><div class="metric-label">PRU</div><div class="metric-value">15,00 €</div></div>
-    <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value pos">+72 €</div></div>
-    <div class="metric"><div class="metric-label">Perf. vs PRU</div><div class="metric-value pos">+120%</div></div>
-    <div class="metric"><div class="metric-label">Croissance CA</div><div class="metric-value pos">+15%/an</div></div>
-    <div class="metric"><div class="metric-label">Marché cible</div><div class="metric-value">H2 / GNL</div></div>
-  </div>
-  <div class="scenarios">
-    <div class="scenario scenario-bull"><div class="scenario-label">Bull Case</div><div class="scenario-price">~50 €</div><div class="scenario-note">Accélération H2 EU + nouveaux contrats GNL offshore</div></div>
-    <div class="scenario scenario-bear"><div class="scenario-price">~22 €</div><div class="scenario-label">Bear Case</div><div class="scenario-note">Retard transition H2 + concurrence équipementiers lourds</div></div>
-  </div>
-  <div class="verdict-box"><p><strong style="color:#c9a84c">ACHAT — Conviction Haute.</strong> +120% depuis PRU. La thèse hydrogène reste intacte avec les objectifs REPowerEU. Valorisation raisonnable pour une croissance à 2 chiffres. Protéger les gains avec un stop trailing à ~26 €.</p></div>
-</div>
-
-<!-- RENAULT -->
-<div class="card">
-  <div class="card-header">
-    <div><div class="card-ticker">RENAULT</div><div class="card-name">RNO.PA · Automobile · Risque Élevé</div></div>
-    <span class="badge badge-avoid">Évitement</span>
-  </div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;margin-bottom:16px;">Renault fait face à une concurrence féroce des constructeurs chinois sur le marché européen, à la pression sur les marges VE, et à une dépendance envers l'alliance Nissan fragilisée. Le repositionnement vers l'électrique nécessite un capex massif.</div>
-  <div class="card-metrics">
-    <div class="metric"><div class="metric-label">Cours actuel</div><div class="metric-value">29,01 €</div></div>
-    <div class="metric"><div class="metric-label">PRU</div><div class="metric-value">37,10 €</div></div>
-    <div class="metric"><div class="metric-label">P&L latent</div><div class="metric-value neg">−57 €</div></div>
-    <div class="metric"><div class="metric-label">Perte vs PRU</div><div class="metric-value neg">−22%</div></div>
-  </div>
-  <div class="scenarios">
-    <div class="scenario scenario-bull"><div class="scenario-label">Bull Case</div><div class="scenario-price">~38 €</div><div class="scenario-note">Percée Ampere + alliance Nissan stabilisée</div></div>
-    <div class="scenario scenario-bear"><div class="scenario-price">~18 €</div><div class="scenario-label">Bear Case</div><div class="scenario-note">Effondrement parts de marché EU + restructuration</div></div>
-  </div>
-  <div class="verdict-box"><p><strong style="color:#ff4757">ÉVITEMENT — Conviction Faible.</strong> Le secteur automobile européen est structurellement sous pression. Renault doit encore prouver sa capacité à monter en gamme. Avec une perte de -22% vs PRU, envisager une cession pour réallouer vers des convictions plus fortes. Stop: 25 €.</p></div>
-</div>
-```
-
-  </div>
-</div>
-
-<!-- MORGAN STANLEY TECHNICAL -->
 
 <div class="section" id="morgan">
   <div class="section-title">Morgan Stanley — Technical Analysis</div>
-  <div class="section-subtitle">Senior Technical Strategist · Signal Dashboard · Key Holdings</div>
+  <div class="section-subtitle" id="morganSub">Technical Research Division · Signaux et niveaux techniques · Généré par IA</div>
 
-  <!-- ACCOR TECHNICAL -->
-
-  <div class="tech-card">
-    <div class="tech-header">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">ACCOR</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;margin-top:4px">AC.PA · Cours: 45,45 € · LONG</div>
-        <div style="margin-top:12px"><span class="badge badge-buy">Signal Haussier</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Supports & Résistances</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b7a8d">R2: <span style="color:#ff4757">51,80 €</span> · R1: <span style="color:#ff4757">48,30 €</span> · Cours: <span style="color:#c9a84c">45,45 €</span> · S1: <span style="color:#00c875">43,20 €</span> · S2: <span style="color:#00c875">40,50 €</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Tendance Globale</div>
-        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#00c875">HAUSSIÈRE</div>
-      </div>
-    </div>
-    <div class="tech-signal-grid">
-      <div class="signal-box signal-bull"><div class="signal-box-label">RSI (14)</div><div class="signal-box-value">58 — Neutre+</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MACD</div><div class="signal-box-value">Croisement ↑</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MM 50j</div><div class="signal-box-value">Au-dessus ✓</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MM 200j</div><div class="signal-box-value">Au-dessus ✓</div></div>
-      <div class="signal-box signal-neutral"><div class="signal-box-label">Bollinger</div><div class="signal-box-value">Milieu bande</div></div>
-    </div>
-    <div class="trade-setup">
-      <div class="setup-item"><div class="setup-label">Entrée</div><div class="setup-value entry">43,50 €</div></div>
-      <div class="setup-item"><div class="setup-label">Stop-Loss</div><div class="setup-value stop">40,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">TP1</div><div class="setup-value tp1">49,50 €</div></div>
-      <div class="setup-item"><div class="setup-label">TP2 · R/R: 1:3,5</div><div class="setup-value tp2">55,00 €</div></div>
-    </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div id="morganStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;letter-spacing:1px;">Non généré</div>
+    <button onclick="generateMorgan()" id="morganBtn"
+      style="display:flex;align-items:center;gap:7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:7px 18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#c9a84c;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(201,168,76,0.2)'"
+      onmouseout="this.style.background='rgba(201,168,76,0.1)'">
+      📊 Générer l'analyse MS Technical
+    </button>
   </div>
 
-  <!-- BNP TECHNICAL -->
-
-  <div class="tech-card">
-    <div class="tech-header">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">BNP PARIBAS</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;margin-top:4px">BNP.PA · Cours: 89,32 € · LONG</div>
-        <div style="margin-top:12px"><span class="badge badge-buy">Signal Haussier</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Supports & Résistances</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b7a8d">R2: <span style="color:#ff4757">100,00 €</span> · R1: <span style="color:#ff4757">93,50 €</span> · Cours: <span style="color:#c9a84c">89,32 €</span> · S1: <span style="color:#00c875">84,00 €</span> · S2: <span style="color:#00c875">78,00 €</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Tendance Globale</div>
-        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#00c875">HAUSSIÈRE</div>
-      </div>
-    </div>
-    <div class="tech-signal-grid">
-      <div class="signal-box signal-bull"><div class="signal-box-label">RSI (14)</div><div class="signal-box-value">62 — Fort</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MACD</div><div class="signal-box-value">Histogramme +</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MM 50j</div><div class="signal-box-value">Breakout ✓</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">MM 200j</div><div class="signal-box-value">+15% au-dessus</div></div>
-      <div class="signal-box signal-neutral"><div class="signal-box-label">Volume</div><div class="signal-box-value">Confirme ↑</div></div>
-    </div>
-    <div class="trade-setup">
-      <div class="setup-item"><div class="setup-label">Entrée</div><div class="setup-value entry">87,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">Stop-Loss</div><div class="setup-value stop">80,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">TP1</div><div class="setup-value tp1">96,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">TP2 · R/R: 1:2,7</div><div class="setup-value tp2">106,00 €</div></div>
-    </div>
+  <div id="morganLoading" style="display:none;text-align:center;padding:48px 20px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9a84c;letter-spacing:2px;margin-bottom:12px;">📊 ANALYSE EN COURS...</div>
+    <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;margin-bottom:16px;">L'IA génère l'analyse complète basée sur votre portefeuille réel.<br>~15 secondes.</div>
+    <div id="morganProg" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;letter-spacing:1px;">Initialisation...</div>
   </div>
-
-  <!-- SEB TECHNICAL -->
-
-  <div class="tech-card">
-    <div class="tech-header">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">SEB</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;margin-top:4px">SK.PA · Cours: 46,50 € · OBSERVATION</div>
-        <div style="margin-top:12px"><span class="badge badge-avoid">Signal Baissier</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Supports & Résistances</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b7a8d">R1: <span style="color:#ff4757">52,00 €</span> · Cours: <span style="color:#c9a84c">46,50 €</span> · S1: <span style="color:#00c875">43,00 €</span> · S2: <span style="color:#00c875">38,00 €</span></div>
-      </div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Tendance Globale</div>
-        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#ff4757">BAISSIÈRE</div>
-      </div>
-    </div>
-    <div class="tech-signal-grid">
-      <div class="signal-box signal-bear"><div class="signal-box-label">RSI (14)</div><div class="signal-box-value">38 — Faible</div></div>
-      <div class="signal-box signal-bear"><div class="signal-box-label">MACD</div><div class="signal-box-value">Croisement ↓</div></div>
-      <div class="signal-box signal-bear"><div class="signal-box-label">MM 50j</div><div class="signal-box-value">En-dessous ✗</div></div>
-      <div class="signal-box signal-bear"><div class="signal-box-label">MM 200j</div><div class="signal-box-value">En-dessous ✗</div></div>
-      <div class="signal-box signal-bear"><div class="signal-box-label">Fibonacci</div><div class="signal-box-value">0.618 cassé</div></div>
-    </div>
-    <div class="trade-setup" style="border-color:rgba(255,71,87,0.3)">
-      <div class="setup-item"><div class="setup-label">Seuil d'alerte</div><div class="setup-value stop">43,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">Stop-Loss absolu</div><div class="setup-value stop">40,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">Rebond possible</div><div class="setup-value tp1">52,00 €</div></div>
-      <div class="setup-item"><div class="setup-label">Recommandation</div><div class="setup-value" style="color:#ff4757;font-size:12px">Attendre confirmation</div></div>
-    </div>
-  </div>
+  <div id="morganError" style="display:none;padding:16px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;"></div>
+  <div id="morganContent" style="display:none;"></div>
 </div>
-
-<!-- BRIDGEWATER RISK -->
 
 <div class="section" id="bridgewater">
-  <div class="section-title">Bridgewater — Risk Assessment</div>
-  <div class="section-subtitle">All Weather Portfolio Analysis · Risk Dashboard · Principes Ray Dalio</div>
+  <div class="section-title">Bridgewater — Risk & Allocation</div>
+  <div class="section-subtitle" id="bridgewaterSub">Risk Management · All Weather Framework · Généré par IA</div>
 
-  <div class="risk-dashboard">
-    <div class="risk-card">
-      <h3>Profil de Volatilité Portefeuille</h3>
-      <div class="risk-row"><span class="risk-row-label">Volatilité estimée (ann.)</span><span class="risk-row-value neutral">~14%</span></div>
-      <div class="risk-row"><span class="risk-row-label">vs Moyenne secteur (18%)</span><span class="risk-row-value pos">Inférieure ✓</span></div>
-      <div class="risk-row"><span class="risk-row-label">Beta estimé portefeuille</span><span class="risk-row-value">0,85</span></div>
-      <div class="risk-row"><span class="risk-row-label">Drawdown max historique</span><span class="risk-row-value neg">−35% (style 2020)</span></div>
-      <div class="risk-row"><span class="risk-row-label">Concentration FR/EU</span><span class="risk-row-value neg">~78% — Risque élevé</span></div>
-      <div class="risk-row"><span class="risk-row-label">Part ETF (diversification)</span><span class="risk-row-value pos">~36% du portefeuille</span></div>
-      <div class="risk-row"><span class="risk-row-label">Secteur le plus exposé</span><span class="risk-row-value">Finance (BNP + ETF Banks)</span></div>
-    </div>
-
-```
-<div class="risk-card">
-  <h3>Analyse de Concentration Sectorielle</h3>
-  <div class="risk-row"><span class="risk-row-label">Finance / Bancaire</span><span class="risk-row-value neg">~18% — Surexposé</span></div>
-  <div class="risk-row"><span class="risk-row-label">Industrie / Construction</span><span class="risk-row-value">~14% — Neutre</span></div>
-  <div class="risk-row"><span class="risk-row-label">Énergie (Total + Entech)</span><span class="risk-row-value">~7% — Neutre</span></div>
-  <div class="risk-row"><span class="risk-row-label">Automobile (Renault + Aramis)</span><span class="risk-row-value neg">~2,5% — Risque structurel</span></div>
-  <div class="risk-row"><span class="risk-row-label">ETF monde / diversifiés</span><span class="risk-row-value pos">~22% — Bonne couverture</span></div>
-  <div class="risk-row"><span class="risk-row-label">Biens de conso. (SEB)</span><span class="risk-row-value neg">~4,4% — Perte latente</span></div>
-</div>
-
-<div class="risk-card">
-  <h3>Stress Test — Scénarios Extrêmes</h3>
-  <div style="margin-top:8px">
-    <div class="stress-bar">
-      <span class="stress-bar-label">Krach 2008</span>
-      <div class="stress-bar-track"><div class="stress-bar-fill" style="width:55%;background:#ff4757"></div></div>
-      <span class="stress-bar-value">−55%</span>
-    </div>
-    <div class="stress-bar">
-      <span class="stress-bar-label">COVID 2020</span>
-      <div class="stress-bar-track"><div class="stress-bar-fill" style="width:35%;background:#ff4757"></div></div>
-      <span class="stress-bar-value">−35%</span>
-    </div>
-    <div class="stress-bar">
-      <span class="stress-bar-label">Crise 2011</span>
-      <div class="stress-bar-track"><div class="stress-bar-fill" style="width:25%;background:#ff8c00)"></div></div>
-      <span class="stress-bar-value">−25%</span>
-    </div>
-    <div class="stress-bar">
-      <span class="stress-bar-label">Hausse BCE +2%</span>
-      <div class="stress-bar-track"><div class="stress-bar-fill" style="width:15%;background:#ff8c00"></div></div>
-      <span class="stress-bar-value">−15%</span>
-    </div>
-    <div class="stress-bar">
-      <span class="stress-bar-label">Récession mild</span>
-      <div class="stress-bar-track"><div class="stress-bar-fill" style="width:18%;background:#ff8c00"></div></div>
-      <span class="stress-bar-value">−18%</span>
-    </div>
-  </div>
-</div>
-
-<div class="risk-card">
-  <h3>Recommandations de Couverture</h3>
-  <div class="risk-row"><span class="risk-row-label">Risque #1: Crise bancaire EU</span><span class="risk-row-value neg">BNP + 18% exposition</span></div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;padding:8px 0;border-bottom:1px solid #1e2530;line-height:1.5">→ Put sur EuroStoxx Banks (SX7E) ou vente partielle BNP si cassure sous 80 €</div>
-  <div class="risk-row" style="margin-top:8px"><span class="risk-row-label">Risque #2: Perte SEB</span><span class="risk-row-value neg">−365 € · −30% vs PRU</span></div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;padding:8px 0;border-bottom:1px solid #1e2530;line-height:1.5">→ Stop-loss à 40 €. Envisager cession pour réduire drawdown psychologique</div>
-  <div class="risk-row" style="margin-top:8px"><span class="risk-row-label">Risque #3: Concentration FR</span><span class="risk-row-value neg">78% exposition France/EU</span></div>
-  <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;padding:8px 0;line-height:1.5">→ Renforcer exposition US via BNP Easy S&P 500 ETF ou ajouter Amundi S&P 500 ESG</div>
-</div>
-```
-
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div id="bridgewaterStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;letter-spacing:1px;">Non généré</div>
+    <button onclick="generateBridgewater()" id="bridgewaterBtn"
+      style="display:flex;align-items:center;gap:7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:7px 18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#c9a84c;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(201,168,76,0.2)'"
+      onmouseout="this.style.background='rgba(201,168,76,0.1)'">
+      🛡️ Générer l'analyse BW Risk
+    </button>
   </div>
 
-  <div class="risk-card" style="margin-top:0">
-    <h3>Évaluation Globale du Risque — Bridgewater All Weather Score</h3>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:16px;">
-      <div class="signal-box signal-neutral"><div class="signal-box-label">Diversification</div><div class="signal-box-value">6/10</div></div>
-      <div class="signal-box signal-bull"><div class="signal-box-label">Liquidité</div><div class="signal-box-value">8/10</div></div>
-      <div class="signal-box signal-bear"><div class="signal-box-label">Concentration géo.</div><div class="signal-box-value">4/10</div></div>
-      <div class="signal-box signal-neutral"><div class="signal-box-label">Qualité actifs</div><div class="signal-box-value">6.5/10</div></div>
-      <div class="signal-box signal-neutral"><div class="signal-box-label">Score global</div><div class="signal-box-value">6.1/10</div></div>
-    </div>
-    <div class="verdict-box" style="margin-top:20px"><p>Le portefeuille présente une <strong style="color:#c9a84c">structure solide</strong> grâce aux 36% d'ETF diversifiants, mais souffre d'une surexposition géographique à la France/Europe (78%) et d'une concentration sectorielle bancaire. La priorité Bridgewater serait d'augmenter l'exposition aux marchés émergents (déjà amorcé) et d'ajouter un ETF US complémentaire. Les 3 positions perdantes significatives (SEB, Renault, Aramis) méritent une revue critique avant tout nouveau renforcement.</p></div>
+  <div id="bridgewaterLoading" style="display:none;text-align:center;padding:48px 20px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9a84c;letter-spacing:2px;margin-bottom:12px;">🛡️ ANALYSE EN COURS...</div>
+    <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;margin-bottom:16px;">L'IA génère l'analyse complète basée sur votre portefeuille réel.<br>~15 secondes.</div>
+    <div id="bridgewaterProg" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;letter-spacing:1px;">Initialisation...</div>
   </div>
+  <div id="bridgewaterError" style="display:none;padding:16px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;"></div>
+  <div id="bridgewaterContent" style="display:none;"></div>
 </div>
-
-<!-- CITADEL MACRO -->
 
 <div class="section" id="citadel">
-  <div class="section-title">Citadel — Sector Rotation Strategist</div>
-  <div class="section-subtitle">Macro Senior Strategy · Ken Griffin Framework · Cycle économique Q1 2026</div>
+  <div class="section-title">Citadel — Macro Strategy</div>
+  <div class="section-subtitle" id="citadelSub">Global Macro Intelligence · Cycle économique · Secteurs · Généré par IA</div>
 
-  <div class="macro-box">
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Phase du cycle économique actuel</div>
-    <div class="macro-phase">LATE-CYCLE → EARLY RECOVERY</div>
-    <div class="macro-desc">Mars 2026 : La BCE a amorcé ses baisses de taux (−100bp depuis sept. 2024). L'inflation européenne converge vers 2,1%. La croissance EU ralentit mais évite la récession technique (PMI Composite ~49). Les banques centrales passent en mode accommodation. <strong style="color:#c9a84c">→ Transition vers un early recovery favorable aux cycliques et financières.</strong> Les valeurs défensives (utilities, santé) surperforment en début de phase, puis les cycliques reprennent la main.</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div id="citadelStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;letter-spacing:1px;">Non généré</div>
+    <button onclick="generateCitadel()" id="citadelBtn"
+      style="display:flex;align-items:center;gap:7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:7px 18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:#c9a84c;cursor:pointer;transition:all .2s;"
+      onmouseover="this.style.background='rgba(201,168,76,0.2)'"
+      onmouseout="this.style.background='rgba(201,168,76,0.1)'">
+      🌍 Générer l'analyse Citadel Macro
+    </button>
   </div>
 
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">Matrice de rotation sectorielle — Portefeuille vs Recommandations</div>
-
-  <div class="sector-matrix">
-    <div class="sector-cell" style="border-color:rgba(0,200,117,0.4)">
-      <div class="sector-name">🏦 Finance / Banque</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ow">SURPONDÉRER ↑↑</div>
-      <div class="sector-note">Baisses de taux BCE = compression des créances douteuses + reprise crédit. BNP et ETF Banks bien positionnés.</div>
-      <div class="sector-holdings">BNP PARIBAS · iShares Euro Stoxx Banks ETF</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(0,200,117,0.3)">
-      <div class="sector-name">🏗️ Construction / Infra</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ow">SURPONDÉRER ↑</div>
-      <div class="sector-note">Plans de relance EU (REPowerEU, réarmement). Carnets records. Bénéficiaires directs de la baisse des taux longs.</div>
-      <div class="sector-holdings">EIFFAGE · SPIE</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(0,200,117,0.3)">
-      <div class="sector-name">🏨 Tourisme / Hôtellerie</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ow">SURPONDÉRER ↑</div>
-      <div class="sector-note">Demande de voyages résiliente. Momentum asiatique en reprise. RevPAR en hausse structurelle. Bon timing de cycle.</div>
-      <div class="sector-holdings">ACCOR</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(74,144,217,0.3)">
-      <div class="sector-name">⚡ Énergie</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ntrl">NEUTRE →</div>
-      <div class="sector-note">TotalEnergies soutenu par le dividende. Pétrole sous pression (OPEC+ / transition). Entech niche verte croissante.</div>
-      <div class="sector-holdings">TOTALENERGIES · ENTECH</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(74,144,217,0.3)">
-      <div class="sector-name">💻 IT / Tech</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ntrl">NEUTRE →</div>
-      <div class="sector-note">Capgemini bien positionné sur IA/cloud. Valorisation raisonnable. Demande IT entreprises légèrement sous pression.</div>
-      <div class="sector-holdings">CAPGEMINI</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(74,144,217,0.3)">
-      <div class="sector-name">📡 Média / Communication</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ntrl">NEUTRE →</div>
-      <div class="sector-note">Publicis bénéficie de la reprise publicitaire digitale. TF1 structurellement challengé par le streaming. Mix mitigé.</div>
-      <div class="sector-holdings">PUBLICIS · TF1</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(255,71,87,0.3)">
-      <div class="sector-name">🏭 Chimie Spécialisée</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight uw">SOUS-PONDÉRER ↓</div>
-      <div class="sector-note">Arkema sous pression sur les marges. Cycle chimie difficile. Surcapacité mondiale. Attendre confirmation reprise.</div>
-      <div class="sector-holdings">ARKEMA</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(255,71,87,0.4)">
-      <div class="sector-name">🚗 Automobile</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight uw">SOUS-PONDÉRER ↓↓</div>
-      <div class="sector-note">Disruption chinoise + transition VE coûteuse + compression marges. Secteur à éviter structurellement en 2026.</div>
-      <div class="sector-holdings">RENAULT · ARAMIS GROUP</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(255,71,87,0.3)">
-      <div class="sector-name">🍳 Biens de Conso.</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight uw">SOUS-PONDÉRER ↓</div>
-      <div class="sector-note">SEB sous pression en Chine. Cycle électroménager morose. Attendre des catalyseurs clairs avant repositionnement.</div>
-      <div class="sector-holdings">SEB</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(0,200,117,0.3)">
-      <div class="sector-name">🌍 ETF Marchés Émergents</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ow">SURPONDÉRER ↑</div>
-      <div class="sector-note">Dollar en légère baisse + reprise Asie-Pacifique + stimulus Chine. EM outperformance probable en 2026.</div>
-      <div class="sector-holdings">Amundi PEA Emergent · Amundi LatAm ETF</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(0,200,117,0.3)">
-      <div class="sector-name">🇺🇸 ETF US (S&P / Russell)</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ow">SURPONDÉRER ↑</div>
-      <div class="sector-note">Small caps US (Russell 2000) bénéficient des baisses Fed. S&P 500 momentum intact. Sous-exposition actuelle à corriger.</div>
-      <div class="sector-holdings">BNP Easy S&P 500 · Amundi Russell 2000</div>
-    </div>
-    <div class="sector-cell" style="border-color:rgba(74,144,217,0.3)">
-      <div class="sector-name">🏥 Santé / Healthcare</div>
-      <div class="sector-weight-label">Recommandation</div>
-      <div class="sector-weight ntrl">NEUTRE →</div>
-      <div class="sector-note">Défensif par nature. L'ETF Healthcare EU offre stabilité. À conserver mais pas priorité de renforcement en early recovery.</div>
-      <div class="sector-holdings">Amundi Stoxx Europe 600 Healthcare</div>
-    </div>
+  <div id="citadelLoading" style="display:none;text-align:center;padding:48px 20px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9a84c;letter-spacing:2px;margin-bottom:12px;">🌍 ANALYSE EN COURS...</div>
+    <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;margin-bottom:16px;">L'IA génère l'analyse complète basée sur votre portefeuille réel.<br>~15 secondes.</div>
+    <div id="citadelProg" style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;letter-spacing:1px;">Initialisation...</div>
   </div>
-
-  <div class="verdict-box" style="margin-top:8px">
-    <p><strong style="color:#c9a84c">Conclusion Citadel — Q1 2026 :</strong> Le portefeuille est correctement positionné pour la phase de reprise avec ses expositions financières (BNP, Banks ETF) et construction (Eiffage, SPIE). La priorité d'action est double : (1) <strong style="color:#00c875">Renforcer</strong> les ETF US (S&P 500 et Russell 2000) pour réduire la concentration géographique française ; (2) <strong style="color:#ff4757">Réduire ou couper</strong> les positions automobile (Renault, Aramis) qui sont à contre-cycle. Le biais général du portefeuille est bien aligné avec un scénario de reprise graduelle en Europe, tempéré par les risques géopolitiques persistants.</p>
-  </div>
+  <div id="citadelError" style="display:none;padding:16px;background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ff4757;"></div>
+  <div id="citadelContent" style="display:none;"></div>
 </div>
-
-<!-- ══════════════════════════════════════════════════
-     WATCHLIST PEA / PEA-PME
-══════════════════════════════════════════════════ -->
 
 <div class="section" id="watchlist">
   <div class="section-title">Watchlist Institutionnel — PEA & PEA-PME</div>
-  <div class="section-subtitle">Veille actions françaises · Consensus GS · MS · Deutsche Bank · ODDO BHF · Kepler Cheuvreux · Mars 2026</div>
+  <div class="section-subtitle" id="wlSubtitle">Veille actions françaises · Consensus GS · MS · Deutsche Bank · ODDO BHF · Kepler Cheuvreux</div>
 
 <style>
   .wl-intro { font-family:'IBM Plex Sans',sans-serif; font-size:12px; color:#6b7a8d; line-height:1.7; max-width:780px; margin-bottom:28px; padding:16px 20px; background:#0f1318; border:1px solid #1e2530; border-left:3px solid #c9a84c; }
@@ -1071,26 +665,19 @@ main { padding: 24px; }
     <br><br>⚠️ <strong>Avertissement :</strong> Cette analyse est fournie à titre informatif uniquement et ne constitue pas un conseil en investissement. Les objectifs de cours et verdicts reflètent les opinions synthétisées d'analystes sell-side à une date donnée et sont susceptibles d'évoluer.
   </div>
 
-  <!-- STATS -->
+  <!-- STATS — dynamically updated on generation -->
 
-  <div class="wl-stats-bar">
-    <div class="wl-stat"><div class="wl-stat-label">Valeurs suivies</div><div class="wl-stat-val">65</div><div class="wl-stat-sub">PEA + PEA-PME</div></div>
-    <div class="wl-stat"><div class="wl-stat-label">Signal Achat</div><div class="wl-stat-val" style="color:#00c875">28</div><div class="wl-stat-sub">43% de la watchlist</div></div>
-    <div class="wl-stat"><div class="wl-stat-label">Signal Vente</div><div class="wl-stat-val" style="color:#ff4757">9</div><div class="wl-stat-sub">14% de la watchlist</div></div>
-    <div class="wl-stat"><div class="wl-stat-label">Déjà en portefeuille</div><div class="wl-stat-val" style="color:#c9a84c">18</div><div class="wl-stat-sub">Sur 26 positions</div></div>
+  <div class="wl-stats-bar" id="wlStatsBar">
+    <div class="wl-stat"><div class="wl-stat-label">Statut</div><div class="wl-stat-val" style="font-size:13px;color:#6b7a8d">—</div><div class="wl-stat-sub">Cliquez ⚡ Générer</div></div>
+    <div class="wl-stat"><div class="wl-stat-label">Signal Achat</div><div class="wl-stat-val" style="color:#6b7a8d">—</div><div class="wl-stat-sub">Après génération</div></div>
+    <div class="wl-stat"><div class="wl-stat-label">Signal Vente</div><div class="wl-stat-val" style="color:#6b7a8d">—</div><div class="wl-stat-sub">Après génération</div></div>
+    <div class="wl-stat"><div class="wl-stat-label">En portefeuille</div><div class="wl-stat-val" style="color:#6b7a8d">—</div><div class="wl-stat-sub">Après génération</div></div>
   </div>
 
-  <!-- FILTERS -->
+  <!-- FILTERS — dynamically updated on generation -->
 
-  <div class="wl-filters">
-    <button class="wl-filter active" onclick="filterWL('all',this)">Tout (65)</button>
-    <button class="wl-filter" onclick="filterWL('achat',this)">🟢 Achat (28)</button>
-    <button class="wl-filter" onclick="filterWL('conserver',this)">🔵 Conserver (28)</button>
-    <button class="wl-filter" onclick="filterWL('vendre',this)">🔴 Vendre (9)</button>
-    <button class="wl-filter" onclick="filterWL('pme',this)">🟣 PEA-PME uniquement</button>
-    <button class="wl-filter" onclick="filterWL('portfolio',this)">⭐ Mon portefeuille</button>
-    <button class="wl-filter" onclick="filterWL('cac40',this)">CAC 40</button>
-    <button class="wl-filter" onclick="filterWL('dividende',this)">💰 Dividende >4%</button>
+  <div class="wl-filters" id="wlFilters">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#3d4a5c;letter-spacing:1px;">Filtres disponibles après génération</span>
   </div>
 
   <div id="watchlistContent">
@@ -1563,7 +1150,7 @@ function renderOverview(){
 }
 
 // Auto-render on page load
-window.addEventListener('DOMContentLoaded', () => renderOverview());
+// renderOverview is called from global DOMContentLoaded at bottom of file
 </script>
 
 <!-- ══════════════════════════════════════════
@@ -1987,6 +1574,563 @@ function showMsg(txt, type){
   el.style.display='block';
   setTimeout(()=>el.style.display='none', 4000);
 }
+</script>
+
+<script>
+// ══ SECTION AI GENERATORS ══
+
+function buildPortfolioSnapshot(){
+  let pfData=[];
+  try{ pfData=JSON.parse(localStorage.getItem('portfolio_data')||'[]'); }catch(e){}
+  if(!pfData.length && typeof OV_DEFAULT!=='undefined') pfData=[...OV_DEFAULT];
+  let aiStore={};
+  try{ aiStore=JSON.parse(localStorage.getItem('consensus_store')||'{}'); }catch(e){}
+  const FULL=Object.assign({},CONSENSUS,aiStore);
+  const today=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  const snapshot=pfData.map(p=>{
+    const c=FULL[p.ticker];
+    return `${p.ticker} | ${p.name} | PRU:${p.pru}€ | Qté:${p.qty} | Investi:${(p.pru*p.qty).toFixed(0)}€ | Secteur:${p.sector} | Compte:${p.account}${c?' | Verdict:'+c.label+' | Target:'+c.target:''}`;
+  }).join('\n');
+  return {pfData, snapshot, today, FULL};
+}
+
+async function callAI(prompt, sid){
+  const loading=document.getElementById(sid+'Loading');
+  const content=document.getElementById(sid+'Content');
+  const errDiv=document.getElementById(sid+'Error');
+  const status=document.getElementById(sid+'Status');
+  const btn=document.getElementById(sid+'Btn');
+
+  loading.style.display='block';
+  content.style.display='none';
+  errDiv.style.display='none';
+  if(btn){btn.disabled=true;}
+  if(status) status.textContent='Génération en cours...';
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})
+    });
+    const d=await resp.json();
+    const raw=d.content?.map(b=>b.text||'').join('').trim();
+    // Extract JSON
+    const jsonMatch=raw.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('Format JSON invalide');
+    return JSON.parse(jsonMatch[0]);
+  } catch(err){
+    loading.style.display='none';
+    errDiv.style.display='block';
+    errDiv.innerHTML=`⚠️ Erreur : ${err.message} <button onclick="${sid}Retry()" style="background:none;border:none;color:#c9a84c;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;">↻ Réessayer</button>`;
+    if(status) status.textContent='Erreur';
+    if(btn){btn.disabled=false;}
+    return null;
+  }
+}
+
+function finishSection(sid, html, today){
+  const loading=document.getElementById(sid+'Loading');
+  const content=document.getElementById(sid+'Content');
+  const status=document.getElementById(sid+'Status');
+  const btn=document.getElementById(sid+'Btn');
+  loading.style.display='none';
+  content.innerHTML=html;
+  content.style.display='block';
+  if(status) status.textContent=`Généré le ${today}`;
+  if(btn){btn.disabled=false; btn.innerHTML='↻ Regénérer';}
+}
+
+// ─── GOLDMAN SACHS ───
+async function generateGoldman(){
+  const {pfData,snapshot,today}=buildPortfolioSnapshot();
+  const data=await callAI(`Tu es analyste senior Goldman Sachs Equity Research. Date : ${today}.
+Portefeuille :
+${snapshot}
+
+Génère une analyse fondamentale GS pour CHAQUE position du portefeuille. JSON uniquement, aucun texte avant/après :
+{
+  "generated": "${today}",
+  "macro_view": "Vision macro GS en 2 phrases",
+  "positions": [
+    {
+      "ticker": "BNP",
+      "name": "BNP Paribas",
+      "sector": "Finance",
+      "pl_latent": "+227€ / +30.1%",
+      "verdict": "Achat",
+      "verdict_class": "badge-buy",
+      "conviction": "Haute",
+      "target": "~105€",
+      "pe": "7.2x",
+      "ev_ebitda": "—",
+      "rationale": "2 phrases max sur la thèse fondamentale GS"
+    }
+  ]
+}
+verdict_class: "badge-buy"|"badge-hold"|"badge-watch"|"badge-avoid"
+conviction: "Haute"|"Moyenne"|"Faible"
+Couvre TOUTES les ${pfData.length} positions, dans l'ordre : VENDRE d'abord, puis ALLÉGER, puis CONSERVER, puis ACHETER.`, 'goldman');
+
+  if(!data) return;
+  const rows=data.positions.map(p=>`<tr>
+    <td class="ticker">${p.ticker}</td>
+    <td style="color:#e8eaf0">${p.sector}</td>
+    <td class="${p.pl_latent?.startsWith('-')||p.pl_latent?.startsWith('−')?'neg':'pos'}">${p.pl_latent}</td>
+    <td><span class="badge ${p.verdict_class}">${p.verdict}</span></td>
+    <td style="color:#6b7a8d">${p.conviction}</td>
+    <td style="color:#c9a84c">${p.target}</td>
+    <td style="color:#e8eaf0">${p.pe||'—'}</td>
+    <td style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;max-width:280px">${p.rationale}</td>
+  </tr>`).join('');
+
+  finishSection('goldman',`
+    <div style="background:rgba(0,200,117,0.06);border:1px solid rgba(0,200,117,0.15);border-radius:5px;padding:14px 18px;margin-bottom:24px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6;">
+      <strong style="color:#c9a84c">Vision macro GS :</strong> ${data.macro_view}
+    </div>
+    <table class="rating-table">
+      <thead><tr>
+        <th>Ticker</th><th>Secteur</th><th>P&L Latent</th>
+        <th>Verdict GS</th><th>Conviction</th><th>Target 12M</th><th>P/E</th><th>Rationale</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:8px;">Goldman Sachs Equity Research · Généré le ${today} · IA · ${pfData.length} positions</div>
+  `, today);
+}
+window.goldmanRetry=generateGoldman;
+
+// ─── MORGAN STANLEY TECHNICAL ───
+async function generateMorgan(){
+  const {pfData,snapshot,today}=buildPortfolioSnapshot();
+  const data=await callAI(`Tu es analyste technique senior Morgan Stanley. Date : ${today}.
+Portefeuille :
+${snapshot}
+
+Génère une analyse technique MS pour chaque position. JSON uniquement :
+{
+  "generated": "${today}",
+  "market_regime": "Description du régime de marché actuel en 1 phrase",
+  "positions": [
+    {
+      "ticker": "BNP",
+      "name": "BNP Paribas",
+      "trend": "Haussier"|"Neutre"|"Baissier",
+      "trend_class": "signal-bull"|"signal-neutral"|"signal-bear",
+      "rsi": "62",
+      "macd": "Positif",
+      "mm20_signal": "Au-dessus"|"En-dessous",
+      "support": "82€",
+      "resistance": "96€",
+      "entry": "85€",
+      "stop": "78€",
+      "tp1": "98€",
+      "tp2": "106€",
+      "signal": "Achat"|"Neutre"|"Vente",
+      "signal_class": "signal-bull"|"signal-neutral"|"signal-bear",
+      "comment": "1 phrase sur la configuration technique"
+    }
+  ]
+}
+Couvre TOUTES les ${pfData.length} positions.`, 'morgan');
+
+  if(!data) return;
+  const cards=data.positions.map(p=>`
+    <div class="tech-card">
+      <div class="tech-header">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#e8eaf0">${p.name}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b7a8d;margin-top:3px">${p.ticker}</div>
+        </div>
+        <div class="tech-signal-grid" style="grid-template-columns:repeat(5,1fr)">
+          <div class="signal-box ${p.trend_class}"><div class="signal-box-label">Tendance</div><div class="signal-box-value">${p.trend}</div></div>
+          <div class="signal-box"><div class="signal-box-label">RSI</div><div class="signal-box-value" style="color:${parseInt(p.rsi)>70?'#ff4757':parseInt(p.rsi)<30?'#00c875':'#e8eaf0'}">${p.rsi}</div></div>
+          <div class="signal-box"><div class="signal-box-label">MACD</div><div class="signal-box-value">${p.macd}</div></div>
+          <div class="signal-box"><div class="signal-box-label">MM20</div><div class="signal-box-value">${p.mm20_signal}</div></div>
+          <div class="signal-box ${p.signal_class}"><div class="signal-box-label">Signal</div><div class="signal-box-value">${p.signal}</div></div>
+        </div>
+        <span class="badge ${p.signal==='Achat'?'badge-buy':p.signal==='Vente'?'badge-avoid':'badge-hold'}">${p.signal}</span>
+      </div>
+      <div class="trade-setup">
+        <div class="setup-item"><div class="setup-label">Support</div><div class="setup-value" style="color:#4a90d9">${p.support}</div></div>
+        <div class="setup-item"><div class="setup-label">Résistance</div><div class="setup-value" style="color:#ff8c00">${p.resistance}</div></div>
+        <div class="setup-item"><div class="setup-label">Stop Loss</div><div class="setup-value stop">${p.stop}</div></div>
+        <div class="setup-item"><div class="setup-label">TP1 / TP2</div><div class="setup-value tp1">${p.tp1} <span style="color:#6b7a8d">/</span> <span class="tp2">${p.tp2}</span></div></div>
+      </div>
+      <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;margin-top:10px">${p.comment}</div>
+    </div>`).join('');
+
+  finishSection('morgan',`
+    <div style="background:rgba(74,144,217,0.06);border:1px solid rgba(74,144,217,0.15);border-radius:5px;padding:14px 18px;margin-bottom:24px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;">
+      <strong style="color:#4a90d9">Régime de marché MS :</strong> ${data.market_regime}
+    </div>
+    ${cards}
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:8px;">Morgan Stanley Technical Research · Généré le ${today} · IA · ${pfData.length} positions</div>
+  `, today);
+}
+
+// ─── BRIDGEWATER RISK ───
+async function generateBridgewater(){
+  const {pfData,snapshot,today}=buildPortfolioSnapshot();
+  const data=await callAI(`Tu es gérant de risque senior Bridgewater Associates. Date : ${today}.
+Portefeuille :
+${snapshot}
+
+Génère une analyse de risque complète. JSON uniquement :
+{
+  "generated": "${today}",
+  "risk_score": 6.2,
+  "risk_label": "Modéré",
+  "sharpe_est": "0.82",
+  "max_drawdown_est": "-18%",
+  "beta_market": "0.91",
+  "concentration_risk": "Élevé"|"Modéré"|"Faible",
+  "key_risks": [
+    {"label": "Risque de concentration", "level": 72, "color": "#ff8c00", "comment": "1 phrase"},
+    {"label": "Risque de devise (CTO)", "level": 30, "color": "#4a90d9", "comment": "1 phrase"},
+    {"label": "Risque de liquidité", "level": 45, "color": "#c9a84c", "comment": "1 phrase"},
+    {"label": "Risque macro taux", "level": 55, "color": "#ff4757", "comment": "1 phrase"}
+  ],
+  "sector_allocation": [
+    {"sector": "Finance", "weight": "23%", "stance": "OW", "stance_label": "Surpondéré", "stance_class": "ow"},
+    {"sector": "Énergie", "weight": "12%", "stance": "NW", "stance_label": "Neutre", "stance_class": "ntrl"}
+  ],
+  "stress_scenarios": [
+    {"scenario": "Récession EU -15%", "impact": "-2 840€", "color": "#ff4757"},
+    {"scenario": "Hausse taux +100bp", "impact": "-1 200€", "color": "#ff8c00"},
+    {"scenario": "Rebond marchés +20%", "impact": "+4 100€", "color": "#00c875"}
+  ],
+  "recommendations": ["Recommandation 1", "Recommandation 2", "Recommandation 3"]
+}
+Basé sur le vrai portefeuille ci-dessus. Sois précis et cohérent avec les montants réels.`, 'bridgewater');
+
+  if(!data) return;
+
+  const riskBars=data.key_risks.map(r=>`
+    <div class="risk-row">
+      <div class="risk-row-label">${r.label}</div>
+      <div style="flex:1;margin:0 16px">
+        <div class="stress-bar-track"><div class="stress-bar-fill" style="width:${r.level}%;background:${r.color}"></div></div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:#6b7a8d;margin-top:3px">${r.comment}</div>
+      </div>
+      <div class="risk-row-value" style="color:${r.color}">${r.level}/100</div>
+    </div>`).join('');
+
+  const sectorCells=data.sector_allocation.map(s=>`
+    <div class="sector-cell">
+      <div class="sector-name">${s.sector}</div>
+      <div class="sector-weight-label">Allocation</div>
+      <div class="sector-weight ${s.stance_class}">${s.weight}</div>
+      <div class="badge ${s.stance==='OW'?'badge-buy':s.stance==='UW'?'badge-avoid':'badge-hold'}" style="font-size:8px">${s.stance_label}</div>
+    </div>`).join('');
+
+  const stressRows=data.stress_scenarios.map(s=>`
+    <div class="risk-row">
+      <div class="risk-row-label">${s.scenario}</div>
+      <div class="risk-row-value" style="color:${s.color}">${s.impact}</div>
+    </div>`).join('');
+
+  const recList=data.recommendations.map((r,i)=>`
+    <div style="display:flex;gap:10px;padding:10px;background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;margin-bottom:8px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9a84c;min-width:18px">${i+1}</span>
+      <span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0">${r}</span>
+    </div>`).join('');
+
+  finishSection('bridgewater',`
+    <div class="risk-dashboard">
+      <div class="risk-card">
+        <h3>Score de Risque Global</h3>
+        <div style="text-align:center;padding:16px 0">
+          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:${data.risk_score>7?'#ff4757':data.risk_score>5?'#ff8c00':'#00c875'}">${data.risk_score}<span style="font-size:20px;color:#6b7a8d">/10</span></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6b7a8d;margin-top:4px">${data.risk_label}</div>
+        </div>
+        <div class="risk-row"><div class="risk-row-label">Sharpe estimé</div><div class="risk-row-value" style="color:#00c875">${data.sharpe_est}</div></div>
+        <div class="risk-row"><div class="risk-row-label">Drawdown max estimé</div><div class="risk-row-value" style="color:#ff4757">${data.max_drawdown_est}</div></div>
+        <div class="risk-row"><div class="risk-row-label">Bêta marché</div><div class="risk-row-value">${data.beta_market}</div></div>
+        <div class="risk-row"><div class="risk-row-label">Risque concentration</div><div class="risk-row-value" style="color:${data.concentration_risk==='Élevé'?'#ff4757':data.concentration_risk==='Modéré'?'#ff8c00':'#00c875'}">${data.concentration_risk}</div></div>
+      </div>
+      <div class="risk-card">
+        <h3>Facteurs de Risque</h3>
+        ${riskBars}
+      </div>
+    </div>
+    <div class="sector-matrix">${sectorCells}</div>
+    <div class="risk-dashboard">
+      <div class="risk-card"><h3>Scénarios de Stress</h3>${stressRows}</div>
+      <div class="risk-card"><h3>Recommandations BW</h3>${recList}</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:8px;">Bridgewater Risk Framework · Généré le ${today} · IA</div>
+  `, today);
+}
+
+// ─── CITADEL MACRO ───
+async function generateCitadel(){
+  const {pfData,snapshot,today}=buildPortfolioSnapshot();
+  const data=await callAI(`Tu es stratégiste macro senior Citadel Global Macro Fund. Date : ${today}.
+Portefeuille :
+${snapshot}
+
+Génère une analyse macro complète. JSON uniquement :
+{
+  "generated": "${today}",
+  "cycle_phase": "Early Recovery"|"Late Recovery"|"Expansion"|"Contraction",
+  "cycle_desc": "Description du cycle en 2 phrases avec données macro actuelles",
+  "themes": [
+    {"title": "BCE et taux directeurs", "stance": "Positif"|"Neutre"|"Négatif", "color": "#00c875"|"#4a90d9"|"#ff4757", "desc": "2 phrases d'analyse"},
+    {"title": "Croissance Europe", "stance": "Neutre", "color": "#4a90d9", "desc": "2 phrases"},
+    {"title": "Transition énergétique", "stance": "Positif", "color": "#00c875", "desc": "2 phrases"},
+    {"title": "Risque géopolitique", "stance": "Négatif", "color": "#ff4757", "desc": "2 phrases"}
+  ],
+  "sector_views": [
+    {"sector": "Finance", "stance": "Surpondérer", "stance_class": "ow", "rationale": "1 phrase"},
+    {"sector": "Énergie", "stance": "Neutre", "stance_class": "ntrl", "rationale": "1 phrase"},
+    {"sector": "Tech/IT", "stance": "Surpondérer", "stance_class": "ow", "rationale": "1 phrase"},
+    {"sector": "Défensifs", "stance": "Sous-pondérer", "stance_class": "uw", "rationale": "1 phrase"}
+  ],
+  "portfolio_fit": "Évaluation de 2-3 phrases sur l'adéquation du portefeuille avec le contexte macro actuel",
+  "catalysts": [
+    "Catalyseur 1 pour les 3 prochains mois",
+    "Catalyseur 2",
+    "Catalyseur 3"
+  ]
+}`, 'citadel');
+
+  if(!data) return;
+
+  const cycleColor = data.cycle_phase?.includes('Recovery')?'#c9a84c':data.cycle_phase?.includes('Expansion')?'#00c875':'#ff8c00';
+
+  const themes=data.themes.map(t=>`
+    <div class="risk-card" style="margin-bottom:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#e8eaf0;font-weight:500">${t.title}</div>
+        <span class="badge" style="background:${t.color}22;color:${t.color};border:1px solid ${t.color}44">${t.stance}</span>
+      </div>
+      <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6b7a8d;line-height:1.6">${t.desc}</div>
+    </div>`).join('');
+
+  const sectorRows=data.sector_views.map(s=>`
+    <div class="risk-row">
+      <div class="risk-row-label">${s.sector}</div>
+      <div style="flex:1;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;padding:0 16px">${s.rationale}</div>
+      <div class="sector-weight ${s.stance_class}" style="white-space:nowrap">${s.stance}</div>
+    </div>`).join('');
+
+  const catalysts=data.catalysts.map((c,i)=>`
+    <div style="display:flex;gap:10px;padding:10px;background:rgba(0,200,117,0.05);border:1px solid rgba(0,200,117,0.15);border-radius:4px;margin-bottom:8px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00c875;min-width:18px">${i+1}</span>
+      <span style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0">${c}</span>
+    </div>`).join('');
+
+  finishSection('citadel',`
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:20px;margin-bottom:28px;align-items:start">
+      <div style="background:#0f1318;border:1px solid #1e2530;border-radius:6px;padding:20px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#6b7a8d;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Phase de cycle</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:${cycleColor};margin-bottom:8px">${data.cycle_phase}</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6b7a8d;line-height:1.5">${data.cycle_desc}</div>
+      </div>
+      <div style="background:rgba(0,200,117,0.05);border:1px solid rgba(0,200,117,0.2);border-radius:6px;padding:16px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#00c875;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Adéquation portefeuille</div>
+        <div style="font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:#e8eaf0;line-height:1.6">${data.portfolio_fit}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:28px">${themes}</div>
+    <div class="risk-dashboard">
+      <div class="risk-card"><h3>Vues Sectorielles Citadel</h3>${sectorRows}</div>
+      <div class="risk-card"><h3>Catalyseurs 3 mois</h3>${catalysts}</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:8px;">Citadel Global Macro · Généré le ${today} · IA</div>
+  `, today);
+}
+
+// ══ GLOBAL REFRESH ══
+function initHeaderStats(){
+  try{
+    const data=JSON.parse(localStorage.getItem('portfolio_data')||'null')||(typeof PE_DEFAULT!=='undefined'?PE_DEFAULT:[]);
+    const total=data.reduce((s,p)=>s+p.pru*p.qty,0);
+    const fmt=v=>v.toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+'€';
+    document.getElementById('hdrTotal').textContent=fmt(total);
+    document.getElementById('hdrPositions').textContent=data.length;
+  }catch(e){}
+  const today=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('hdrDate').textContent=today;
+}
+
+async function refreshAll(){
+  const btn=document.getElementById('globalRefreshBtn');
+  const icon=document.getElementById('refreshIcon');
+  const label=document.getElementById('refreshLabel');
+  btn.style.borderColor='rgba(0,200,117,0.5)';
+  btn.style.color='#00c875';
+  icon.style.animation='spin2 1s linear infinite';
+  label.textContent='ACTUALISATION...';
+
+  initHeaderStats();
+  renderOverview();
+  generatePriorityActions();
+
+  // Regenerate whichever section is currently active
+  const active=document.querySelector('.section.active');
+  if(active){
+    const id=active.id;
+    if(id==='goldman') generateGoldman();
+    else if(id==='morgan') generateMorgan();
+    else if(id==='bridgewater') generateBridgewater();
+    else if(id==='citadel') generateCitadel();
+    else if(id==='watchlist'){
+      const rendered=document.getElementById('wlRendered');
+      if(rendered&&rendered.style.display!=='none') await generateWatchlist();
+    }
+  }
+
+  setTimeout(()=>{
+    btn.style.borderColor='rgba(201,168,76,0.35)';
+    btn.style.color='#c9a84c';
+    icon.style.animation='';
+    label.textContent='ACTUALISER LES DONNÉES';
+  },600);
+}
+
+// Also trigger generation when switching to a tab that hasn't been generated yet
+const _origShowSection=showSection;
+function showSection(id){
+  _origShowSection.call(this,id);
+  const content=document.getElementById(id+'Content');
+  if(content && content.style.display==='none' && !document.getElementById(id+'Loading')?.style.display?.includes('block')){
+    if(id==='goldman') generateGoldman();
+    else if(id==='morgan') generateMorgan();
+    else if(id==='bridgewater') generateBridgewater();
+    else if(id==='citadel') generateCitadel();
+  }
+}
+
+// Init on load
+window.addEventListener('DOMContentLoaded',()=>{
+  initHeaderStats();
+  renderOverview();
+  if(!loadCachedPriority()) generatePriorityActions();
+});
+
+// ══ PRIORITY ACTIONS — AI generated from real portfolio ══
+async function generatePriorityActions(){
+  const box = document.getElementById('priorityContent');
+  const btn = document.getElementById('priorityRefreshBtn');
+  if(!box) return;
+
+  box.innerHTML = `<div style="text-align:center;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#c9a84c;letter-spacing:1px;">⚡ Génération en cours...</div>`;
+  if(btn){ btn.disabled=true; btn.textContent='...'; }
+
+  // Build portfolio summary for the prompt
+  let pfData=[];
+  try{ pfData=JSON.parse(localStorage.getItem('portfolio_data')||'[]'); }catch(e){}
+  if(!pfData.length && typeof OV_DEFAULT!=='undefined') pfData=OV_DEFAULT;
+
+  let aiStore={};
+  try{ aiStore=JSON.parse(localStorage.getItem('consensus_store')||'{}'); }catch(e){}
+  const FULL=Object.assign({},CONSENSUS,aiStore);
+
+  const today=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+
+  // Build a concise portfolio snapshot
+  const snapshot = pfData.map(p=>{
+    const c=FULL[p.ticker];
+    const inv=(p.pru*p.qty).toFixed(0);
+    const verdict=c?c.label:'—';
+    const target=c?c.target:'—';
+    return `${p.ticker} (${p.name}) PRU:${p.pru}€ × ${p.qty} = ${inv}€ | Verdict:${verdict} | Target:${target}`;
+  }).join('\n');
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1200,
+        messages:[{role:'user',content:`Tu es un gestionnaire de portefeuille institutionnel senior. Date : ${today}.
+
+Voici le portefeuille actuel de l'investisseur :
+${snapshot}
+
+Génère exactement 5 actions prioritaires UNIQUEMENT basées sur ce portefeuille réel (ne cite que des tickers présents dans la liste ci-dessus).
+Réponds UNIQUEMENT en JSON valide sans markdown :
+{
+  "actions": [
+    {
+      "priority": 1,
+      "type": "vendre"|"alleger"|"conserver"|"renforcer"|"arbitrage",
+      "title": "VENDRE Renault (RNO)",
+      "detail": "Explication courte et précise avec les chiffres réels du portefeuille.",
+      "urgency": "haute"|"moyenne"|"faible"
+    }
+  ]
+}`}]
+      })
+    });
+    const d=await resp.json();
+    const raw=d.content?.map(b=>b.text||'').join('').trim().replace(/\`\`\`json|\`\`\`/g,'').trim();
+    const result=JSON.parse(raw);
+
+    const colorMap={
+      vendre:{bg:'rgba(255,71,87,0.06)',border:'rgba(255,71,87,0.2)',num:'#ff4757'},
+      alleger:{bg:'rgba(255,140,0,0.06)',border:'rgba(255,140,0,0.2)',num:'#ff8c00'},
+      conserver:{bg:'rgba(74,144,217,0.06)',border:'rgba(74,144,217,0.2)',num:'#4a90d9'},
+      renforcer:{bg:'rgba(0,200,117,0.06)',border:'rgba(0,200,117,0.2)',num:'#00c875'},
+      arbitrage:{bg:'rgba(201,168,76,0.06)',border:'rgba(201,168,76,0.2)',num:'#c9a84c'},
+    };
+
+    box.innerHTML=`<div style="display:flex;flex-direction:column;gap:10px;">
+      ${result.actions.map(a=>{
+        const s=colorMap[a.type]||colorMap.conserver;
+        return `<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:${s.bg};border:1px solid ${s.border};border-radius:4px;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:${s.num};min-width:22px;">${a.priority}</span>
+          <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;">
+            <strong>${a.title}</strong> — ${a.detail}
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:4px;">Généré le ${today} · Basé sur votre portefeuille actuel</div>
+    </div>`;
+
+    // Cache result
+    try{ localStorage.setItem('priority_actions', JSON.stringify({date:today, actions:result.actions})); }catch(e){}
+
+  }catch(err){
+    box.innerHTML=`<div style="color:#ff4757;font-family:'IBM Plex Mono',monospace;font-size:10px;">Erreur : ${err.message} — <button onclick="generatePriorityActions()" style="background:none;border:none;color:#c9a84c;cursor:pointer;font-family:inherit;">↻ Réessayer</button></div>`;
+  }
+  if(btn){ btn.disabled=false; btn.textContent='↻ Regénérer'; }
+}
+
+function loadCachedPriority(){
+  try{
+    const cached=JSON.parse(localStorage.getItem('priority_actions')||'null');
+    const today=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+    if(cached && cached.date===today && cached.actions?.length){
+      // Same day — rerender from cache
+      const colorMap={
+        vendre:{bg:'rgba(255,71,87,0.06)',border:'rgba(255,71,87,0.2)',num:'#ff4757'},
+        alleger:{bg:'rgba(255,140,0,0.06)',border:'rgba(255,140,0,0.2)',num:'#ff8c00'},
+        conserver:{bg:'rgba(74,144,217,0.06)',border:'rgba(74,144,217,0.2)',num:'#4a90d9'},
+        renforcer:{bg:'rgba(0,200,117,0.06)',border:'rgba(0,200,117,0.2)',num:'#00c875'},
+        arbitrage:{bg:'rgba(201,168,76,0.06)',border:'rgba(201,168,76,0.2)',num:'#c9a84c'},
+      };
+      const box=document.getElementById('priorityContent');
+      if(!box) return false;
+      box.innerHTML=`<div style="display:flex;flex-direction:column;gap:10px;">
+        ${cached.actions.map(a=>{
+          const s=colorMap[a.type]||colorMap.conserver;
+          return `<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:${s.bg};border:1px solid ${s.border};border-radius:4px;">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:${s.num};min-width:22px;">${a.priority}</span>
+            <div style="font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#e8eaf0;line-height:1.6;"><strong>${a.title}</strong> — ${a.detail}</div>
+          </div>`;
+        }).join('')}
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3d4a5c;text-align:right;margin-top:4px;">Généré le ${today} (cache) · <button onclick="generatePriorityActions()" style="background:none;border:none;color:#6b7a8d;cursor:pointer;font-family:inherit;font-size:9px;">↻ Regénérer</button></div>
+      </div>`;
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
 </script>
 
 </body>
