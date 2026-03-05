@@ -296,164 +296,129 @@ margin-bottom: 8px;
 
 hr.divider { border: none; border-top: 1px solid #1e2530; margin: 32px 0; }
 
-/* ══ iOS BOTTOM TAB BAR ══ */
-/* Always hidden by default — shown only on mobile via media query */
-#iosTabBar { display: none; }
-#desktopTabs { display: flex; }
-
-.ios-tab {
-flex: 1;
+/* ══ UNIFIED TAB BAR ══ */
+#unifiedTabBar {
 display: flex;
-flex-direction: column;
+flex-direction: row;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+background: #0d1017;
+border-bottom: 1px solid #1e2530;
+position: sticky;
+top: 0;
+z-index: 500;
+padding: 0 4px;
+scrollbar-width: none;
+-ms-overflow-style: none;
+}
+#unifiedTabBar::-webkit-scrollbar { display: none; }
+
+.utab {
+display: flex;
+flex-direction: row;
 align-items: center;
-justify-content: center;
-padding: 8px 2px 6px;
+gap: 6px;
+padding: 12px 16px;
 background: none;
 border: none;
-cursor: pointer;
-gap: 3px;
--webkit-tap-highlight-color: transparent;
-min-width: 0;
-touch-action: manipulation;
-}
-.ios-tab-icon { font-size: 20px; line-height: 1; display: block; }
-.ios-tab-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 8px;
-color: #6b7a8d;
-display: block;
+border-bottom: 2px solid transparent;
 white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-max-width: 100%;
-letter-spacing: 0.3px;
+cursor: pointer;
+flex-shrink: 0;
+-webkit-tap-highlight-color: transparent;
+touch-action: manipulation;
+transition: all 0.15s;
 }
-.ios-tab.active .ios-tab-label { color: #c9a84c; font-weight: 600; }
+.utab-icon { font-size: 14px; line-height: 1; }
+.utab-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 10px;
+color: #6b7a8d;
+letter-spacing: 0.8px;
+text-transform: uppercase;
+}
+.utab:hover .utab-label { color: #e8eaf0; }
+.utab.active { border-bottom-color: #c9a84c; }
+.utab.active .utab-label { color: #c9a84c; }
+
+/* Hide legacy tab elements */
+#iosTabBar, #desktopTabs, .tabs { display: none !important; }
 
 @media (max-width: 900px) {
-/* Show iOS tab bar, hide desktop nav */
-#iosTabBar {
-display: flex !important;
-position: fixed !important;
-bottom: 0 !important;
-left: 0 !important;
-right: 0 !important;
-z-index: 99999 !important;
-background: #0a0c10 !important;
-border-top: 2px solid #c9a84c !important;
-}
-#desktopTabs { display: none !important; }
-#mobileRefreshBar { display: none !important; }
-body { padding-bottom: 75px !important; }
-.ios-tab {
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-padding: 7px 2px 5px;
-background: none;
-border: none;
-cursor: pointer;
-gap: 2px;
--webkit-tap-highlight-color: transparent;
-min-width: 0;
-}
-.ios-tab-icon { font-size: 18px; line-height: 1; display: block; }
-.ios-tab-label {
-font-family: ‘IBM Plex Mono’, monospace;
-font-size: 8px;
-color: #6b7a8d;
-display: block;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-max-width: 100%;
-letter-spacing: 0.3px;
-}
-.ios-tab.active .ios-tab-label { color: #c9a84c; }
-.ios-tab.active .ios-tab-icon { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
+/* Tab bar: larger touch targets on mobile */
+.utab { padding: 11px 14px; gap: 5px; }
+.utab-icon { font-size: 16px; }
+.utab-label { font-size: 9px; }
 
 ```
-body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 16px)) !important; }
-
-/* Header */
-header { padding: 10px 14px 8px !important; flex-direction: column; gap: 8px; align-items: flex-start; }
+/* Layout */
+body { padding-bottom: 12px !important; }
+header { padding: 10px 14px 8px !important; flex-direction: column; gap: 6px; }
 .logo { font-size: 15px !important; }
-.logo span { font-size: 8px !important; letter-spacing: 1px; }
-.header-stats { gap: 0 !important; width: 100%; justify-content: space-between; margin-top: 4px; }
-.hstat { text-align: left; }
-.hstat-label { font-size: 8px !important; letter-spacing: 1px; }
+.logo span { font-size: 8px !important; }
+.header-stats { gap: 0 !important; width: 100%; justify-content: space-between; }
+.hstat-label { font-size: 8px !important; }
 .hstat-value { font-size: 15px !important; }
-#globalRefreshBtn { padding: 4px 10px !important; font-size: 9px !important; }
+#globalRefreshBtn { padding: 4px 8px !important; font-size: 9px !important; }
 #refreshLabel { display: none !important; }
-
-/* Main */
+#mobileRefreshBar { display: none !important; }
 main { padding: 14px 12px !important; max-width: 100%; }
 .section-title { font-size: 20px !important; margin-bottom: 4px !important; }
-.section-subtitle { font-size: 9px !important; margin-bottom: 18px !important; letter-spacing: 1px; }
+.section-subtitle { font-size: 9px !important; margin-bottom: 18px !important; }
 
-/* Overview */
+/* Cards → 2 columns */
 .overview-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-.stat-card { padding: 12px 12px !important; }
-.stat-label { font-size: 8px !important; }
+.stat-card { padding: 12px !important; }
 .stat-value { font-size: 20px !important; }
-.stat-sub { font-size: 9px !important; }
+.cards-grid { grid-template-columns: 1fr !important; }
 
-/* Consensus table → cards */
-.consensus-table thead { display: none !important; }
-.consensus-table, .consensus-table tbody, .consensus-table tr, .consensus-table td { display: block !important; width: 100% !important; }
-.consensus-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
-.consensus-table tr.buy-row  { border-left: 3px solid #00c875; }
-.consensus-table tr.hold-row { border-left: 3px solid #4a90d9; }
-.consensus-table tr.lighten-row { border-left: 3px solid #ff8c00; }
-.consensus-table tr.sell-row { border-left: 3px solid #ff4757; }
-.consensus-table td { padding: 3px 0 !important; border: none !important; font-size: 11px !important; }
+/* Tables → cards */
+.consensus-table thead,
+.rating-table thead,
+.wl-table thead,
+.pe-table thead { display: none !important; }
+
+.consensus-table, .consensus-table tbody, .consensus-table tr, .consensus-table td,
+.rating-table, .rating-table tbody, .rating-table tr, .rating-table td,
+.wl-table, .wl-table tbody, .wl-table tr, .wl-table td,
+.pe-table, .pe-table tbody, .pe-table tr, .pe-table td { display: block !important; width: 100% !important; }
+
+.consensus-table tr, .rating-table tr, .wl-table tr, .pe-table tr {
+  border: 1px solid #1e2530 !important;
+  border-radius: 8px !important;
+  margin-bottom: 10px !important;
+  padding: 12px 14px !important;
+  background: #0a0c10 !important;
+}
+.consensus-table tr.buy-row  { border-left: 3px solid #00c875 !important; }
+.consensus-table tr.hold-row { border-left: 3px solid #4a90d9 !important; }
+.consensus-table tr.lighten-row { border-left: 3px solid #ff8c00 !important; }
+.consensus-table tr.sell-row { border-left: 3px solid #ff4757 !important; }
+.consensus-table td, .rating-table td, .wl-table td, .pe-table td {
+  padding: 3px 0 !important; border: none !important; font-size: 11px !important;
+}
 .ct-rationale { max-width: 100% !important; font-size: 10px; }
-.bank-dots { margin-top: 4px; }
 
 /* Watchlist */
 .wl-stats-bar { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-.wl-filters { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; padding-bottom: 6px !important; gap: 6px !important; }
-.wl-filter { white-space: nowrap !important; flex-shrink: 0 !important; font-size: 10px !important; }
-.wl-table thead { display: none !important; }
-.wl-table, .wl-table tbody, .wl-table tr, .wl-table td { display: block !important; width: 100% !important; }
-.wl-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px; background: #0a0c10; }
-.wl-table td { padding: 3px 0 !important; border: none !important; }
+.wl-filters { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; padding-bottom: 4px !important; }
+.wl-filter { white-space: nowrap !important; flex-shrink: 0 !important; }
 
-/* Rating table → cards */
-.rating-table thead { display: none !important; }
-.rating-table, .rating-table tbody, .rating-table tr, .rating-table td { display: block !important; width: 100% !important; }
-.rating-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
-.rating-table td { padding: 3px 0 !important; border: none !important; font-size: 11px !important; }
+/* Tech / Risk */
+.tech-header { grid-template-columns: 1fr !important; }
+.tech-signal-grid { grid-template-columns: repeat(3,1fr) !important; }
+.trade-setup { grid-template-columns: repeat(2,1fr) !important; }
+.risk-dashboard { grid-template-columns: 1fr !important; }
+.sector-matrix { grid-template-columns: repeat(2,1fr) !important; }
 
-/* Tech */
-.tech-card { padding: 14px !important; }
-.tech-header { grid-template-columns: 1fr !important; gap: 10px !important; }
-.tech-signal-grid { grid-template-columns: repeat(3,1fr) !important; gap: 8px !important; }
-.trade-setup { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
-
-/* Risk */
-.risk-dashboard { grid-template-columns: 1fr !important; gap: 16px !important; }
-.sector-matrix { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
-
-/* PE table → cards */
-.pe-table thead { display: none !important; }
-.pe-table, .pe-table tbody, .pe-table tr, .pe-table td { display: block !important; width: 100% !important; }
-.pe-table tr { border: 1px solid #1e2530; border-radius: 8px; margin-bottom: 10px; padding: 12px 14px; background: #0a0c10; }
-.pe-table td { padding: 4px 0 !important; border: none !important; font-size: 11px !important; }
-.pe-input { width: 100% !important; }
+/* PE form */
 .pe-add-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-.pe-add-btn { width: 100% !important; margin-top: 8px !important; }
-
-/* Other */
-.cards-grid { grid-template-columns: 1fr !important; }
-#priorityBox { padding: 14px !important; }
+.pe-input { width: 100% !important; }
 ```
 
 }
-</style>
 
+</style>
 </head>
 <body>
 
@@ -511,16 +476,30 @@ main { padding: 14px 12px !important; max-width: 100%; }
   </button>
 </div>
 
-<!-- Desktop top tabs (hidden on mobile) -->
+<!-- Unified tab bar — works on ALL devices, sticky top, horizontal scroll -->
 
-<div class="tabs" id="desktopTabs">
-  <button class="tab active" onclick="showSection('overview',this)">Vue d'ensemble</button>
-  <button class="tab" onclick="showSection('goldman',this)">GS Fundamental</button>
-  <button class="tab" onclick="showSection('morgan',this)">MS Technical</button>
-  <button class="tab" onclick="showSection('bridgewater',this)">BW Risk</button>
-  <button class="tab" onclick="showSection('citadel',this)">Citadel Macro</button>
-  <button class="tab" onclick="showSection('watchlist',this)">⚡ Watchlist</button>
-  <button class="tab" onclick="showSection('portfolio-editor',this)">✏️ Positions</button>
+<div id="unifiedTabBar">
+  <button class="utab active" onclick="showSection('overview',this)" data-section="overview">
+    <span class="utab-icon">📊</span><span class="utab-label">Aperçu</span>
+  </button>
+  <button class="utab" onclick="showSection('goldman',this)" data-section="goldman">
+    <span class="utab-icon">🏦</span><span class="utab-label">GS Fund.</span>
+  </button>
+  <button class="utab" onclick="showSection('morgan',this)" data-section="morgan">
+    <span class="utab-icon">📈</span><span class="utab-label">MS Tech.</span>
+  </button>
+  <button class="utab" onclick="showSection('bridgewater',this)" data-section="bridgewater">
+    <span class="utab-icon">🛡</span><span class="utab-label">BW Risk</span>
+  </button>
+  <button class="utab" onclick="showSection('citadel',this)" data-section="citadel">
+    <span class="utab-icon">🌍</span><span class="utab-label">Citadel</span>
+  </button>
+  <button class="utab" onclick="showSection('watchlist',this)" data-section="watchlist">
+    <span class="utab-icon">⚡</span><span class="utab-label">Watchlist</span>
+  </button>
+  <button class="utab" onclick="showSection('portfolio-editor',this)" data-section="portfolio-editor">
+    <span class="utab-icon">✏️</span><span class="utab-label">Positions</span>
+  </button>
 </div>
 
 <main>
@@ -961,7 +940,7 @@ Règles :
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "anthropic-dangerous-direct-browser-access": "true" },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 6000,
@@ -1111,21 +1090,21 @@ function renderWatchlist(wl) {
 
 <script>
 function showSection(id, btn) {
+  // Hide all sections
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  // Update desktop tabs
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  // Update iOS tab bar
-  document.querySelectorAll('.ios-tab').forEach(t => t.classList.remove('active'));
-  // Activate clicked button (works on both iOS and desktop)
-  if(btn) btn.classList.add('active');
-  // Also sync the other nav (desktop↔ios)
-  document.querySelectorAll('[data-section="'+id+'"]').forEach(t => t.classList.add('active'));
-  document.querySelectorAll('.tab[onclick*=\''+id+'\']').forEach(t => t.classList.add('active'));
-  // Show section
+  // Deactivate all tabs
+  document.querySelectorAll('.utab').forEach(t => t.classList.remove('active'));
+  // Activate the clicked button
+  if(btn) {
+    btn.classList.add('active');
+    // Scroll the tab bar to make active tab visible
+    btn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  }
+  // Show the section
   const section = document.getElementById(id);
   if(section) section.classList.add('active');
-  // Scroll to top on mobile
-  window.scrollTo({top:0,behavior:'smooth'});
+  // Scroll page to top
+  window.scrollTo({top: 0, behavior: 'smooth'});
   if(id==='portfolio-editor') loadEditor();
   if(id==='overview') renderOverview();
 }
@@ -1653,7 +1632,7 @@ Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
 
     const resp = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
     const d = await resp.json();
@@ -1820,7 +1799,7 @@ async function callAI(prompt, sid){
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})
     });
     const d=await resp.json();
@@ -2209,11 +2188,14 @@ const _origShowSection=showSection;
 function showSection(id, btn){
   _origShowSection(id, btn);
   const aiContent=document.getElementById(id+'Content');
-  if(aiContent && aiContent.style.display==='none' && !document.getElementById(id+'Loading')?.style.display?.includes('block')){
-    if(id==='goldman') generateGoldman();
-    else if(id==='morgan') generateMorgan();
-    else if(id==='bridgewater') generateBridgewater();
-    else if(id==='citadel') generateCitadel();
+  if(aiContent && (aiContent.style.display==='' || aiContent.style.display==='none') && !document.getElementById(id+'Loading')?.style.display?.includes('block')){
+    const already = aiContent.innerHTML && aiContent.innerHTML.trim().length > 50;
+    if(!already){
+      if(id==='goldman') generateGoldman();
+      else if(id==='morgan') generateMorgan();
+      else if(id==='bridgewater') generateBridgewater();
+      else if(id==='citadel') generateCitadel();
+    }
   }
 }
 
@@ -2257,7 +2239,7 @@ async function generatePriorityActions(){
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1200,
@@ -2359,39 +2341,6 @@ function loadCachedPriority(){
 }
 
 </script>
-
-<!-- ══ iOS BOTTOM TAB BAR ══ -->
-
-<nav id="iosTabBar">
-  <button class="ios-tab active" onclick="showSection('overview',this)" data-section="overview">
-    <span class="ios-tab-icon">📊</span>
-    <span class="ios-tab-label">Aperçu</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('goldman',this)" data-section="goldman">
-    <span class="ios-tab-icon">🏦</span>
-    <span class="ios-tab-label">GS</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('morgan',this)" data-section="morgan">
-    <span class="ios-tab-icon">📈</span>
-    <span class="ios-tab-label">MS</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('bridgewater',this)" data-section="bridgewater">
-    <span class="ios-tab-icon">🛡️</span>
-    <span class="ios-tab-label">Risk</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('citadel',this)" data-section="citadel">
-    <span class="ios-tab-icon">🌍</span>
-    <span class="ios-tab-label">Macro</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('watchlist',this)" data-section="watchlist">
-    <span class="ios-tab-icon">⚡</span>
-    <span class="ios-tab-label">Watchlist</span>
-  </button>
-  <button class="ios-tab" onclick="showSection('portfolio-editor',this)" data-section="portfolio-editor">
-    <span class="ios-tab-icon">✏️</span>
-    <span class="ios-tab-label">Positions</span>
-  </button>
-</nav>
 
 </body>
 </html>
