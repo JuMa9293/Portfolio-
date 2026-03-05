@@ -297,18 +297,54 @@ margin-bottom: 8px;
 hr.divider { border: none; border-top: 1px solid #1e2530; margin: 32px 0; }
 
 /* ══ iOS BOTTOM TAB BAR ══ */
-/* iOS tab bar: visible on mobile, hidden on desktop */
-#iosTabBar {
+/* Always hidden by default — shown only on mobile via media query */
+#iosTabBar { display: none; }
+#desktopTabs { display: flex; }
+
+.ios-tab {
+flex: 1;
 display: flex;
-position: fixed;
-bottom: 0; left: 0; right: 0;
-z-index: 9999;
-background: rgba(10,12,16,0.97);
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border-top: 1px solid #1e2530;
-padding-bottom: env(safe-area-inset-bottom, 0px);
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 8px 2px 6px;
+background: none;
+border: none;
+cursor: pointer;
+gap: 3px;
+-webkit-tap-highlight-color: transparent;
+min-width: 0;
+touch-action: manipulation;
 }
+.ios-tab-icon { font-size: 20px; line-height: 1; display: block; }
+.ios-tab-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 8px;
+color: #6b7a8d;
+display: block;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 100%;
+letter-spacing: 0.3px;
+}
+.ios-tab.active .ios-tab-label { color: #c9a84c; font-weight: 600; }
+
+@media (max-width: 900px) {
+/* Show iOS tab bar, hide desktop nav */
+#iosTabBar {
+display: flex !important;
+position: fixed !important;
+bottom: 0 !important;
+left: 0 !important;
+right: 0 !important;
+z-index: 99999 !important;
+background: #0a0c10 !important;
+border-top: 2px solid #c9a84c !important;
+}
+#desktopTabs { display: none !important; }
+#mobileRefreshBar { display: none !important; }
+body { padding-bottom: 75px !important; }
 .ios-tab {
 flex: 1;
 display: flex;
@@ -338,58 +374,7 @@ letter-spacing: 0.3px;
 .ios-tab.active .ios-tab-label { color: #c9a84c; }
 .ios-tab.active .ios-tab-icon { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
 
-/* Hide on desktop — show desktop tabs instead */
-@media (min-width: 901px) {
-#iosTabBar { display: none !important; }
-}
-
-@media (max-width: 900px) {
-/* Hide desktop tabs */
-#desktopTabs { display: none !important; }
-#mobileRefreshBar { display: none !important; }
-body { padding-bottom: calc(65px + env(safe-area-inset-bottom, 16px)) !important; }
-
 ```
-#iosTabBar {
-  display: flex;
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 9999;
-  background: rgba(10,12,16,0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid #1e2530;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-.ios-tab {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 7px 2px 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  gap: 2px;
-  -webkit-tap-highlight-color: transparent;
-  min-width: 0;
-}
-.ios-tab-icon { font-size: 18px; line-height: 1; display: block; }
-.ios-tab-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
-  color: #6b7a8d;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  letter-spacing: 0.3px;
-}
-.ios-tab.active .ios-tab-label { color: #c9a84c; }
-.ios-tab.active .ios-tab-icon { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
-
 body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 16px)) !important; }
 
 /* Header */
@@ -2237,25 +2222,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   initHeaderStats();
   renderOverview();
   if(!loadCachedPriority()) generatePriorityActions();
-  // Force tab bar visibility: hide on wide screens
-  function handleTabBarVisibility(){
-    const bar=document.getElementById('iosTabBar');
-    if(!bar) return;
-    if(window.innerWidth>900){
-      bar.style.display='none';
-      // Show desktop tabs
-      const dt=document.getElementById('desktopTabs');
-      if(dt) dt.style.display='flex';
-    } else {
-      bar.style.display='flex';
-      const dt=document.getElementById('desktopTabs');
-      if(dt) dt.style.display='none';
-      // Ensure body has padding
-      document.body.style.paddingBottom='calc(65px + env(safe-area-inset-bottom,16px))';
-    }
-  }
-  handleTabBarVisibility();
-  window.addEventListener('resize', handleTabBarVisibility);
+  // Tab bar controlled by CSS media queries only
 });
 
 // ══ PRIORITY ACTIONS — AI generated from real portfolio ══
@@ -2351,7 +2318,11 @@ Réponds UNIQUEMENT en JSON valide sans markdown :
     try{ localStorage.setItem('priority_actions', JSON.stringify({date:today, actions:result.actions})); }catch(e){}
 
   }catch(err){
-    box.innerHTML=`<div style="color:#ff4757;font-family:'IBM Plex Mono',monospace;font-size:10px;">Erreur : ${err.message} — <button onclick="generatePriorityActions()" style="background:none;border:none;color:#c9a84c;cursor:pointer;font-family:inherit;">↻ Réessayer</button></div>`;
+    const isNetwork = err.message.includes('Load failed') || err.message.includes('NetworkError') || err.message.includes('Failed to fetch');
+    const msg = isNetwork 
+      ? 'Connexion à l\'API bloquée (réseau/CORS Safari). Essayez depuis l\'app Claude ou un autre réseau.'
+      : 'Erreur : '+err.message;
+    box.innerHTML=`<div style="color:#ff4757;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.6;">${msg}<br><button onclick="generatePriorityActions()" style="margin-top:6px;background:none;border:1px solid #c9a84c;border-radius:4px;padding:4px 10px;color:#c9a84c;cursor:pointer;font-family:inherit;font-size:9px;">↻ Réessayer</button></div>`;
   }
   if(btn){ btn.disabled=false; btn.textContent='↻ Regénérer'; }
 }
@@ -2391,7 +2362,7 @@ function loadCachedPriority(){
 
 <!-- ══ iOS BOTTOM TAB BAR ══ -->
 
-<nav id="iosTabBar" style="display:flex;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(10,12,16,0.97);border-top:1px solid #1e2530;padding-bottom:env(safe-area-inset-bottom,0px);">
+<nav id="iosTabBar">
   <button class="ios-tab active" onclick="showSection('overview',this)" data-section="overview">
     <span class="ios-tab-icon">📊</span>
     <span class="ios-tab-label">Aperçu</span>
