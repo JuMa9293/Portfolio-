@@ -1523,6 +1523,7 @@ Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
         loadEditor();
         if(document.getElementById('overview')?.classList.contains('active')) renderOverview();
         showMsg('✅ '+pos.name+' analysé ! Verdict : '+a.label+' · Target : '+a.target,'ok');
+        portfolioChanged();
       },600);
     },7500);
 
@@ -1530,6 +1531,7 @@ Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
     document.getElementById('aiOverlay')?.remove();
     loadEditor();
     showMsg('✅ '+pos.name+' ajouté (analyse IA indisponible : '+err.message+')','ok');
+    portfolioChanged();
   }
 }
 
@@ -1541,7 +1543,8 @@ function deletePosition(i){
   try{
     localStorage.setItem('portfolio_data', JSON.stringify(data));
     loadEditor();
-    showMsg(`🗑️ ${pos.name} supprimé.`,'ok');
+    showMsg(`🗑️ ${pos.name} supprimé. Onglets mis à jour.`,'ok');
+    portfolioChanged();
   }catch(e){ showMsg('Erreur: '+e.message,'err'); }
 }
 
@@ -1556,7 +1559,8 @@ function savePortfolio(){
   try{
     localStorage.setItem('portfolio_data', JSON.stringify(updated));
     loadEditor();
-    showMsg('✅ Sauvegardé ! Le Live Tracker utilisera ces nouvelles valeurs.','ok');
+    showMsg('✅ Sauvegardé · Tous les onglets seront actualisés.','ok');
+    portfolioChanged();
   }catch(e){ showMsg('Erreur localStorage : '+e.message,'err'); }
 }
 
@@ -1565,6 +1569,46 @@ function resetPortfolio(){
   try{ localStorage.removeItem('portfolio_data'); }catch(e){}
   loadEditor();
   showMsg('↺ Réinitialisé aux 26 positions d\'origine.','ok');
+  portfolioChanged();
+}
+
+// ── Propagation automatique vers tous les onglets ──
+function portfolioChanged(){
+  // 1. Header stats immédiatement
+  if(typeof initHeaderStats==='function') initHeaderStats();
+
+  // 2. Vue d'ensemble — re-render immédiat (pas d'IA, juste recalcul)
+  if(typeof renderOverview==='function') renderOverview();
+
+  // 3. Actions prioritaires — invalider le cache et regénérer
+  try{ localStorage.removeItem('priority_actions'); }catch(e){}
+  if(typeof generatePriorityActions==='function') generatePriorityActions();
+
+  // 4. Marquer les onglets IA comme "à regénérer"
+  ['goldman','morgan','bridgewater','citadel'].forEach(sid=>{
+    const content = document.getElementById(sid+'Content');
+    const status  = document.getElementById(sid+'Status');
+    const btn     = document.getElementById(sid+'Btn');
+    if(content && content.style.display !== 'none'){
+      // Onglet déjà généré → le marquer obsolète avec un bandeau
+      const stale = document.getElementById(sid+'Stale');
+      if(!stale){
+        const banner = document.createElement('div');
+        banner.id = sid+'Stale';
+        banner.style.cssText = 'background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:5px;padding:10px 16px;margin-bottom:16px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#c9a84c;display:flex;align-items:center;justify-content:space-between;';
+        banner.innerHTML = `<span>⚠️ Portefeuille modifié — analyse obsolète</span>
+          <button onclick="document.getElementById('${sid}Stale').remove(); generate${sid.charAt(0).toUpperCase()+sid.slice(1)}()"
+            style="background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.4);border-radius:4px;padding:4px 12px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:#c9a84c;cursor:pointer;">
+            ↻ Regénérer
+          </button>`;
+        content.insertBefore(banner, content.firstChild);
+      }
+    } else {
+      // Onglet pas encore généré → rien à faire, se générera au prochain clic
+    }
+    if(status && content && content.style.display==='none')
+      status.textContent = 'Portefeuille modifié — cliquez pour regénérer';
+  });
 }
 
 function showMsg(txt, type){
