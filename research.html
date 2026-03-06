@@ -446,6 +446,43 @@ main { padding: 14px 12px !important; max-width: 100%; }
 
 }
 
+/* ══ API KEY MODAL ══ */
+#apiKeyModal {
+display: none;
+position: fixed;
+inset: 0;
+z-index: 99999;
+background: rgba(0,0,0,0.85);
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+#apiKeyModal.show { display: flex; }
+.akm-box {
+background: #0d1017;
+border: 1px solid #c9a84c;
+border-radius: 10px;
+padding: 32px 28px;
+max-width: 460px;
+width: 100%;
+}
+.akm-title { font-family: ‘Playfair Display’,serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
+.akm-sub { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+.akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: ‘IBM Plex Mono’,monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
+.akm-info a { color: #c9a84c; text-decoration: none; }
+.akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: ‘IBM Plex Mono’,monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
+.akm-input:focus { border-color: #c9a84c; }
+.akm-input::placeholder { color: #3d4a5c; }
+.akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: ‘IBM Plex Mono’,monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
+.akm-btn:hover { background: #dbb85c; }
+.akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: ‘IBM Plex Mono’,monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
+.akm-err { font-family: ‘IBM Plex Mono’,monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
+.akm-note { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
+/* API key badge in breadcrumb */
+#apiKeyBadge { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
+#apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
+#apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
+
 </style>
 </head>
 <body>
@@ -485,7 +522,7 @@ main { padding: 14px 12px !important; max-width: 100%; }
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="Index.html" style="color:#6b7a8d;text-decoration:none;">← Accueil</a>
       <span style="color:#3d4a5c">|</span>
-      <span style="color:#c9a84c;letter-spacing:1px;">🔬 Research Terminal</span>
+      <span style="color:#c9a84c;letter-spacing:1px;">🔬 Research Terminal</span><span id="apiKeyBadge" onclick="showApiKeyModal()">🔑 Clé API</span>
     </div>
     <button onclick="refreshAll()" id="globalRefreshBtn">
       <span id="refreshIcon">↻</span>
@@ -804,6 +841,43 @@ main { padding: 14px 12px !important; max-width: 100%; }
   .wl-stat-label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:#6b7a8d; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
   .wl-stat-val { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#c9a84c; }
   .wl-stat-sub { font-family:'IBM Plex Mono',monospace; font-size:9px; color:#6b7a8d; margin-top:3px; }
+  /* ══ API KEY MODAL ══ */
+  #apiKeyModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #apiKeyModal.show { display: flex; }
+  .akm-box {
+    background: #0d1017;
+    border: 1px solid #c9a84c;
+    border-radius: 10px;
+    padding: 32px 28px;
+    max-width: 460px;
+    width: 100%;
+  }
+  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
+  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
+  .akm-info a { color: #c9a84c; text-decoration: none; }
+  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
+  .akm-input:focus { border-color: #c9a84c; }
+  .akm-input::placeholder { color: #3d4a5c; }
+  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
+  .akm-btn:hover { background: #dbb85c; }
+  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
+  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
+  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
+  /* API key badge in breadcrumb */
+  #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
+  #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
+  #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
+
 </style>
 
   <!-- INTRO -->
@@ -871,6 +945,7 @@ function filterWL(type, btn) {
 }
 
 async function generateWatchlist() {
+  if(!getApiKey()) return;
   const prog = document.getElementById('wlProgress');
   const errDiv = document.getElementById('wlError');
   const rendered = document.getElementById('wlRendered');
@@ -957,6 +1032,7 @@ Règles :
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
         "anthropic-dangerous-direct-browser-access": "true"
       },
       body: JSON.stringify({
@@ -1392,6 +1468,43 @@ function renderOverview(){
 .pe-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11px; display: none; margin-top: 12px; padding: 10px 14px; border-radius: 5px; }
 .pe-saved.ok { color: #00c875; background: rgba(0,200,117,0.08); border: 1px solid rgba(0,200,117,0.2); }
 .pe-saved.err { color: #ff4757; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); }
+  /* ══ API KEY MODAL ══ */
+  #apiKeyModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #apiKeyModal.show { display: flex; }
+  .akm-box {
+    background: #0d1017;
+    border: 1px solid #c9a84c;
+    border-radius: 10px;
+    padding: 32px 28px;
+    max-width: 460px;
+    width: 100%;
+  }
+  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
+  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
+  .akm-info a { color: #c9a84c; text-decoration: none; }
+  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
+  .akm-input:focus { border-color: #c9a84c; }
+  .akm-input::placeholder { color: #3d4a5c; }
+  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
+  .akm-btn:hover { background: #dbb85c; }
+  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
+  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
+  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
+  /* API key badge in breadcrumb */
+  #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
+  #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
+  #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
+
 </style>
 
 <div class="section" id="portfolio-editor">
@@ -1573,6 +1686,43 @@ function updateInvested(i){
 .ai-spinner{width:32px;height:32px;border:2px solid #1e2530;border-top-color:#c9a84c;border-radius:50%;animation:spin2 1s linear infinite;margin:0 auto;}
 @keyframes spin2{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+  /* ══ API KEY MODAL ══ */
+  #apiKeyModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #apiKeyModal.show { display: flex; }
+  .akm-box {
+    background: #0d1017;
+    border: 1px solid #c9a84c;
+    border-radius: 10px;
+    padding: 32px 28px;
+    max-width: 460px;
+    width: 100%;
+  }
+  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
+  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
+  .akm-info a { color: #c9a84c; text-decoration: none; }
+  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
+  .akm-input:focus { border-color: #c9a84c; }
+  .akm-input::placeholder { color: #3d4a5c; }
+  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
+  .akm-btn:hover { background: #dbb85c; }
+  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
+  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
+  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
+  /* API key badge in breadcrumb */
+  #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
+  #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
+  #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
+
 </style>
 
 <script>
@@ -1666,7 +1816,7 @@ Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks :
 
     const resp = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
     const d = await resp.json();
@@ -1833,7 +1983,7 @@ async function callAI(prompt, sid){
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4000,messages:[{role:'user',content:prompt}]})
     });
     if(!resp.ok){ const t=await resp.text(); throw new Error('HTTP '+resp.status+': '+t.slice(0,150)); }
@@ -2221,15 +2371,74 @@ async function refreshAll(){
 // showSection handles AI generation directly (merged above)
 
 // Init on load
+
+// ══ ANTHROPIC API KEY MANAGEMENT ══
+let ANTHROPIC_API_KEY = '';
+
+function loadApiKey() {
+  try { ANTHROPIC_API_KEY = localStorage.getItem('anthropic_api_key') || ''; } catch(e) {}
+  updateApiKeyBadge();
+  return ANTHROPIC_API_KEY;
+}
+
+function saveApiKey() {
+  const val = document.getElementById('akmInput').value.trim();
+  if(!val || !val.startsWith('sk-ant-')) {
+    const err = document.getElementById('akmErr');
+    err.textContent = 'Clé invalide — doit commencer par sk-ant-';
+    err.style.display = 'block';
+    return;
+  }
+  ANTHROPIC_API_KEY = val;
+  try { localStorage.setItem('anthropic_api_key', val); } catch(e) {}
+  closeApiKeyModal();
+  updateApiKeyBadge();
+}
+
+function closeApiKeyModal() {
+  document.getElementById('apiKeyModal').classList.remove('show');
+}
+
+function showApiKeyModal() {
+  const m = document.getElementById('apiKeyModal');
+  const inp = document.getElementById('akmInput');
+  if(ANTHROPIC_API_KEY) inp.value = ANTHROPIC_API_KEY;
+  m.classList.add('show');
+}
+
+function updateApiKeyBadge() {
+  const badge = document.getElementById('apiKeyBadge');
+  if(!badge) return;
+  if(ANTHROPIC_API_KEY) {
+    badge.textContent = '🔑 ' + ANTHROPIC_API_KEY.slice(0,12) + '****';
+    badge.className = 'connected';
+    badge.title = 'Clé API active — cliquez pour modifier';
+  } else {
+    badge.textContent = '🔑 Clé API requise';
+    badge.className = '';
+    badge.title = 'Cliquez pour ajouter votre clé API';
+  }
+}
+
+function getApiKey() {
+  if(!ANTHROPIC_API_KEY) {
+    showApiKeyModal();
+    return null;
+  }
+  return ANTHROPIC_API_KEY;
+}
+
 window.addEventListener('DOMContentLoaded',()=>{
+  loadApiKey();
   initHeaderStats();
   renderOverview();
-  if(!loadCachedPriority()) generatePriorityActions();
+  if(ANTHROPIC_API_KEY && !loadCachedPriority()) generatePriorityActions();
   // Tab bar controlled by CSS media queries only
 });
 
 // ══ PRIORITY ACTIONS — AI generated from real portfolio ══
 async function generatePriorityActions(){
+  if(!getApiKey()) return;
   const box = document.getElementById('priorityContent');
   const btn = document.getElementById('priorityRefreshBtn');
   if(!box) return;
@@ -2260,7 +2469,7 @@ async function generatePriorityActions(){
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
         max_tokens:1200,
@@ -2362,6 +2571,27 @@ function loadCachedPriority(){
 }
 
 </script>
+
+<!-- ══ ANTHROPIC API KEY MODAL ══ -->
+
+<div id="apiKeyModal">
+  <div class="akm-box">
+    <div class="akm-title">Clé API Anthropic</div>
+    <div class="akm-sub">Requise pour les analyses IA</div>
+    <div class="akm-info">
+      <strong style="color:#c9a84c;">Comment obtenir votre clé :</strong><br>
+      1. Créez un compte sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+      2. Allez dans <strong style="color:#e8eaf0;">API Keys</strong> → <strong style="color:#e8eaf0;">Create Key</strong><br>
+      3. Copiez la clé (commence par <code style="color:#c9a84c;">sk-ant-</code>)<br><br>
+      💳 ~0,001€ par analyse · Stockée uniquement dans votre navigateur
+    </div>
+    <input type="password" class="akm-input" id="akmInput" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
+    <button class="akm-btn" onclick="saveApiKey()">▶ Activer les analyses IA</button>
+    <button class="akm-skip" onclick="closeApiKeyModal()">Plus tard</button>
+    <div class="akm-err" id="akmErr"></div>
+    <div class="akm-note">🔒 Clé sauvegardée dans votre navigateur uniquement · Jamais envoyée sur un serveur tiers</div>
+  </div>
+</div>
 
 </body>
 </html>
