@@ -445,40 +445,6 @@ main { padding: 14px 12px !important; max-width: 100%; }
 ```
 
 }
-
-/* ══ API KEY MODAL ══ */
-#apiKeyModal {
-display: none;
-position: fixed;
-inset: 0;
-z-index: 99999;
-background: rgba(0,0,0,0.85);
-align-items: center;
-justify-content: center;
-padding: 20px;
-}
-#apiKeyModal.show { display: flex; }
-.akm-box {
-background: #0d1017;
-border: 1px solid #c9a84c;
-border-radius: 10px;
-padding: 32px 28px;
-max-width: 460px;
-width: 100%;
-}
-.akm-title { font-family: ‘Playfair Display’,serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
-.akm-sub { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-.akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: ‘IBM Plex Mono’,monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
-.akm-info a { color: #c9a84c; text-decoration: none; }
-.akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: ‘IBM Plex Mono’,monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
-.akm-input:focus { border-color: #c9a84c; }
-.akm-input::placeholder { color: #3d4a5c; }
-.akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: ‘IBM Plex Mono’,monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
-.akm-btn:hover { background: #dbb85c; }
-.akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: ‘IBM Plex Mono’,monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
-.akm-err { font-family: ‘IBM Plex Mono’,monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
-.akm-note { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
-/* API key badge in breadcrumb */
 #apiKeyBadge { font-family: ‘IBM Plex Mono’,monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
 #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
 #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
@@ -841,39 +807,6 @@ width: 100%;
   .wl-stat-label { font-family:'IBM Plex Mono',monospace; font-size:9px; color:#6b7a8d; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
   .wl-stat-val { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#c9a84c; }
   .wl-stat-sub { font-family:'IBM Plex Mono',monospace; font-size:9px; color:#6b7a8d; margin-top:3px; }
-  /* ══ API KEY MODAL ══ */
-  #apiKeyModal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #apiKeyModal.show { display: flex; }
-  .akm-box {
-    background: #0d1017;
-    border: 1px solid #c9a84c;
-    border-radius: 10px;
-    padding: 32px 28px;
-    max-width: 460px;
-    width: 100%;
-  }
-  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
-  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
-  .akm-info a { color: #c9a84c; text-decoration: none; }
-  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
-  .akm-input:focus { border-color: #c9a84c; }
-  .akm-input::placeholder { color: #3d4a5c; }
-  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
-  .akm-btn:hover { background: #dbb85c; }
-  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
-  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
-  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
-  /* API key badge in breadcrumb */
   #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
   #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
   #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
@@ -1468,39 +1401,6 @@ function renderOverview(){
 .pe-saved { font-family: 'IBM Plex Mono', monospace; font-size: 11px; display: none; margin-top: 12px; padding: 10px 14px; border-radius: 5px; }
 .pe-saved.ok { color: #00c875; background: rgba(0,200,117,0.08); border: 1px solid rgba(0,200,117,0.2); }
 .pe-saved.err { color: #ff4757; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); }
-  /* ══ API KEY MODAL ══ */
-  #apiKeyModal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #apiKeyModal.show { display: flex; }
-  .akm-box {
-    background: #0d1017;
-    border: 1px solid #c9a84c;
-    border-radius: 10px;
-    padding: 32px 28px;
-    max-width: 460px;
-    width: 100%;
-  }
-  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
-  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
-  .akm-info a { color: #c9a84c; text-decoration: none; }
-  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
-  .akm-input:focus { border-color: #c9a84c; }
-  .akm-input::placeholder { color: #3d4a5c; }
-  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
-  .akm-btn:hover { background: #dbb85c; }
-  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
-  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
-  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
-  /* API key badge in breadcrumb */
   #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
   #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
   #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
@@ -1686,39 +1586,6 @@ function updateInvested(i){
 .ai-spinner{width:32px;height:32px;border:2px solid #1e2530;border-top-color:#c9a84c;border-radius:50%;animation:spin2 1s linear infinite;margin:0 auto;}
 @keyframes spin2{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-  /* ══ API KEY MODAL ══ */
-  #apiKeyModal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0,0,0,0.85);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #apiKeyModal.show { display: flex; }
-  .akm-box {
-    background: #0d1017;
-    border: 1px solid #c9a84c;
-    border-radius: 10px;
-    padding: 32px 28px;
-    max-width: 460px;
-    width: 100%;
-  }
-  .akm-title { font-family: 'Playfair Display',serif; font-size: 22px; color: #c9a84c; margin-bottom: 4px; }
-  .akm-sub { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-  .akm-info { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 12px 14px; margin-bottom: 20px; font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #6b7a8d; line-height: 1.7; }
-  .akm-info a { color: #c9a84c; text-decoration: none; }
-  .akm-input { width: 100%; background: #0a0c10; border: 1px solid #1e2530; border-radius: 6px; padding: 12px 14px; font-family: 'IBM Plex Mono',monospace; font-size: 13px; color: #e8eaf0; outline: none; margin-bottom: 12px; transition: border-color .2s; }
-  .akm-input:focus { border-color: #c9a84c; }
-  .akm-input::placeholder { color: #3d4a5c; }
-  .akm-btn { width: 100%; background: #c9a84c; color: #0a0c10; border: none; border-radius: 6px; padding: 13px; font-family: 'IBM Plex Mono',monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-bottom: 8px; }
-  .akm-btn:hover { background: #dbb85c; }
-  .akm-skip { width: 100%; background: transparent; border: 1px solid #1e2530; border-radius: 6px; padding: 10px; font-family: 'IBM Plex Mono',monospace; font-size: 11px; color: #6b7a8d; cursor: pointer; }
-  .akm-err { font-family: 'IBM Plex Mono',monospace; font-size: 10px; color: #ff4757; margin-top: 8px; display: none; }
-  .akm-note { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #3d4a5c; margin-top: 12px; line-height: 1.6; }
-  /* API key badge in breadcrumb */
   #apiKeyBadge { font-family: 'IBM Plex Mono',monospace; font-size: 9px; color: #6b7a8d; cursor: pointer; padding: 2px 8px; border: 1px solid #1e2530; border-radius: 3px; transition: all .2s; }
   #apiKeyBadge:hover { color: #c9a84c; border-color: #c9a84c; }
   #apiKeyBadge.connected { color: #00c875; border-color: rgba(0,200,117,0.3); }
@@ -2396,14 +2263,16 @@ function saveApiKey() {
 }
 
 function closeApiKeyModal() {
-  document.getElementById('apiKeyModal').classList.remove('show');
+  const m = document.getElementById('apiKeyModal');
+  if(m) m.style.display = 'none';
 }
 
 function showApiKeyModal() {
   const m = document.getElementById('apiKeyModal');
   const inp = document.getElementById('akmInput');
-  if(ANTHROPIC_API_KEY) inp.value = ANTHROPIC_API_KEY;
-  m.classList.add('show');
+  if(!m) return;
+  if(ANTHROPIC_API_KEY && inp) inp.value = ANTHROPIC_API_KEY;
+  m.style.display = 'flex';
 }
 
 function updateApiKeyBadge() {
@@ -2574,7 +2443,7 @@ function loadCachedPriority(){
 
 <!-- ══ ANTHROPIC API KEY MODAL ══ -->
 
-<div id="apiKeyModal">
+<div id="apiKeyModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:20px;">
   <div class="akm-box">
     <div class="akm-title">Clé API Anthropic</div>
     <div class="akm-sub">Requise pour les analyses IA</div>
