@@ -2,9 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Portfolio Pro</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}::-webkit-scrollbar{display:none}input,select,button{font-family:inherit}</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
@@ -14,62 +13,94 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useMemo}=React;
+const {useState,useMemo,useRef,useCallback}=React;
 
 const INIT_PME=[
-{id:1,name:"NEURONES",ticker:"NRO",cours:35.10,pru:35.21,qty:9,sector:"Technologie",consensus:"Achat Fort",target:52,ac:1},
-{id:2,name:"ENTECH",ticker:"ENTE",cours:9.78,pru:7.86,qty:25,sector:"Énergie Renouvelable",consensus:"N/A",target:null,ac:0},
-{id:3,name:"ABEO",ticker:"ABEO",cours:8.70,pru:8.74,qty:22,sector:"Loisirs",consensus:"N/A",target:null,ac:0},
-{id:4,name:"TF1",ticker:"TFI",cours:7.13,pru:7.14,qty:21,sector:"Médias",consensus:"Neutre",target:9.50,ac:5},
-{id:5,name:"RISING STONE",ticker:"ALRS",cours:48.80,pru:58.30,qty:3,sector:"Immobilier",consensus:"N/A",target:null,ac:0},
-{id:6,name:"SEMCO TECHNOLOGIES",ticker:"ALSEM",cours:32.40,pru:15.00,qty:4,sector:"Semi-conducteurs",consensus:"N/A",target:null,ac:0},
+{id:1,name:"NEURONES",ticker:"NRO",cours:35.10,pru:35.21,qty:9,sector:"Technologie",consensus:"Achat Fort",target:52,ac:1,brokerNotes:[{broker:"Portzamparc",rating:"Achat Fort",target:52,note:"Croissance organique solide, bilan net cash, valorisation attractive pour une ESN de qualite."}]},
+{id:2,name:"ENTECH",ticker:"ENTE",cours:9.78,pru:7.86,qty:25,sector:"Energie Renouvelable",consensus:"N/A",target:null,ac:0,brokerNotes:[]},
+{id:3,name:"ABEO",ticker:"ABEO",cours:8.70,pru:8.74,qty:22,sector:"Loisirs",consensus:"N/A",target:null,ac:0,brokerNotes:[]},
+{id:4,name:"TF1",ticker:"TFI",cours:7.13,pru:7.14,qty:21,sector:"Medias",consensus:"Neutre",target:9.50,ac:5,brokerNotes:[{broker:"Oddo BHF",rating:"Neutre",target:9.5,note:"Marche pub TV en leger recul. TF1+ est un relais digital interessant mais encore marginal."},{broker:"Exane BNP",rating:"Surperformance",target:10,note:"Valorisation decotee vs pairs europeens. Le streaming TF1+ pourrait devenir un catalyseur."}]},
+{id:5,name:"RISING STONE",ticker:"ALRS",cours:48.80,pru:58.30,qty:3,sector:"Immobilier",consensus:"N/A",target:null,ac:0,brokerNotes:[]},
+{id:6,name:"SEMCO TECHNOLOGIES",ticker:"ALSEM",cours:32.40,pru:15.00,qty:4,sector:"Semi-conducteurs",consensus:"N/A",target:null,ac:0,brokerNotes:[]},
 ];
 
 const INIT_PEA=[
-{id:7,name:"ISHARES MSCI WORLD",ticker:"WPEA",cours:6.19,pru:5.97,qty:696,sector:"ETF Monde",consensus:"ETF",target:null,ac:0},
-{id:8,name:"PUBLICIS GROUPE",ticker:"PUB",cours:76.36,pru:78.47,qty:29,sector:"Communication",consensus:"Achat",target:108,ac:14},
-{id:9,name:"AMUNDI MSCI EMERGING",ticker:"PAEEM",cours:30.47,pru:30.07,qty:52,sector:"ETF Émergents",consensus:"ETF",target:null,ac:0},
-{id:10,name:"ACCOR",ticker:"AC",cours:43.96,pru:37.30,qty:30,sector:"Hôtellerie",consensus:"Achat",target:55,ac:18},
-{id:11,name:"BNP PARIBAS",ticker:"BNP",cours:87.26,pru:74.31,qty:15,sector:"Banque",consensus:"Achat",target:100.66,ac:19},
-{id:12,name:"EIFFAGE",ticker:"FGR",cours:133.85,pru:114.09,qty:8,sector:"Construction",consensus:"Achat",target:144.80,ac:17},
-{id:13,name:"AMUNDI RUSSELL 2000",ticker:"RS2K",cours:332.33,pru:308.55,qty:3,sector:"ETF US Small",consensus:"ETF",target:null,ac:0},
-{id:14,name:"SEB",ticker:"SK",cours:47.40,pru:66.80,qty:18,sector:"Consommation",consensus:"Achat",target:75.36,ac:8},
-{id:15,name:"AMUNDI HEALTHCARE",ticker:"HLT",cours:152.43,pru:159.08,qty:5,sector:"ETF Santé",consensus:"ETF",target:null,ac:0},
-{id:16,name:"ISHARES STOXX BANKS",ticker:"BNKE",cours:16.02,pru:14.75,qty:42,sector:"ETF Banques",consensus:"ETF",target:null,ac:0},
-{id:17,name:"CAPGEMINI",ticker:"CAP",cours:110.05,pru:105.34,qty:6,sector:"Technologie",consensus:"Achat Fort",target:155,ac:16},
-{id:18,name:"AMUNDI LATAM",ticker:"ALAT",cours:26.74,pru:25.08,qty:24,sector:"ETF LatAm",consensus:"ETF",target:null,ac:0},
-{id:19,name:"TOTALENERGIES",ticker:"TTE",cours:67.44,pru:52.64,qty:9,sector:"Énergie",consensus:"Achat",target:69.20,ac:22},
-{id:20,name:"SPIE",ticker:"SPIE",cours:48.06,pru:43.61,qty:12,sector:"Services Industriels",consensus:"Achat",target:54.50,ac:11},
-{id:21,name:"BNP EASY S&P 500",ticker:"ESE",cours:29.65,pru:25.54,qty:19,sector:"ETF US Large",consensus:"ETF",target:null,ac:0},
-{id:22,name:"WENDEL",ticker:"MF",cours:83.65,pru:80.33,qty:5,sector:"Holding",consensus:"Achat",target:118.50,ac:6},
-{id:23,name:"FDJ UNITED",ticker:"FDJ",cours:25.62,pru:28.13,qty:15,sector:"Jeux",consensus:"Neutre",target:29.37,ac:11},
-{id:24,name:"MERSEN",ticker:"MRN",cours:25.45,pru:22.63,qty:14,sector:"Matériaux",consensus:"Achat",target:27.72,ac:7},
-{id:25,name:"ARKEMA",ticker:"AKE",cours:54.30,pru:69.61,qty:5,sector:"Chimie",consensus:"Achat",target:74.25,ac:16},
-{id:26,name:"RENAULT",ticker:"RNO",cours:28.55,pru:37.10,qty:7,sector:"Automobile",consensus:"Achat",target:45.74,ac:19},
+{id:7,name:"ISHARES MSCI WORLD",ticker:"WPEA",cours:6.19,pru:5.97,qty:696,sector:"ETF Monde",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:8,name:"PUBLICIS GROUPE",ticker:"PUB",cours:76.36,pru:78.47,qty:29,sector:"Communication",consensus:"Achat",target:108,ac:14,brokerNotes:[{broker:"Goldman Sachs",rating:"Achat",target:115,note:"Leader inconteste du data-driven marketing. Epsilon et Sapient creent un avantage concurrentiel majeur."},{broker:"Morgan Stanley",rating:"Surponderer",target:112,note:"Resilience remarquable dans un marche pub volatile. Mix digital 60%+ protege les marges."},{broker:"Oddo BHF",rating:"Surperformance",target:108,note:"Multiples attractifs vs WPP/Omnicom malgre la surperformance recente."},{broker:"Deutsche Bank",rating:"Achat",target:105,note:"Mieux positionne des Big 4 pour capter les budgets IA/data des annonceurs."}]},
+{id:9,name:"AMUNDI MSCI EMERGING",ticker:"PAEEM",cours:30.47,pru:30.07,qty:52,sector:"ETF Emergents",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:10,name:"ACCOR",ticker:"AC",cours:43.96,pru:37.30,qty:30,sector:"Hotellerie",consensus:"Achat",target:55,ac:18,brokerNotes:[{broker:"HSBC",rating:"Achat",target:58,note:"Modele asset-light, ROIC superieur. Pipeline record 1200 hotels. Luxe en acceleration."},{broker:"Bernstein",rating:"Surperformance",target:54,note:"RevPAR en croissance mid-single digit. Exposition Asie-Pacifique sous-estimee."},{broker:"Oddo BHF",rating:"Surperformance",target:55,note:"18x PE fwd vs Marriott 25x. Potentiel de rerating significatif."}]},
+{id:11,name:"BNP PARIBAS",ticker:"BNP",cours:87.26,pru:74.31,qty:15,sector:"Banque",consensus:"Achat",target:100.66,ac:19,brokerNotes:[{broker:"Goldman Sachs",rating:"Achat",target:105,note:"Premiere banque zone euro. CET1 13.2% permet rachats agressifs. ROE cible 12%+."},{broker:"Deutsche Bank",rating:"Achat",target:102,note:"Diversification unique en Europe. Dividend yield >5% bien couvert."},{broker:"UBS",rating:"Achat",target:98,note:"Banque la moins chere du SBF120. Retour aux actionnaires massif sous-estime."},{broker:"JP Morgan",rating:"Surponderer",target:100,note:"CIB en position de force. Cout du risque contenu malgre le cycle."}]},
+{id:12,name:"EIFFAGE",ticker:"FGR",cours:133.85,pru:114.09,qty:8,sector:"Construction",consensus:"Achat",target:144.80,ac:17,brokerNotes:[{broker:"Oddo BHF",rating:"Surperformance",target:152,note:"APRR genere 50% de l EBITDA avec visibilite exceptionnelle. Carnet BTP record 25Mds."},{broker:"Societe Generale",rating:"Achat",target:145,note:"Modele integre unique. Rendement dividende 3.3% en croissance."},{broker:"Stifel",rating:"Achat",target:140,note:"Infrastructure et transition energetique = moteurs seculaires. Decote vs Vinci."}]},
+{id:13,name:"AMUNDI RUSSELL 2000",ticker:"RS2K",cours:332.33,pru:308.55,qty:3,sector:"ETF US Small",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:14,name:"SEB",ticker:"SK",cours:47.40,pru:66.80,qty:18,sector:"Consommation",consensus:"Achat",target:75.36,ac:8,brokerNotes:[{broker:"Oddo BHF",rating:"Surperformance",target:82,note:"Leader mondial petit electromenager. Tefal, Moulinex = pricing power. Reprise Chine attendue S2."},{broker:"Bernstein",rating:"Achat",target:75,note:"Surstockage en absorption. Rebond volumes anticipe. Valorisation historiquement basse."},{broker:"Deutsche Bank",rating:"Achat",target:70,note:"Innovation constante (friteuses sans huile, robots). Sous-valorise vs De Longhi."}]},
+{id:15,name:"AMUNDI HEALTHCARE",ticker:"HLT",cours:152.43,pru:159.08,qty:5,sector:"ETF Sante",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:16,name:"ISHARES STOXX BANKS",ticker:"BNKE",cours:16.02,pru:14.75,qty:42,sector:"ETF Banques",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:17,name:"CAPGEMINI",ticker:"CAP",cours:110.05,pru:105.34,qty:6,sector:"Technologie",consensus:"Achat Fort",target:155,ac:16,brokerNotes:[{broker:"Goldman Sachs",rating:"Achat",target:165,note:"Positionnement IA generative unique en Europe. Pipeline deals IA en forte acceleration."},{broker:"Morgan Stanley",rating:"Surponderer",target:155,note:"Cycle IT au point bas. Premier beneficiaire du rebond budgets IT 2026."},{broker:"UBS",rating:"Achat",target:150,note:"Marge operationnelle resiliente 13%+. FCF conversion exemplaire."},{broker:"Oddo BHF",rating:"Surperformance",target:148,note:"Sous-valorise vs Accenture/Infosys. Potentiel rerating lie a l IA."}]},
+{id:18,name:"AMUNDI LATAM",ticker:"ALAT",cours:26.74,pru:25.08,qty:24,sector:"ETF LatAm",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:19,name:"TOTALENERGIES",ticker:"TTE",cours:67.44,pru:52.64,qty:9,sector:"Energie",consensus:"Achat",target:69.20,ac:22,brokerNotes:[{broker:"Goldman Sachs",rating:"Neutre",target:72,note:"Major la mieux positionnee sur la transition. Exposition petrole dominante."},{broker:"Bernstein",rating:"Surperformance",target:75,note:"FCF yield 9% parmi les plus eleves du secteur. Rachats sous-estimes."},{broker:"JP Morgan",rating:"Surponderer",target:70,note:"Pipeline renouvelable 35GW credibilise la strategie multi-energies."},{broker:"Societe Generale",rating:"Achat",target:68,note:"Rendement total (dividende + rachat) de 12%. Brent 70$/b confortable."}]},
+{id:20,name:"SPIE",ticker:"SPIE",cours:48.06,pru:43.61,qty:12,sector:"Services Industriels",consensus:"Achat",target:54.50,ac:11,brokerNotes:[{broker:"Oddo BHF",rating:"Surperformance",target:56,note:"Leader europeen services multi-techniques. Beneficiaire structurel transition energetique."},{broker:"Stifel",rating:"Achat",target:54,note:"Croissance organique 4-5% durable. M&A relutif. Management de qualite."},{broker:"Berenberg",rating:"Achat",target:55,note:"Carnet offre 18 mois de visibilite. Marge EBITA en expansion vers 7.5%."}]},
+{id:21,name:"BNP EASY S&P 500",ticker:"ESE",cours:29.65,pru:25.54,qty:19,sector:"ETF US Large",consensus:"ETF",target:null,ac:0,brokerNotes:[]},
+{id:22,name:"WENDEL",ticker:"MF",cours:83.65,pru:80.33,qty:5,sector:"Holding",consensus:"Achat",target:118.50,ac:6,brokerNotes:[{broker:"Oddo BHF",rating:"Surperformance",target:125,note:"Decote holding 35% injustifiee. IK Partners transforme le profil."},{broker:"Societe Generale",rating:"Achat",target:118,note:"NAV 130eur vs cours 84. Catalyseurs : simplification et rerating."},{broker:"Berenberg",rating:"Achat",target:115,note:"Track record solide. Bureau Veritas + IK Partners = combinaison unique."}]},
+{id:23,name:"FDJ UNITED",ticker:"FDJ",cours:25.62,pru:28.13,qty:15,sector:"Jeux",consensus:"Neutre",target:29.37,ac:11,brokerNotes:[{broker:"Oddo BHF",rating:"Neutre",target:30,note:"Monopole loterie = cash machine. Integration Kindred complexe a court terme."},{broker:"Deutsche Bank",rating:"Conservation",target:28,note:"Synergie Kindred 50M mais timeline incertaine. Pression regulatoire online."},{broker:"JP Morgan",rating:"Neutre",target:29,note:"Rendement dividende 3.5% correct mais croissance limitee hors Kindred."}]},
+{id:24,name:"MERSEN",ticker:"MRN",cours:25.45,pru:22.63,qty:14,sector:"Materiaux",consensus:"Achat",target:27.72,ac:7,brokerNotes:[{broker:"Oddo BHF",rating:"Surperformance",target:32,note:"Fournisseur critique semi-conducteurs (SiC) et EV. Pricing power eleve."},{broker:"Portzamparc",rating:"Achat",target:28,note:"Exposition megatendances industrielles (EV, ENR, semi). Valorisation attractive."},{broker:"Gilbert Dupont",rating:"Achat",target:26,note:"Carnet solide. Capacites SiC en expansion rapide pour la demande EV."}]},
+{id:25,name:"ARKEMA",ticker:"AKE",cours:54.30,pru:69.61,qty:5,sector:"Chimie",consensus:"Achat",target:74.25,ac:16,brokerNotes:[{broker:"Goldman Sachs",rating:"Achat",target:80,note:"Transformation portefeuille vers specialites hautes marges reussie. Bostik porteur."},{broker:"Deutsche Bank",rating:"Achat",target:75,note:"Point bas cyclique atteint. Destockage termine. Levier operationnel important."},{broker:"Oddo BHF",rating:"Surperformance",target:72,note:"Exposition construction durable, batteries et 5G. Sous-valorise vs pairs."},{broker:"JP Morgan",rating:"Surponderer",target:74,note:"EBITDA margin recovery de 14% vers 17% attendue 2026-27."}]},
+{id:26,name:"RENAULT",ticker:"RNO",cours:28.55,pru:37.10,qty:7,sector:"Automobile",consensus:"Achat",target:45.74,ac:19,brokerNotes:[{broker:"Goldman Sachs",rating:"Achat",target:50,note:"Renaulution porte ses fruits : marge 8%+. R5 et Scenic E-Tech = succes."},{broker:"Deutsche Bank",rating:"Achat",target:48,note:"3.8x PE fwd absurde. Le marche price un scenario catastrophe irrealiste."},{broker:"Oddo BHF",rating:"Surperformance",target:44,note:"Risque tarifaire US limite. Ampere (EV) pourrait etre revalorise separement."},{broker:"Bernstein",rating:"Surperformance",target:42,note:"Restructuration la plus reussie du secteur auto europeen. Cash net positif."}]},
 ];
 
-const f=(n)=>n?.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
-const fp=(n)=>(n>=0?"+":"")+n?.toFixed(2)+"%";
-const TABS=["Vue d'ensemble","Mes Positions","Goldman Sachs","Morgan Stanley","Bridgewater","BlackRock","Citadel","JPMorgan","Briefing"];
-const SECS=["Technologie","Banque","Communication","Hôtellerie","Construction","Énergie","Services Industriels","Holding","Jeux","Matériaux","Chimie","Automobile","Consommation","Médias","Loisirs","Immobilier","Semi-conducteurs","Énergie Renouvelable","ETF Monde","ETF Émergents","ETF US Small","ETF US Large","ETF Santé","ETF Banques","ETF LatAm","Autre"];
+const f=(n)=>n!=null?n.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" \u20ac":"N/A";
+const fp=(n)=>(n>=0?"+":"")+n.toFixed(2)+"%";
+const TABS=["Vue d'ensemble","Positions","Goldman Sachs","Morgan Stanley","Bridgewater","BlackRock","Citadel","JPMorgan","Reco","Briefing"];
+const SECS=["Technologie","Banque","Communication","Hotellerie","Construction","Energie","Services Industriels","Holding","Jeux","Materiaux","Chimie","Automobile","Consommation","Medias","Loisirs","Immobilier","Semi-conducteurs","Energie Renouvelable","ETF Monde","ETF Emergents","ETF US Small","ETF US Large","ETF Sante","ETF Banques","ETF LatAm","Autre"];
 const CONS=["Achat Fort","Achat","Neutre","Conservation","Vente","ETF","N/A"];
 
+// Broker tiers for conviction weighting
+const TIER1=["Goldman Sachs","JP Morgan","Morgan Stanley","UBS","Deutsche Bank","Bernstein","HSBC","Barclays","RBC","Citi","BofA"];
+const TIER2=["Societe Generale","Oddo BHF","Exane BNP","Stifel","Berenberg","Jefferies","Bryan Garnier"];
+
+// DAILY RECOMMENDATIONS with conviction score
+const DAILY_RECO=[
+// HIGH CONVICTION (4+ brokers, mostly Tier 1)
+{action:"SCHNEIDER ELECTRIC",ticker:"SU",sector:"Industrie",cap:"Large",nbBrokers:28,achat:24,neutre:3,vente:1,targetMoy:285,cours:248,topBrokers:[{broker:"Goldman Sachs",rating:"Achat",target:310,note:"Leader electrification + data centers. Croissance organique >10% durable. Pure play transition energetique."},{broker:"JP Morgan",rating:"Surponderer",target:295,note:"Carnet de commandes record. Marge EBITA en expansion vers 20%. Qualite de croissance exceptionnelle."},{broker:"Morgan Stanley",rating:"Surponderer",target:290,note:"Positionnement unique sur 3 megatendances : electrification, automatisation, digitalisation."},{broker:"UBS",rating:"Achat",target:280,note:"Pricing power demontre. Mix vers le logiciel ameliore la recurrence du CA."}]},
+{action:"LVMH",ticker:"MC",sector:"Luxe",cap:"Large",nbBrokers:32,achat:26,neutre:5,vente:1,targetMoy:820,cours:685,topBrokers:[{broker:"Goldman Sachs",rating:"Achat",target:850,note:"Rebond Chine confirme T4. Diversification marques inegalee. Mode + Maroquinerie reste le moteur."},{broker:"Morgan Stanley",rating:"Surponderer",target:830,note:"Aspirational luxury en croissance structurelle. Pricing power intact malgre le ralentissement."},{broker:"HSBC",rating:"Achat",target:810,note:"Pipeline innovation fort (Pharrell/LV, Tiffany repositionnement). Free cash flow exceptionnel."},{broker:"Bernstein",rating:"Surperformance",target:800,note:"Valorisation raisonnable a 22x PE fwd pour un CAGR benefice de 12%."}]},
+{action:"ASML",ticker:"ASML",sector:"Semi-conducteurs",cap:"Large",nbBrokers:30,achat:25,neutre:4,vente:1,targetMoy:780,cours:640,topBrokers:[{broker:"Morgan Stanley",rating:"Surponderer",target:820,note:"Monopole EUV inattaquable. Carnet de commandes record. IA = driver structurel de la demande."},{broker:"Goldman Sachs",rating:"Achat",target:800,note:"Installed base services en croissance 15%/an. High-NA EUV = nouveau cycle de pricing."},{broker:"Deutsche Bank",rating:"Achat",target:770,note:"Seul fournisseur mondial de lithographie avancee. Barrier to entry absolue."},{broker:"Barclays",rating:"Surponderer",target:760,note:"Cycle semi en reprise. ASML beneficie en premier de la hausse des capex fonderies."}]},
+{action:"AIRBUS",ticker:"AIR",sector:"Aeronautique",cap:"Large",nbBrokers:26,achat:21,neutre:4,vente:1,targetMoy:182,cours:158,topBrokers:[{broker:"JP Morgan",rating:"Surponderer",target:195,note:"Ramp-up A320neo en bonne voie. Carnet de 8 ans. Supply chain en amelioration."},{broker:"Goldman Sachs",rating:"Achat",target:190,note:"Duopole Boeing/Airbus. Boeing en difficulte = parts de marche pour Airbus."},{broker:"Bernstein",rating:"Surperformance",target:185,note:"Aftermarket en croissance 10%+. Pricing power sur A321XLR."},{broker:"Deutsche Bank",rating:"Achat",target:180,note:"FCF en acceleration vers 6Mds en 2027. Programme de retour massif."}]},
+{action:"SAFRAN",ticker:"SAF",sector:"Aeronautique",cap:"Large",nbBrokers:22,achat:19,neutre:3,vente:0,targetMoy:265,cours:232,topBrokers:[{broker:"Goldman Sachs",rating:"Achat",target:280,note:"Aftermarket LEAP en plein boom. Marge OEM en amelioration. Meilleur profil du secteur aero."},{broker:"Exane BNP",rating:"Surperformance",target:270,note:"Pricing power exceptionnel sur pieces de rechange. FCF en acceleration forte."},{broker:"JP Morgan",rating:"Surponderer",target:260,note:"Installed base LEAP grandit chaque trimestre. Revenus recurrents en hausse structurelle."}]},
+// MEDIUM CONVICTION
+{action:"SAINT-GOBAIN",ticker:"SGO",sector:"Materiaux Construction",cap:"Large",nbBrokers:20,achat:16,neutre:3,vente:1,targetMoy:102,cours:84,topBrokers:[{broker:"Societe Generale",rating:"Achat",target:108,note:"Renovation energetique = megatendance seculaire. Transformation vers specialites reussie."},{broker:"Deutsche Bank",rating:"Achat",target:100,note:"Marge record a 11.5%. Le marche sous-estime la recurrence de la renovation."},{broker:"Goldman Sachs",rating:"Neutre",target:95,note:"Valorisation correcte apres le re-rating. Croissance organique a surveiller."}]},
+{action:"HERMES",ticker:"RMS",sector:"Luxe",cap:"Large",nbBrokers:24,achat:12,neutre:10,vente:2,targetMoy:2380,cours:2250,topBrokers:[{broker:"UBS",rating:"Neutre",target:2400,note:"Qualite exceptionnelle mais 55x PE laisse peu de marge de securite."},{broker:"Bernstein",rating:"Sous-performance",target:2000,note:"Croissance ralentit. Valorisation excessive meme pour le luxe ultra-premium."},{broker:"Goldman Sachs",rating:"Neutre",target:2350,note:"Best-in-class mais le risque/rendement est equilibre a ces niveaux."}]},
+// MID CAPS
+{action:"INTERPARFUMS",ticker:"ITP",sector:"Luxe/Beaute",cap:"Mid",nbBrokers:8,achat:7,neutre:1,vente:0,targetMoy:58,cours:42,topBrokers:[{broker:"Oddo BHF",rating:"Surperformance",target:62,note:"Pipeline de licences exceptionnel (Lacoste, Jimmy Choo, Montblanc). Croissance >15% attendue."},{broker:"Stifel",rating:"Achat",target:55,note:"Mid-cap parfums la mieux geree en Europe. Operating leverage en acceleration."},{broker:"Bryan Garnier",rating:"Achat",target:56,note:"Modele asset-light a forte generation de cash. PER attractif vs L Oreal."}]},
+{action:"THERMADOR GROUPE",ticker:"THEP",sector:"Distribution BTP",cap:"Mid",nbBrokers:5,achat:4,neutre:1,vente:0,targetMoy:98,cours:78,topBrokers:[{broker:"Portzamparc",rating:"Achat Fort",target:105,note:"Leader distribution plomberie/chauffage. Modele decentralise unique. Marge nette >10%."},{broker:"Oddo BHF",rating:"Surperformance",target:95,note:"Exposition renovation energetique. Treso nette positive. Dividende croissant depuis 15 ans."}]},
+{action:"GERARD PERRIER",ticker:"GPCP",sector:"Electricite Industrielle",cap:"Small",nbBrokers:3,achat:3,neutre:0,vente:0,targetMoy:120,cours:96,topBrokers:[{broker:"Portzamparc",rating:"Achat Fort",target:128,note:"Nucleaire + electrification industrielle. Carnet record. Bilan net cash."},{broker:"Gilbert Dupont",rating:"Achat",target:115,note:"Beneficiaire direct du plan nucleaire francais. Valorisation attractive."}]},
+{action:"LECTRA",ticker:"LSS",sector:"Technologie Industrielle",cap:"Mid",nbBrokers:6,achat:5,neutre:1,vente:0,targetMoy:38,cours:28,topBrokers:[{broker:"Oddo BHF",rating:"Surperformance",target:40,note:"Leader mondial decoupe et CAO pour la mode et l auto. Integration Gerber reussie."},{broker:"Stifel",rating:"Achat",target:37,note:"Modele recurrent (SaaS + consommables). Cycle bas = point d entree."}]},
+{action:"ESKER",ticker:"ESKR",sector:"SaaS",cap:"Mid",nbBrokers:5,achat:5,neutre:0,vente:0,targetMoy:260,cours:210,topBrokers:[{broker:"Oddo BHF",rating:"Surperformance",target:275,note:"Pure play digitalisation processus P2P et O2C. ARR en croissance >15%. Modele SaaS pur."},{broker:"Bryan Garnier",rating:"Achat",target:255,note:"Retention nette >110%. Expansion internationale US en acceleration."}]},
+{action:"DASSAULT SYSTEMES",ticker:"DSY",sector:"Logiciel",cap:"Large",nbBrokers:22,achat:14,neutre:7,vente:1,targetMoy:42,cours:34,topBrokers:[{broker:"Stifel",rating:"Achat",target:45,note:"Relevement : adoption cloud en acceleration. 3DEXPERIENCE gagne des parts."},{broker:"Goldman Sachs",rating:"Achat",target:43,note:"Transition cloud creuse les resultats court terme mais augmente la valeur long terme."},{broker:"JP Morgan",rating:"Surponderer",target:41,note:"Life sciences + manufacturing = 2 marches adressables en croissance seculaire."}]},
+];
+
 const GS={
-"PUBLICIS GROUPE":{moat:8,mgmt:7,val:"Sous-évalué",pe:13,pef:11.2,ev:8.5,fcf:"7.2%",de:0.45,v:"Achat",conv:"Élevée",bull:130,bear:65,sum:"Leader mondial communication digitale. Transformation data-driven réussie. Publicis Sapient = relais de croissance structurel."},
-"BNP PARIBAS":{moat:7,mgmt:7,val:"Sous-évalué",pe:7.5,pef:6.8,ev:null,fcf:"N/A",de:null,v:"Achat",conv:"Élevée",bull:110,bear:72,sum:"1ère banque zone euro. Diversification exemplaire. Rachat d'actions massif. Rendement >5%."},
-"ACCOR":{moat:7,mgmt:8,val:"Fair Value",pe:22.5,pef:18,ev:12.3,fcf:"4.8%",de:0.85,v:"Achat",conv:"Moyenne",bull:66,bear:35,sum:"Transformation asset-light réussie. Marques premium en croissance. Pipeline +1200 hôtels."},
-"EIFFAGE":{moat:6,mgmt:7,val:"Sous-évalué",pe:12.2,pef:10.5,ev:6.8,fcf:"6.5%",de:1.2,v:"Achat",conv:"Élevée",bull:172,bear:105,sum:"BTP + concessions APRR. Cash-flow récurrent. Carnet de commandes record."},
-"CAPGEMINI":{moat:7,mgmt:7,val:"Sous-évalué",pe:15.8,pef:13.5,ev:10.2,fcf:"5.5%",de:0.55,v:"Achat",conv:"Élevée",bull:208,bear:90,sum:"N°1 européen conseil IT. Fort sur IA générative et cloud. Compression temporaire = opportunité."},
-"TOTALENERGIES":{moat:8,mgmt:8,val:"Fair Value",pe:8.5,pef:7.8,ev:4.2,fcf:"9.1%",de:0.35,v:"Conservation",conv:"Moyenne",bull:80,bear:50,sum:"Major la mieux positionnée transition énergétique. Pipeline renouvelable massif."},
-"ARKEMA":{moat:6,mgmt:6,val:"Sous-évalué",pe:18.5,pef:12,ev:7.5,fcf:"5.0%",de:0.65,v:"Achat",conv:"Moyenne",bull:95,bear:42,sum:"Matériaux de spécialité. Exposition EV, 5G, construction durable."},
-"RENAULT":{moat:5,mgmt:7,val:"Très Sous-évalué",pe:4.2,pef:3.8,ev:2.5,fcf:"12%",de:0.90,v:"Achat",conv:"Moyenne",bull:64,bear:22,sum:"Renaulution : marges en hausse. R5 électrique réussi. Risque EV chinois + tarifs."},
-"SEB":{moat:7,mgmt:7,val:"Sous-évalué",pe:14,pef:11.5,ev:8,fcf:"6.0%",de:0.70,v:"Achat",conv:"Élevée",bull:102,bear:55,sum:"Leader mondial petit électroménager (Tefal, Moulinex). Marques iconiques."},
-"WENDEL":{moat:6,mgmt:8,val:"Sous-évalué (décote ~35%)",pe:null,pef:null,ev:null,fcf:"N/A",de:0.40,v:"Achat",conv:"Moyenne",bull:135,bear:70,sum:"Holding solide. Transformation asset management. Décote NAV ~35%."},
-"FDJ UNITED":{moat:8,mgmt:6,val:"Fair Value",pe:16,pef:14.5,ev:9.5,fcf:"5.5%",de:0.55,v:"Conservation",conv:"Faible",bull:41,bear:20,sum:"Monopole loterie France + Kindred. Cash-flow prévisible."},
-"SPIE":{moat:6,mgmt:8,val:"Fair Value",pe:18,pef:15.5,ev:10.5,fcf:"5.0%",de:0.80,v:"Conservation",conv:"Moyenne",bull:60,bear:38,sum:"Leader services multi-techniques. Transition énergétique. Valorisation tendue."},
-"MERSEN":{moat:6,mgmt:7,val:"Sous-évalué",pe:12,pef:10,ev:6.5,fcf:"7.0%",de:0.50,v:"Achat",conv:"Moyenne",bull:33,bear:18,sum:"Graphite + solutions électriques. Exposition EV, semi-conducteurs, ENR."},
-"NEURONES":{moat:5,mgmt:7,val:"Fair Value",pe:16,pef:14,ev:9,fcf:"5.5%",de:0.10,v:"Achat",conv:"Moyenne",bull:52,bear:28,sum:"ESN française, infra IT et cloud. Croissance régulière. Bilan très sain."},
+"PUBLICIS GROUPE":{moat:8,mgmt:7,val:"Sous-evalue",pe:13,pef:11.2,ev:8.5,fcf:"7.2%",de:0.45,v:"Achat",conv:"Elevee",bull:130,bear:65,sum:"Leader mondial communication digitale. Epsilon + Sapient = avantage data unique."},
+"BNP PARIBAS":{moat:7,mgmt:7,val:"Sous-evalue",pe:7.5,pef:6.8,ev:null,fcf:"N/A",de:null,v:"Achat",conv:"Elevee",bull:110,bear:72,sum:"1ere banque zone euro. ROE 12%+. Rachat d actions massif."},
+"ACCOR":{moat:7,mgmt:8,val:"Fair Value",pe:22.5,pef:18,ev:12.3,fcf:"4.8%",de:0.85,v:"Achat",conv:"Moyenne",bull:66,bear:35,sum:"Asset-light reussi. Marques premium en croissance. Pipeline +1200 hotels."},
+"EIFFAGE":{moat:6,mgmt:7,val:"Sous-evalue",pe:12.2,pef:10.5,ev:6.8,fcf:"6.5%",de:1.2,v:"Achat",conv:"Elevee",bull:172,bear:105,sum:"BTP + APRR. Cash-flow recurrent. Carnet record."},
+"CAPGEMINI":{moat:7,mgmt:7,val:"Sous-evalue",pe:15.8,pef:13.5,ev:10.2,fcf:"5.5%",de:0.55,v:"Achat",conv:"Elevee",bull:208,bear:90,sum:"N1 europeen conseil IT. Fort IA generative et cloud."},
+"TOTALENERGIES":{moat:8,mgmt:8,val:"Fair Value",pe:8.5,pef:7.8,ev:4.2,fcf:"9.1%",de:0.35,v:"Conservation",conv:"Moyenne",bull:80,bear:50,sum:"Major la mieux positionnee transition energetique."},
+"ARKEMA":{moat:6,mgmt:6,val:"Sous-evalue",pe:18.5,pef:12,ev:7.5,fcf:"5.0%",de:0.65,v:"Achat",conv:"Moyenne",bull:95,bear:42,sum:"Materiaux de specialite. Exposition EV, 5G, construction durable."},
+"RENAULT":{moat:5,mgmt:7,val:"Tres Sous-evalue",pe:4.2,pef:3.8,ev:2.5,fcf:"12%",de:0.90,v:"Achat",conv:"Moyenne",bull:64,bear:22,sum:"Renaulution : marges en hausse. R5 electrique reussi."},
+"SEB":{moat:7,mgmt:7,val:"Sous-evalue",pe:14,pef:11.5,ev:8,fcf:"6.0%",de:0.70,v:"Achat",conv:"Elevee",bull:102,bear:55,sum:"Leader mondial petit electromenager. Marques iconiques."},
+"WENDEL":{moat:6,mgmt:8,val:"Sous-evalue (decote 35%)",pe:null,pef:null,ev:null,fcf:"N/A",de:0.40,v:"Achat",conv:"Moyenne",bull:135,bear:70,sum:"Holding solide. Decote NAV 35%. IK Partners = catalyseur."},
+"FDJ UNITED":{moat:8,mgmt:6,val:"Fair Value",pe:16,pef:14.5,ev:9.5,fcf:"5.5%",de:0.55,v:"Conservation",conv:"Faible",bull:41,bear:20,sum:"Monopole loterie France. Integration Kindred = risque."},
+"SPIE":{moat:6,mgmt:8,val:"Fair Value",pe:18,pef:15.5,ev:10.5,fcf:"5.0%",de:0.80,v:"Conservation",conv:"Moyenne",bull:60,bear:38,sum:"Leader services multi-techniques. Transition energetique."},
+"MERSEN":{moat:6,mgmt:7,val:"Sous-evalue",pe:12,pef:10,ev:6.5,fcf:"7.0%",de:0.50,v:"Achat",conv:"Moyenne",bull:33,bear:18,sum:"Graphite + solutions electriques. Exposition EV, semi, ENR."},
+"NEURONES":{moat:5,mgmt:7,val:"Fair Value",pe:16,pef:14,ev:9,fcf:"5.5%",de:0.10,v:"Achat",conv:"Moyenne",bull:52,bear:28,sum:"ESN francaise, infra IT et cloud. Bilan tres sain."},
+"TF1":{moat:5,mgmt:6,val:"Sous-evalue",pe:8,pef:7.5,ev:5.5,fcf:"8.0%",de:0.30,v:"Neutre",conv:"Faible",bull:12,bear:5,sum:"Leader TV France. TF1+ en croissance mais marche pub incertain."},
 };
+
+// MARKET COMMENTARY
+const GS_MARKET={title:"Goldman Sachs \u2014 Global Equity Strategy",date:"6 Mars 2026",outlook:"Constructif avec prudence",points:["CAC 40 : objectif 8400 pts a 12 mois (+7%). Le marche europeen reste sous-valorise vs le S&P 500 (14x PE fwd vs 21x).","Rotation sectorielle en cours : les flux sortent des megacaps US tech vers les cycliques europeens et les banques.","Risque principal : escalade tarifaire US-UE. Impact estime -3 a -5% sur les benefices du SBF120 en scenario adverse.","IA generative : catalyseur structurel pour les SSII europeennes (Capgemini, SAP) et les semi-conducteurs (ASML, STMicro).","Taux BCE : anticipation de 2 baisses supplementaires en 2026 vers 2.15%, positif pour les valeurs de croissance et l immobilier."]};
+
+const MS_MARKET={title:"Morgan Stanley \u2014 European Equity Strategy",date:"6 Mars 2026",outlook:"Surponderer l Europe",points:["Europe vs US : decote historique de 35% sur le PE forward. Les marges europeennes rattrapent leur retard.","Momentum technique : l Euro Stoxx 50 au-dessus de sa MM200 depuis 4 mois. RSI a 58, pas de surchauffe.","Secteurs favoris : Banques (NII resilient + retour capital), Tech (cycle bas = opportunite), Industrials (reindustrialisation).","Secteurs a eviter : Utilities (valorisation tendue), Telecom (concurrence prix), Auto (tarifs + transition EV couteuse).","Volatilite : VIX Europe (VSTOXX) a 18, niveau modere. Protection via puts sur auto et chimie recommandee."]};
+
+const CITADEL_MARKET={title:"Citadel \u2014 Macro & Sector Rotation",date:"6 Mars 2026",outlook:"Mid-to-Late Cycle",points:["Cycle economique : la zone euro est en phase mid-to-late cycle. PMI manufacturier a 48.5, services a 52.3. Divergence a surveiller.","Inflation : en recul vers 2.2% en zone euro. Core inflation a 2.6% reste au-dessus de la cible BCE.","Credit : spreads IG a 95bps, HY a 380bps. Pas de stress mais resserrement des conditions de financement immobilier.","Positionnement : surponderer les secteurs a pricing power (luxe, aero, tech) et sous-ponderer les cycliques purs (auto, chimie basique).","Risques tail : election allemande (recomposition politique), tarifs Trump sur l automobile EU, crise immobiliere Chine phase 2."]};
 
 function App(){
 const[tab,setTab]=useState(0);
@@ -79,9 +110,9 @@ const[eid,setEid]=useState(null);
 const[ev,setEv]=useState({});
 const[dk,setDk]=useState(false);
 const[af,setAf]=useState(null);
-const[np,setNp]=useState({name:"",ticker:"",cours:"",pru:"",qty:"",sector:"Autre",consensus:"N/A",target:""});
 const[gs,setGs]=useState(null);
 const[cd,setCd]=useState(null);
+const[brokerView,setBrokerView]=useState(null);
 
 const all=useMemo(()=>[...pme,...pea],[pme,pea]);
 const stk=useMemo(()=>all.filter(p=>p.consensus!=="ETF"),[all]);
@@ -95,199 +126,261 @@ const pc=useMemo(()=>pea.reduce((s,p)=>s+p.pru*p.qty,0),[pea]);
 const pmc=useMemo(()=>pme.reduce((s,p)=>s+p.pru*p.qty,0),[pme]);
 const sa=useMemo(()=>{const m={};all.forEach(p=>{m[p.sector]=(m[p.sector]||0)+p.cours*p.qty});return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([n,v])=>({n,v,p:(v/tv)*100}))},[all,tv]);
 
-const se=(p)=>{setEid(p.id);setEv({pru:p.pru,qty:p.qty,cours:p.cours})};
+const se=(p)=>{setEid(p.id);setEv({pru:String(p.pru),qty:String(p.qty),cours:String(p.cours)})};
 const sv=(id)=>{const u=l=>l.map(p=>p.id===id?{...p,pru:parseFloat(ev.pru)||p.pru,qty:parseInt(ev.qty)||p.qty,cours:parseFloat(ev.cours)||p.cours}:p);setPme(u);setPea(u);setEid(null)};
-const ap=(t)=>{const p={id:nid,name:np.name.toUpperCase(),ticker:np.ticker.toUpperCase(),cours:parseFloat(np.cours)||0,pru:parseFloat(np.pru)||0,qty:parseInt(np.qty)||0,sector:np.sector,consensus:np.consensus,target:np.target?parseFloat(np.target):null,ac:0};if(!p.name||!p.cours||!p.qty)return;if(t==="pme")setPme(x=>[...x,p]);else setPea(x=>[...x,p]);setNp({name:"",ticker:"",cours:"",pru:"",qty:"",sector:"Autre",consensus:"N/A",target:""});setAf(null)};
 const dp=(id)=>{setPme(x=>x.filter(p=>p.id!==id));setPea(x=>x.filter(p=>p.id!==id));setCd(null)};
 
-const bg=dk?"#0a0a0f":"#f8f9fb",cr=dk?"#16172a":"#fff",tx=dk?"#e8e8f0":"#1a1a2e",ts=dk?"#8888a8":"#6b7280",bd=dk?"#2a2b45":"#e5e7eb",ac="#2563eb",gn="#10b981",rd="#ef4444";
-const cs={background:cr,borderRadius:16,padding:20,border:`1px solid ${bd}`,marginBottom:12};
-const ip={width:"100%",padding:"8px 10px",borderRadius:8,border:`1px solid ${bd}`,background:bg,color:tx,fontSize:13,outline:"none",boxSizing:"border-box"};
+const bg=dk?"#0a0a0f":"#f8f9fb",cr=dk?"#16172a":"#fff",tx=dk?"#e8e8f0":"#1a1a2e",ts=dk?"#8888a8":"#6b7280",bd=dk?"#2a2b45":"#e5e7eb",acc="#2563eb",gn="#10b981",rd="#ef4444";
+const cs={background:cr,borderRadius:16,padding:20,border:"1px solid "+bd,marginBottom:12};
+const ip={width:"100%",padding:"8px 10px",borderRadius:8,border:"1px solid "+bd,background:bg,color:tx,fontSize:13,outline:"none",boxSizing:"border-box"};
 
-const Bar=({p,c})=><div style={{width:"100%",height:6,background:bd,borderRadius:3,overflow:"hidden"}}><div style={{width:`${Math.min(Math.abs(p),100)}%`,height:"100%",background:c,borderRadius:3}}/></div>;
-const Pnl=({v})=><span style={{color:v>=0?gn:rd,fontWeight:700,fontSize:13}}>{v>=0?"▲":"▼"} {f(Math.abs(v))}</span>;
-const CB=({c})=>{const m={"Achat Fort":{b:"#059669",f:"#fff"},Achat:{b:gn,f:"#fff"},Neutre:{b:"#f59e0b",f:"#000"},Conservation:{b:"#6b7280",f:"#fff"},Vente:{b:rd,f:"#fff"},"N/A":{b:bd,f:ts},ETF:{b:ac,f:"#fff"}}[c]||{b:bd,f:ts};return<span style={{background:m.b,color:m.f,padding:"3px 10px",borderRadius:12,fontSize:11,fontWeight:600}}>{c}</span>};
+const Bar=({p,c})=>React.createElement("div",{style:{width:"100%",height:6,background:bd,borderRadius:3,overflow:"hidden"}},React.createElement("div",{style:{width:Math.min(Math.abs(p),100)+"%",height:"100%",background:c,borderRadius:3}}));
+const Pnl=({v})=>React.createElement("span",{style:{color:v>=0?gn:rd,fontWeight:700,fontSize:13}},(v>=0?"\u25b2":"\u25bc")+" "+f(Math.abs(v)));
+const CB=({c})=>{const m={"Achat Fort":{b:"#059669",f:"#fff"},Achat:{b:gn,f:"#fff"},Surperformance:{b:gn,f:"#fff"},Surponderer:{b:gn,f:"#fff"},"Sous-performance":{b:rd,f:"#fff"},Neutre:{b:"#f59e0b",f:"#000"},Conservation:{b:"#6b7280",f:"#fff"},Vente:{b:rd,f:"#fff"},"N/A":{b:bd,f:ts},ETF:{b:acc,f:"#fff"}}[c]||{b:bd,f:ts};return React.createElement("span",{style:{background:m.b,color:m.f,padding:"3px 10px",borderRadius:12,fontSize:11,fontWeight:600}},c)};
 
-const AF=({t})=><div style={{...cs,borderLeft:`4px solid ${gn}`}}>
-<div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:12}}>Ajouter — {t==="pme"?"PEA-PME":"PEA"}</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Nom *</div><input value={np.name} onChange={e=>setNp({...np,name:e.target.value})} placeholder="LVMH" style={ip}/></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Ticker</div><input value={np.ticker} onChange={e=>setNp({...np,ticker:e.target.value})} placeholder="MC" style={ip}/></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Cours * (€)</div><input type="number" step="0.01" value={np.cours} onChange={e=>setNp({...np,cours:e.target.value})} style={ip}/></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>PRU (€)</div><input type="number" step="0.01" value={np.pru} onChange={e=>setNp({...np,pru:e.target.value})} style={ip}/></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Quantité *</div><input type="number" value={np.qty} onChange={e=>setNp({...np,qty:e.target.value})} style={ip}/></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Secteur</div><select value={np.sector} onChange={e=>setNp({...np,sector:e.target.value})} style={{...ip,appearance:"auto"}}>{SECS.map(s=><option key={s}>{s}</option>)}</select></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Consensus</div><select value={np.consensus} onChange={e=>setNp({...np,consensus:e.target.value})} style={{...ip,appearance:"auto"}}>{CONS.map(c=><option key={c}>{c}</option>)}</select></div>
-<div><div style={{fontSize:10,color:ts,marginBottom:2}}>Obj 12M (€)</div><input type="number" step="0.01" value={np.target} onChange={e=>setNp({...np,target:e.target.value})} style={ip}/></div>
-</div>
-<div style={{display:"flex",gap:8,marginTop:12}}>
-<button onClick={()=>ap(t)} style={{padding:"8px 18px",borderRadius:10,background:ac,color:"#fff",border:"none",fontSize:13,fontWeight:600,cursor:"pointer"}}>Ajouter</button>
-<button onClick={()=>setAf(null)} style={{padding:"8px 18px",borderRadius:10,background:"transparent",color:ts,border:`1px solid ${bd}`,fontSize:13,cursor:"pointer"}}>Annuler</button>
-</div></div>;
+// Market Commentary Block
+const MarketBlock=({data,gradient})=>React.createElement("div",{style:{...cs,background:gradient,border:"none",color:"#fff",marginBottom:16}},
+React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},data.title),
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8}},
+React.createElement("div",{style:{fontSize:18,fontWeight:700}},data.outlook),
+React.createElement("span",{style:{fontSize:11,opacity:0.6}},data.date)),
+React.createElement("div",{style:{marginTop:12}},data.points.map((p,i)=>React.createElement("div",{key:i,style:{fontSize:12,opacity:0.9,lineHeight:1.6,padding:"6px 0",borderTop:i>0?"1px solid rgba(255,255,255,0.15)":"none"}},"\u2022 "+p))));
 
+// ADD FORM with refs
+const AF=({t})=>{
+const refs={name:useRef(),ticker:useRef(),cours:useRef(),pru:useRef(),qty:useRef(),sector:useRef(),cons:useRef(),target:useRef()};
+const doAdd=()=>{
+const p={id:nid,name:(refs.name.current.value||"").toUpperCase(),ticker:(refs.ticker.current.value||"").toUpperCase(),cours:parseFloat(refs.cours.current.value)||0,pru:parseFloat(refs.pru.current.value)||0,qty:parseInt(refs.qty.current.value)||0,sector:refs.sector.current.value,consensus:refs.cons.current.value,target:refs.target.current.value?parseFloat(refs.target.current.value):null,ac:0,brokerNotes:[]};
+if(!p.name||!p.cours||!p.qty)return;
+if(t==="pme")setPme(x=>[...x,p]);else setPea(x=>[...x,p]);setAf(null)};
+return React.createElement("div",{style:{...cs,borderLeft:"4px solid "+gn}},
+React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Ajouter \u2014 "+(t==="pme"?"PEA-PME":"PEA")),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}},
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Nom *"),React.createElement("input",{ref:refs.name,placeholder:"LVMH",style:ip})),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Ticker"),React.createElement("input",{ref:refs.ticker,placeholder:"MC",style:ip})),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Cours * (\u20ac)"),React.createElement("input",{ref:refs.cours,type:"number",step:"0.01",style:ip})),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"PRU (\u20ac)"),React.createElement("input",{ref:refs.pru,type:"number",step:"0.01",style:ip})),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Quantite *"),React.createElement("input",{ref:refs.qty,type:"number",style:ip})),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Secteur"),React.createElement("select",{ref:refs.sector,defaultValue:"Autre",style:{...ip,appearance:"auto"}},SECS.map(s=>React.createElement("option",{key:s},s)))),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Consensus"),React.createElement("select",{ref:refs.cons,defaultValue:"N/A",style:{...ip,appearance:"auto"}},CONS.map(c=>React.createElement("option",{key:c},c)))),
+React.createElement("div",null,React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},"Obj 12M (\u20ac)"),React.createElement("input",{ref:refs.target,type:"number",step:"0.01",style:ip}))
+),
+React.createElement("div",{style:{display:"flex",gap:8,marginTop:12}},
+React.createElement("button",{onClick:doAdd,style:{padding:"8px 18px",borderRadius:10,background:acc,color:"#fff",border:"none",fontSize:13,fontWeight:600,cursor:"pointer"}},"Ajouter"),
+React.createElement("button",{onClick:()=>setAf(null),style:{padding:"8px 18px",borderRadius:10,background:"transparent",color:ts,border:"1px solid "+bd,fontSize:13,cursor:"pointer"}},"Annuler")))};
+
+// Position Row
 const PR=({p})=>{const pnl=(p.cours-p.pru)*p.qty;const pp=p.pru?((p.cours-p.pru)/p.pru)*100:0;const ie=eid===p.id;
-return<div style={{...cs,padding:14}}>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-<div style={{flex:1}}>
-<div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}><span style={{fontSize:14,fontWeight:700,color:tx}}>{p.name}</span><CB c={p.consensus}/></div>
-{ie?<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginTop:8}}>
-{["cours","pru","qty"].map(k=><div key={k}><div style={{fontSize:10,color:ts,marginBottom:2}}>{k==="cours"?"Cours":k==="pru"?"PRU":"Qté"}</div><input value={ev[k]} onChange={e=>setEv({...ev,[k]:e.target.value})} style={{...ip,borderColor:ac}}/></div>)}
-</div>:<div style={{fontSize:12,color:ts,marginTop:4}}>Cours: {f(p.cours)} · PRU: {f(p.pru)} · Qté: {p.qty}{p.target&&<span> · Obj: <span style={{color:ac,fontWeight:600}}>{f(p.target)}</span></span>}</div>}
-</div>
-<div style={{textAlign:"right",minWidth:90}}><div style={{fontSize:15,fontWeight:700,color:tx}}>{f(p.cours*p.qty)}</div><Pnl v={pnl}/><div style={{fontSize:11,color:pp>=0?gn:rd}}>{fp(pp)}</div></div>
-</div>
-<div style={{display:"flex",gap:8,marginTop:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
-{ie?<><button onClick={()=>sv(p.id)} style={{padding:"5px 14px",borderRadius:8,background:gn,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}}>Sauvegarder</button><button onClick={()=>setEid(null)} style={{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:`1px solid ${bd}`,fontSize:11,cursor:"pointer"}}>Annuler</button></>:
-<><button onClick={()=>se(p)} style={{padding:"5px 14px",borderRadius:8,background:"transparent",color:ac,border:`1px solid ${ac}`,fontSize:11,fontWeight:600,cursor:"pointer"}}>Modifier</button>
-{cd===p.id?<><button onClick={()=>dp(p.id)} style={{padding:"5px 14px",borderRadius:8,background:rd,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}}>Confirmer</button><button onClick={()=>setCd(null)} style={{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:`1px solid ${bd}`,fontSize:11,cursor:"pointer"}}>Non</button></>:
-<button onClick={()=>setCd(p.id)} style={{padding:"5px 14px",borderRadius:8,background:"transparent",color:rd,border:`1px solid ${rd}`,fontSize:11,fontWeight:600,cursor:"pointer"}}>Supprimer</button>}</>}
-</div></div>};
+return React.createElement("div",{style:{...cs,padding:14}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
+React.createElement("div",{style:{flex:1}},
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}},React.createElement("span",{style:{fontSize:14,fontWeight:700,color:tx}},p.name),React.createElement(CB,{c:p.consensus})),
+ie?React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginTop:8}},
+["cours","pru","qty"].map(k=>React.createElement("div",{key:k},React.createElement("div",{style:{fontSize:10,color:ts,marginBottom:2}},k==="cours"?"Cours":k==="pru"?"PRU":"Qte"),React.createElement("input",{value:ev[k],onChange:e=>setEv({...ev,[k]:e.target.value}),style:{...ip,borderColor:acc}})))
+):React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},"Cours: "+f(p.cours)+" \u00b7 PRU: "+f(p.pru)+" \u00b7 Qte: "+p.qty+(p.target?" \u00b7 Obj: ":""),p.target&&React.createElement("span",{style:{color:acc,fontWeight:600}},f(p.target)))
+),
+React.createElement("div",{style:{textAlign:"right",minWidth:90}},React.createElement("div",{style:{fontSize:15,fontWeight:700,color:tx}},f(p.cours*p.qty)),React.createElement(Pnl,{v:pnl}),React.createElement("div",{style:{fontSize:11,color:pp>=0?gn:rd}},fp(pp)))
+),
+React.createElement("div",{style:{display:"flex",gap:8,marginTop:8,justifyContent:"flex-end",flexWrap:"wrap"}},
+ie?React.createElement(React.Fragment,null,
+React.createElement("button",{onClick:()=>sv(p.id),style:{padding:"5px 14px",borderRadius:8,background:gn,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"Sauvegarder"),
+React.createElement("button",{onClick:()=>setEid(null),style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:"1px solid "+bd,fontSize:11,cursor:"pointer"}},"Annuler")
+):React.createElement(React.Fragment,null,
+React.createElement("button",{onClick:()=>se(p),style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:acc,border:"1px solid "+acc,fontSize:11,fontWeight:600,cursor:"pointer"}},"Modifier"),
+p.brokerNotes&&p.brokerNotes.length>0&&React.createElement("button",{onClick:()=>setBrokerView(brokerView===p.id?null:p.id),style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:"#7c3aed",border:"1px solid #7c3aed",fontSize:11,fontWeight:600,cursor:"pointer"}},brokerView===p.id?"Masquer":"Analystes"),
+cd===p.id?React.createElement(React.Fragment,null,
+React.createElement("button",{onClick:()=>dp(p.id),style:{padding:"5px 14px",borderRadius:8,background:rd,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"Confirmer"),
+React.createElement("button",{onClick:()=>setCd(null),style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:"1px solid "+bd,fontSize:11,cursor:"pointer"}},"Non")
+):React.createElement("button",{onClick:()=>setCd(p.id),style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:rd,border:"1px solid "+rd,fontSize:11,fontWeight:600,cursor:"pointer"}},"Supprimer")
+)),
+brokerView===p.id&&p.brokerNotes&&p.brokerNotes.length>0&&React.createElement("div",{style:{marginTop:10,width:"100%"}},
+p.brokerNotes.map((b,i)=>React.createElement("div",{key:i,style:{padding:"10px 12px",background:dk?"#1e1f38":"#f1f5f9",borderRadius:10,marginBottom:6}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}},
+React.createElement("span",{style:{fontSize:12,fontWeight:700,color:tx}},b.broker+(TIER1.includes(b.broker)?" \u2b50":"")),
+React.createElement("div",{style:{display:"flex",gap:6,alignItems:"center"}},React.createElement(CB,{c:b.rating}),b.target&&React.createElement("span",{style:{fontSize:11,color:acc,fontWeight:600}},"Obj: "+f(b.target)))
+),
+React.createElement("div",{style:{fontSize:12,color:ts,lineHeight:1.5}},b.note)
+))))};
 
-const T0=()=><div>
-<div style={{...cs,background:`linear-gradient(135deg,${ac},#7c3aed)`,border:"none",color:"#fff"}}>
-<div style={{fontSize:13,opacity:0.8}}>Valeur Totale</div>
-<div style={{fontSize:36,fontWeight:800,letterSpacing:-1}}>{f(tv)}</div>
-<div style={{display:"flex",gap:20,marginTop:12}}>
-<div><span style={{opacity:0.7,fontSize:12}}>P&L</span><br/><span style={{fontSize:18,fontWeight:700}}>{tpnl>=0?"+":""}{f(tpnl)}</span></div>
-<div><span style={{opacity:0.7,fontSize:12}}>Perf.</span><br/><span style={{fontSize:18,fontWeight:700}}>{fp(tpct)}</span></div>
-</div></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-{[["PEA",pv,pc],["PEA-PME",pmv,pmc]].map(([l,v,c])=><div key={l} style={cs}><div style={{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>{l}</div><div style={{fontSize:22,fontWeight:700,color:tx,marginTop:4}}>{f(v)}</div><div style={{fontSize:12,color:(v-c)>=0?gn:rd,fontWeight:600}}>{c?fp(((v-c)/c)*100):"—"}</div></div>)}
-</div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:12}}>Top Performers</div>
-{[...all].sort((a,b)=>(b.cours-b.pru)*b.qty-(a.cours-a.pru)*a.qty).slice(0,5).map(p=>{const pnl=(p.cours-p.pru)*p.qty;const pp=((p.cours-p.pru)/p.pru)*100;
-return<div key={p.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:`1px solid ${bd}`}}>
-<div><div style={{fontSize:13,fontWeight:600,color:tx}}>{p.name}</div><div style={{fontSize:11,color:ts}}>{f(p.cours*p.qty)}</div></div>
-<div style={{textAlign:"right"}}><Pnl v={pnl}/><div style={{fontSize:11,color:pp>=0?gn:rd}}>{fp(pp)}</div></div></div>})}
-</div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:12}}>Allocation Sectorielle</div>
-{sa.slice(0,10).map(s=><div key={s.n} style={{marginBottom:10}}><div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:tx,marginBottom:3}}><span>{s.n}</span><span style={{color:ts}}>{s.p.toFixed(1)}%</span></div><Bar p={s.p} c={ac}/></div>)}
-</div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:12}}>Consensus — Objectifs 12M</div>
-{stk.filter(p=>p.target).sort((a,b)=>((b.target-b.cours)/b.cours)-((a.target-a.cours)/a.cours)).map(p=>{const up=((p.target-p.cours)/p.cours)*100;
-return<div key={p.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:`1px solid ${bd}`}}>
-<div><div style={{fontSize:13,fontWeight:600,color:tx}}>{p.name}</div><div style={{fontSize:11,color:ts}}>{p.ac} analystes · <CB c={p.consensus}/></div></div>
-<div style={{textAlign:"right"}}><div style={{fontSize:13,fontWeight:700,color:up>=0?gn:rd}}>{fp(up)}</div><div style={{fontSize:11,color:ts}}>Obj: {f(p.target)}</div></div></div>})}
-</div></div>;
+// OVERVIEW
+const T0=()=>React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,"+acc+",#7c3aed)",border:"none",color:"#fff"}},
+React.createElement("div",{style:{fontSize:13,opacity:0.8}},"Valeur Totale"),
+React.createElement("div",{style:{fontSize:36,fontWeight:800,letterSpacing:-1}},f(tv)),
+React.createElement("div",{style:{display:"flex",gap:20,marginTop:12}},
+React.createElement("div",null,React.createElement("span",{style:{opacity:0.7,fontSize:12}},"P&L"),React.createElement("br"),React.createElement("span",{style:{fontSize:18,fontWeight:700}},(tpnl>=0?"+":"")+f(tpnl))),
+React.createElement("div",null,React.createElement("span",{style:{opacity:0.7,fontSize:12}},"Perf."),React.createElement("br"),React.createElement("span",{style:{fontSize:18,fontWeight:700}},fp(tpct))))),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+[["PEA",pv,pc],["PEA-PME",pmv,pmc]].map(([l,v,c])=>React.createElement("div",{key:l,style:cs},React.createElement("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}},l),React.createElement("div",{style:{fontSize:22,fontWeight:700,color:tx,marginTop:4}},f(v)),React.createElement("div",{style:{fontSize:12,color:(v-c)>=0?gn:rd,fontWeight:600}},c?fp(((v-c)/c)*100):"\u2014")))),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Toutes les Positions"),
+[...all].sort((a,b)=>b.cours*b.qty-a.cours*a.qty).map(p=>{const pnl=(p.cours-p.pru)*p.qty;const pp=p.pru?((p.cours-p.pru)/p.pru)*100:0;
+return React.createElement("div",{key:p.id,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid "+bd}},
+React.createElement("div",null,React.createElement("div",{style:{fontSize:13,fontWeight:600,color:tx}},p.name),React.createElement("div",{style:{fontSize:11,color:ts}},p.sector+" \u00b7 "+f(p.cours*p.qty))),
+React.createElement("div",{style:{textAlign:"right"}},React.createElement(Pnl,{v:pnl}),React.createElement("div",{style:{fontSize:11,color:pp>=0?gn:rd}},fp(pp))))})),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Allocation Sectorielle"),
+sa.slice(0,12).map(s=>React.createElement("div",{key:s.n,style:{marginBottom:10}},React.createElement("div",{style:{display:"flex",justifyContent:"space-between",fontSize:12,color:tx,marginBottom:3}},React.createElement("span",null,s.n),React.createElement("span",{style:{color:ts}},s.p.toFixed(1)+"%")),React.createElement(Bar,{p:s.p,c:acc})))),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Consensus \u2014 Objectifs 12M"),
+stk.filter(p=>p.target).sort((a,b)=>((b.target-b.cours)/b.cours)-((a.target-a.cours)/a.cours)).map(p=>{const up=((p.target-p.cours)/p.cours)*100;
+return React.createElement("div",{key:p.id,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid "+bd}},
+React.createElement("div",null,React.createElement("div",{style:{fontSize:13,fontWeight:600,color:tx}},p.name),React.createElement("div",{style:{fontSize:11,color:ts}},p.ac+" analystes \u00b7 ",React.createElement(CB,{c:p.consensus}))),
+React.createElement("div",{style:{textAlign:"right"}},React.createElement("div",{style:{fontSize:13,fontWeight:700,color:up>=0?gn:rd}},fp(up)),React.createElement("div",{style:{fontSize:11,color:ts}},"Obj: "+f(p.target))))})));
 
-const T1=()=><div>
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-<div style={{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>PEA-PME · {f(pmv)}</div>
-<button onClick={()=>setAf("pme")} style={{padding:"6px 14px",borderRadius:10,background:ac,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}}>+ Ajouter</button>
-</div>{af==="pme"&&<AF t="pme"/>}{pme.map(p=><PR key={p.id} p={p}/>)}
-<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8,marginTop:20}}>
-<div style={{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}}>PEA · {f(pv)}</div>
-<button onClick={()=>setAf("pea")} style={{padding:"6px 14px",borderRadius:10,background:ac,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}}>+ Ajouter</button>
-</div>{af==="pea"&&<AF t="pea"/>}{pea.map(p=><PR key={p.id} p={p}/>)}
-</div>;
+// POSITIONS
+const T1=()=>React.createElement("div",null,
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},
+React.createElement("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}},"PEA-PME \u00b7 "+f(pmv)),
+React.createElement("button",{onClick:()=>setAf("pme"),style:{padding:"6px 14px",borderRadius:10,background:acc,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"+ Ajouter")),
+af==="pme"&&React.createElement(AF,{t:"pme"}),
+pme.map(p=>React.createElement(PR,{key:p.id,p:p})),
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8,marginTop:20}},
+React.createElement("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}},"PEA \u00b7 "+f(pv)),
+React.createElement("button",{onClick:()=>setAf("pea"),style:{padding:"6px 14px",borderRadius:10,background:acc,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"+ Ajouter")),
+af==="pea"&&React.createElement(AF,{t:"pea"}),
+pea.map(p=>React.createElement(PR,{key:p.id,p:p})));
 
+// GS with market preamble
 const T2=()=>{
 const an=stk.filter(p=>GS[p.name]);
 if(gs&&GS[gs.name]){const a=GS[gs.name],p=gs;
-return<div><button onClick={()=>setGs(null)} style={{background:"none",border:"none",color:ac,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:12}}>← Retour</button>
-<div style={cs}><div style={{display:"flex",justifyContent:"space-between"}}><div><div style={{fontSize:20,fontWeight:800,color:tx}}>{p.name}</div><div style={{fontSize:12,color:ts}}>{p.ticker} · {p.sector}</div></div>
-<span style={{padding:"6px 16px",borderRadius:10,fontSize:14,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Conservation"?"#f59e0b":rd,color:"#fff"}}>{a.v}</span></div>
-<div style={{fontSize:12,color:ts,marginTop:4}}>Conviction: {a.conv}</div></div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:8}}>Résumé</div><div style={{fontSize:13,color:ts,lineHeight:1.6}}>{a.sum}</div></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-{[{l:"P/E",x:a.pe},{l:"P/E Fwd",x:a.pef},{l:"EV/EBITDA",x:a.ev||"N/A"},{l:"FCF Yield",x:a.fcf},{l:"Moat",x:`${a.moat}/10`},{l:"Management",x:`${a.mgmt}/10`},{l:"Dette/FP",x:a.de??"N/A"},{l:"Valorisation",x:a.val}].map((m,i)=>
-<div key={i} style={cs}><div style={{fontSize:10,color:ts,textTransform:"uppercase",letterSpacing:1}}>{m.l}</div><div style={{fontSize:18,fontWeight:700,color:tx,marginTop:2}}>{m.x}</div></div>)}
-</div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:12}}>Scénarios 12M</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
-<div style={{textAlign:"center"}}><div style={{fontSize:10,color:rd,fontWeight:600}}>BEAR</div><div style={{fontSize:20,fontWeight:700,color:rd}}>{f(a.bear)}</div><div style={{fontSize:11,color:ts}}>{fp(((a.bear-p.cours)/p.cours)*100)}</div></div>
-<div style={{textAlign:"center"}}><div style={{fontSize:10,color:ac,fontWeight:600}}>ACTUEL</div><div style={{fontSize:20,fontWeight:700,color:tx}}>{f(p.cours)}</div></div>
-<div style={{textAlign:"center"}}><div style={{fontSize:10,color:gn,fontWeight:600}}>BULL</div><div style={{fontSize:20,fontWeight:700,color:gn}}>{f(a.bull)}</div><div style={{fontSize:11,color:ts}}>{fp(((a.bull-p.cours)/p.cours)*100)}</div></div>
-</div></div></div>}
-return<div><div style={{...cs,background:"linear-gradient(135deg,#1a1a2e,#16213e)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>Goldman Sachs</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Analyse Fondamentale</div></div>
-{an.map(p=>{const a=GS[p.name];return<div key={p.id} onClick={()=>setGs(p)} style={{...cs,cursor:"pointer"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:14,fontWeight:700,color:tx}}>{p.name}</div><div style={{fontSize:12,color:ts}}>{p.sector}</div></div>
-<span style={{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Conservation"?"#f59e0b":rd,color:"#fff"}}>{a.v} →</span></div></div>})}</div>};
+return React.createElement("div",null,
+React.createElement("button",{onClick:()=>setGs(null),style:{background:"none",border:"none",color:acc,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:12}},"\u2190 Retour"),
+React.createElement("div",{style:cs},React.createElement("div",{style:{display:"flex",justifyContent:"space-between"}},React.createElement("div",null,React.createElement("div",{style:{fontSize:20,fontWeight:800,color:tx}},p.name),React.createElement("div",{style:{fontSize:12,color:ts}},p.ticker+" \u00b7 "+p.sector)),React.createElement("span",{style:{padding:"6px 16px",borderRadius:10,fontSize:14,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Conservation"?"#f59e0b":rd,color:"#fff"}},a.v)),React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},"Conviction: "+a.conv)),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:8}},"Resume"),React.createElement("div",{style:{fontSize:13,color:ts,lineHeight:1.6}},a.sum)),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+[{l:"P/E",x:a.pe},{l:"P/E Fwd",x:a.pef},{l:"EV/EBITDA",x:a.ev||"N/A"},{l:"FCF Yield",x:a.fcf},{l:"Moat",x:a.moat+"/10"},{l:"Mgmt",x:a.mgmt+"/10"},{l:"Dette/FP",x:a.de!=null?a.de:"N/A"},{l:"Valorisation",x:a.val}].map((m,i)=>React.createElement("div",{key:i,style:cs},React.createElement("div",{style:{fontSize:10,color:ts,textTransform:"uppercase",letterSpacing:1}},m.l),React.createElement("div",{style:{fontSize:18,fontWeight:700,color:tx,marginTop:2}},m.x)))),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Scenarios 12M"),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}},
+React.createElement("div",{style:{textAlign:"center"}},React.createElement("div",{style:{fontSize:10,color:rd,fontWeight:600}},"BEAR"),React.createElement("div",{style:{fontSize:20,fontWeight:700,color:rd}},f(a.bear)),React.createElement("div",{style:{fontSize:11,color:ts}},fp(((a.bear-p.cours)/p.cours)*100))),
+React.createElement("div",{style:{textAlign:"center"}},React.createElement("div",{style:{fontSize:10,color:acc,fontWeight:600}},"ACTUEL"),React.createElement("div",{style:{fontSize:20,fontWeight:700,color:tx}},f(p.cours))),
+React.createElement("div",{style:{textAlign:"center"}},React.createElement("div",{style:{fontSize:10,color:gn,fontWeight:600}},"BULL"),React.createElement("div",{style:{fontSize:20,fontWeight:700,color:gn}},f(a.bull)),React.createElement("div",{style:{fontSize:11,color:ts}},fp(((a.bull-p.cours)/p.cours)*100))))))}
+return React.createElement("div",null,
+React.createElement(MarketBlock,{data:GS_MARKET,gradient:"linear-gradient(135deg,#1a1a2e,#16213e)"}),
+React.createElement("div",{style:{fontSize:13,fontWeight:700,color:tx,marginBottom:8}},"Analyse par valeur :"),
+an.map(p=>{const a=GS[p.name];return React.createElement("div",{key:p.id,onClick:()=>setGs(p),style:{...cs,cursor:"pointer"}},React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},React.createElement("div",null,React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx}},p.name),React.createElement("div",{style:{fontSize:12,color:ts}},p.sector)),React.createElement("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Conservation"?"#f59e0b":rd,color:"#fff"}},a.v+" \u2192")))}))};
 
-const T3=()=>{const td={"PUBLICIS GROUPE":{t:"Haussier",s:[72,68],r:[82,90],rsi:48,m:"Neutre",sg:"Accumuler"},"BNP PARIBAS":{t:"Haussier Fort",s:[82,78],r:[92,100],rsi:62,m:"Haussier",sg:"Achat"},"ACCOR":{t:"Haussier",s:[40,37],r:[46,50],rsi:55,m:"Haussier",sg:"Achat"},"EIFFAGE":{t:"Haussier Fort",s:[125,118],r:[140,150],rsi:64,m:"Haussier",sg:"Achat"},"CAPGEMINI":{t:"Baissier",s:[100,95],r:[115,125],rsi:38,m:"Baissier",sg:"Attendre"},"TOTALENERGIES":{t:"Haussier",s:[62,58],r:[70,75],rsi:58,m:"Haussier",sg:"Conservation"},"SEB":{t:"Baissier Fort",s:[42,38],r:[52,58],rsi:32,m:"Baissier",sg:"Attendre"},"ARKEMA":{t:"Baissier",s:[50,45],r:[58,65],rsi:35,m:"Baissier",sg:"Attendre"},"RENAULT":{t:"Baissier Fort",s:[26,22],r:[32,38],rsi:28,m:"Baissier",sg:"Éviter"}};
-return<div><div style={{...cs,background:"linear-gradient(135deg,#1e3a5f,#0d2137)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>Morgan Stanley</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Analyse Technique</div></div>
-{Object.entries(td).map(([n,d])=>{const p=all.find(x=>x.name===n);if(!p)return null;const c=d.t.includes("Haussier")?gn:rd;
-return<div key={n} style={cs}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}><div><div style={{fontSize:14,fontWeight:700,color:tx}}>{n}</div><div style={{fontSize:12,color:ts}}>{f(p.cours)}</div></div>
-<span style={{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:700,background:d.sg==="Achat"?gn:d.sg==="Attendre"?"#f59e0b":d.sg==="Éviter"?rd:ac,color:"#fff"}}>{d.sg}</span></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}}>
-<div><span style={{color:ts}}>Tendance</span><br/><span style={{color:c,fontWeight:600}}>{d.t}</span></div>
-<div><span style={{color:ts}}>RSI</span><br/><span style={{color:d.rsi<30?rd:d.rsi>70?rd:gn,fontWeight:600}}>{d.rsi}</span></div>
-<div><span style={{color:ts}}>MACD</span><br/><span style={{color:d.m==="Haussier"?gn:d.m==="Baissier"?rd:ts,fontWeight:600}}>{d.m}</span></div>
-<div><span style={{color:ts}}>Supports</span><br/><span style={{fontWeight:600,color:tx}}>{d.s.join(" / ")}</span></div>
-<div><span style={{color:ts}}>Résistances</span><br/><span style={{fontWeight:600,color:tx}}>{d.r.join(" / ")}</span></div>
-</div></div>})}</div>};
+// MS with market preamble
+const T3=()=>{const td={"PUBLICIS GROUPE":{t:"Haussier",s:"72/68",r:"82/90",rsi:48,m:"Neutre",sg:"Accumuler"},"BNP PARIBAS":{t:"Haussier Fort",s:"82/78",r:"92/100",rsi:62,m:"Haussier",sg:"Achat"},"ACCOR":{t:"Haussier",s:"40/37",r:"46/50",rsi:55,m:"Haussier",sg:"Achat"},"EIFFAGE":{t:"Haussier Fort",s:"125/118",r:"140/150",rsi:64,m:"Haussier",sg:"Achat"},"CAPGEMINI":{t:"Baissier",s:"100/95",r:"115/125",rsi:38,m:"Baissier",sg:"Attendre"},"TOTALENERGIES":{t:"Haussier",s:"62/58",r:"70/75",rsi:58,m:"Haussier",sg:"Conservation"},"SEB":{t:"Baissier Fort",s:"42/38",r:"52/58",rsi:32,m:"Baissier",sg:"Attendre"},"ARKEMA":{t:"Baissier",s:"50/45",r:"58/65",rsi:35,m:"Baissier",sg:"Attendre"},"RENAULT":{t:"Baissier Fort",s:"26/22",r:"32/38",rsi:28,m:"Baissier",sg:"Eviter"},"WENDEL":{t:"Haussier",s:"78/72",r:"90/95",rsi:52,m:"Haussier",sg:"Achat"},"MERSEN":{t:"Neutre",s:"23/20",r:"28/32",rsi:45,m:"Neutre",sg:"Accumuler"},"SPIE":{t:"Haussier Fort",s:"44/40",r:"50/55",rsi:60,m:"Haussier",sg:"Conservation"},"FDJ UNITED":{t:"Neutre",s:"24/22",r:"28/30",rsi:50,m:"Neutre",sg:"Conservation"},"NEURONES":{t:"Haussier",s:"32/28",r:"38/42",rsi:55,m:"Haussier",sg:"Achat"},"TF1":{t:"Neutre",s:"6.5/6",r:"7.8/8.5",rsi:48,m:"Neutre",sg:"Conservation"}};
+return React.createElement("div",null,
+React.createElement(MarketBlock,{data:MS_MARKET,gradient:"linear-gradient(135deg,#1e3a5f,#0d2137)"}),
+Object.entries(td).map(([n,d])=>{const p=all.find(x=>x.name===n);if(!p)return null;const c=d.t.includes("Haussier")?gn:d.t.includes("Baissier")?rd:ts;
+return React.createElement("div",{key:n,style:cs},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}},React.createElement("div",null,React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx}},n),React.createElement("div",{style:{fontSize:12,color:ts}},f(p.cours))),React.createElement("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:700,background:d.sg==="Achat"?gn:d.sg==="Attendre"||d.sg==="Eviter"?rd:d.sg==="Accumuler"?"#7c3aed":"#f59e0b",color:"#fff"}},d.sg)),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}},
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Tendance"),React.createElement("br"),React.createElement("span",{style:{color:c,fontWeight:600}},d.t)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"RSI"),React.createElement("br"),React.createElement("span",{style:{color:d.rsi<30?rd:d.rsi>70?rd:gn,fontWeight:600}},d.rsi)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"MACD"),React.createElement("br"),React.createElement("span",{style:{color:d.m==="Haussier"?gn:d.m==="Baissier"?rd:ts,fontWeight:600}},d.m)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Supports"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:tx}},d.s)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Resistances"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:tx}},d.r))))}))};
 
-const T4=()=>{const r=[{n:"RENAULT",b:1.35,d:"-65%",s:9,rc:"-50%"},{n:"ARKEMA",b:1.25,d:"-55%",s:8,rc:"-45%"},{n:"SEB",b:0.95,d:"-45%",s:7,rc:"-35%"},{n:"CAPGEMINI",b:1.20,d:"-50%",s:7,rc:"-40%"},{n:"BNP PARIBAS",b:1.30,d:"-55%",s:7,rc:"-40%"},{n:"PUBLICIS GROUPE",b:0.65,d:"-35%",s:5,rc:"-25%"},{n:"EIFFAGE",b:0.85,d:"-40%",s:5,rc:"-30%"},{n:"TOTALENERGIES",b:0.90,d:"-45%",s:6,rc:"-35%"}];
-return<div><div style={{...cs,background:"linear-gradient(135deg,#7c2d12,#451a03)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>Bridgewater</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Évaluation des Risques</div></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
-<div style={cs}><div style={{fontSize:10,color:ts,textTransform:"uppercase"}}>Beta</div><div style={{fontSize:22,fontWeight:700,color:tx}}>0.92</div></div>
-<div style={cs}><div style={{fontSize:10,color:ts,textTransform:"uppercase"}}>Top Secteur</div><div style={{fontSize:13,fontWeight:700,color:tx}}>{sa[0]?.n}</div></div>
-<div style={cs}><div style={{fontSize:10,color:ts,textTransform:"uppercase"}}>Stress 2008</div><div style={{fontSize:22,fontWeight:700,color:rd}}>-38%</div></div>
-</div>
-<div style={cs}>{r.map(x=><div key={x.n} style={{padding:"10px 0",borderBottom:`1px solid ${bd}`}}>
-<div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:tx}}>{x.n}</span><span style={{fontSize:12,fontWeight:700,color:x.s>=8?rd:x.s>=6?"#f59e0b":gn}}>{x.s}/10</span></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}}>
-<div><span style={{color:ts}}>Beta</span><br/><span style={{fontWeight:600}}>{x.b}</span></div>
-<div><span style={{color:ts}}>Max DD</span><br/><span style={{fontWeight:600,color:rd}}>{x.d}</span></div>
-<div><span style={{color:ts}}>Récession</span><br/><span style={{fontWeight:600,color:rd}}>{x.rc}</span></div>
-</div></div>)}</div></div>};
+// Bridgewater
+const T4=()=>{const r=[{n:"RENAULT",b:1.35,d:"-65%",s:9,rc:"-50%"},{n:"ARKEMA",b:1.25,d:"-55%",s:8,rc:"-45%"},{n:"SEB",b:0.95,d:"-45%",s:7,rc:"-35%"},{n:"CAPGEMINI",b:1.20,d:"-50%",s:7,rc:"-40%"},{n:"BNP PARIBAS",b:1.30,d:"-55%",s:7,rc:"-40%"},{n:"ACCOR",b:1.15,d:"-60%",s:7,rc:"-45%"},{n:"PUBLICIS GROUPE",b:0.65,d:"-35%",s:5,rc:"-25%"},{n:"EIFFAGE",b:0.85,d:"-40%",s:5,rc:"-30%"},{n:"TOTALENERGIES",b:0.90,d:"-45%",s:6,rc:"-35%"},{n:"WENDEL",b:1.10,d:"-50%",s:6,rc:"-40%"},{n:"MERSEN",b:1.15,d:"-55%",s:7,rc:"-42%"},{n:"SPIE",b:0.80,d:"-35%",s:5,rc:"-28%"},{n:"FDJ UNITED",b:0.60,d:"-25%",s:4,rc:"-20%"},{n:"NEURONES",b:0.70,d:"-30%",s:4,rc:"-22%"},{n:"TF1",b:0.75,d:"-40%",s:6,rc:"-35%"}];
+return React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,#7c2d12,#451a03)",border:"none",color:"#fff"}},React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},"Bridgewater"),React.createElement("div",{style:{fontSize:20,fontWeight:700,marginTop:4}},"Evaluation des Risques")),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}},
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:10,color:ts,textTransform:"uppercase"}},"Beta"),React.createElement("div",{style:{fontSize:22,fontWeight:700,color:tx}},"0.92")),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:10,color:ts,textTransform:"uppercase"}},"Top Secteur"),React.createElement("div",{style:{fontSize:13,fontWeight:700,color:tx}},sa[0]?sa[0].n:"")),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:10,color:ts,textTransform:"uppercase"}},"Stress 08"),React.createElement("div",{style:{fontSize:22,fontWeight:700,color:rd}},"-38%"))),
+React.createElement("div",{style:cs},r.map(x=>React.createElement("div",{key:x.n,style:{padding:"10px 0",borderBottom:"1px solid "+bd}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:6}},React.createElement("span",{style:{fontSize:13,fontWeight:600,color:tx}},x.n),React.createElement("span",{style:{fontSize:12,fontWeight:700,color:x.s>=8?rd:x.s>=6?"#f59e0b":gn}},x.s+"/10")),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}},
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Beta"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600}},x.b)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Max DD"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:rd}},x.d)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Recession"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:rd}},x.rc)))))))};
 
-const T5=()=>{const d=[{n:"TOTALENERGIES",y:5.2,g:8.5,p:42,s:9,yr:5},{n:"BNP PARIBAS",y:5.8,g:12,p:50,s:8,yr:3},{n:"PUBLICIS GROUPE",y:4.1,g:10,p:45,s:8,yr:8},{n:"EIFFAGE",y:3.3,g:6.5,p:35,s:7,yr:5},{n:"CAPGEMINI",y:3.3,g:8,p:36,s:7,yr:7},{n:"SPIE",y:3.8,g:9,p:55,s:7,yr:4},{n:"RENAULT",y:6.5,g:null,p:25,s:5,yr:1}];
-return<div><div style={{...cs,background:"linear-gradient(135deg,#000,#1a1a2e)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>BlackRock</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Analyse Dividendes</div></div>
-{d.map(x=><div key={x.n} style={cs}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}><span style={{fontSize:14,fontWeight:700,color:tx}}>{x.n}</span><span style={{fontSize:18,fontWeight:800,color:gn}}>{x.y}%</span></div>
-<div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,fontSize:11}}>
-<div><span style={{color:ts}}>Croiss.</span><br/><span style={{fontWeight:600}}>{x.g?`${x.g}%`:"N/A"}</span></div>
-<div><span style={{color:ts}}>Payout</span><br/><span style={{fontWeight:600,color:x.p>60?"#f59e0b":gn}}>{x.p}%</span></div>
-<div><span style={{color:ts}}>Sécurité</span><br/><span style={{fontWeight:600,color:x.s>=7?gn:"#f59e0b"}}>{x.s}/10</span></div>
-<div><span style={{color:ts}}>Années↑</span><br/><span style={{fontWeight:600}}>{x.yr}</span></div>
-</div></div>)}</div>};
+// BlackRock
+const T5=()=>{const d=[{n:"TOTALENERGIES",y:5.2,g:8.5,p:42,s:9,yr:5},{n:"BNP PARIBAS",y:5.8,g:12,p:50,s:8,yr:3},{n:"PUBLICIS GROUPE",y:4.1,g:10,p:45,s:8,yr:8},{n:"TF1",y:5.0,g:3,p:45,s:6,yr:4},{n:"EIFFAGE",y:3.3,g:6.5,p:35,s:7,yr:5},{n:"CAPGEMINI",y:3.3,g:8,p:36,s:7,yr:7},{n:"SPIE",y:3.8,g:9,p:55,s:7,yr:4},{n:"RENAULT",y:6.5,g:null,p:25,s:5,yr:1},{n:"SEB",y:2.8,g:5,p:40,s:6,yr:3},{n:"WENDEL",y:2.5,g:6,p:30,s:7,yr:4},{n:"FDJ UNITED",y:3.5,g:4,p:55,s:7,yr:2},{n:"MERSEN",y:2.2,g:7,p:28,s:6,yr:3},{n:"ACCOR",y:2.0,g:15,p:35,s:6,yr:2}];
+return React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,#000,#1a1a2e)",border:"none",color:"#fff"}},React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},"BlackRock"),React.createElement("div",{style:{fontSize:20,fontWeight:700,marginTop:4}},"Analyse Dividendes")),
+d.map(x=>React.createElement("div",{key:x.n,style:cs},React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},React.createElement("span",{style:{fontSize:14,fontWeight:700,color:tx}},x.n),React.createElement("span",{style:{fontSize:18,fontWeight:800,color:gn}},x.y+"%")),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,fontSize:11}},
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Croiss."),React.createElement("br"),React.createElement("span",{style:{fontWeight:600}},x.g?x.g+"%":"N/A")),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Payout"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:x.p>60?"#f59e0b":gn}},x.p+"%")),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Securite"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:x.s>=7?gn:"#f59e0b"}},x.s+"/10")),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Annees"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600}},x.yr))))))};
 
-const T6=()=>{const s=[{n:"Technologie",w:"Surpondérer",ph:"Mid-Cycle",pf:"+12%",c:gn},{n:"Banques",w:"Surpondérer",ph:"Early-Mid",pf:"+18%",c:gn},{n:"Énergie",w:"Neutre",ph:"Late-Cycle",pf:"+5%",c:"#f59e0b"},{n:"Construction",w:"Surpondérer",ph:"Mid-Cycle",pf:"+15%",c:gn},{n:"Consommation",w:"Sous-pondérer",ph:"Late-Cycle",pf:"-8%",c:rd},{n:"Hôtellerie",w:"Neutre",ph:"Mid-Late",pf:"+7%",c:"#f59e0b"},{n:"Chimie",w:"Sous-pondérer",ph:"Late-Cycle",pf:"-12%",c:rd},{n:"Automobile",w:"Sous-pondérer",ph:"Late-Cycle",pf:"-15%",c:rd},{n:"Services Ind.",w:"Surpondérer",ph:"Mid-Cycle",pf:"+10%",c:gn}];
-return<div><div style={{...cs,background:"linear-gradient(135deg,#065f46,#022c22)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>Citadel</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Rotation Sectorielle</div><div style={{fontSize:12,opacity:0.7,marginTop:4}}>Phase: Mid-to-Late · BCE: 2.65%</div></div>
-<div style={cs}>{s.map(x=><div key={x.n} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:`1px solid ${bd}`}}>
-<div><div style={{fontSize:13,fontWeight:600,color:tx}}>{x.n}</div><div style={{fontSize:11,color:ts}}>{x.ph}</div></div>
-<div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:12,color:x.c,fontWeight:600}}>{x.pf}</span>
-<span style={{padding:"4px 10px",borderRadius:8,fontSize:11,fontWeight:700,background:x.w.includes("Sur")?gn:x.w.includes("Sous")?rd:"#f59e0b",color:"#fff"}}>{x.w}</span></div></div>)}</div></div>};
+// Citadel with market preamble
+const T6=()=>{const s=[{n:"Technologie",w:"Surponderer",ph:"Mid-Cycle",pf:"+12%",c:gn},{n:"Banques",w:"Surponderer",ph:"Early-Mid",pf:"+18%",c:gn},{n:"Aeronautique",w:"Surponderer",ph:"Early-Mid",pf:"+14%",c:gn},{n:"Energie",w:"Neutre",ph:"Late-Cycle",pf:"+5%",c:"#f59e0b"},{n:"Construction",w:"Surponderer",ph:"Mid-Cycle",pf:"+15%",c:gn},{n:"Consommation",w:"Sous-ponderer",ph:"Late-Cycle",pf:"-8%",c:rd},{n:"Hotellerie",w:"Neutre",ph:"Mid-Late",pf:"+7%",c:"#f59e0b"},{n:"Chimie",w:"Sous-ponderer",ph:"Late-Cycle",pf:"-12%",c:rd},{n:"Automobile",w:"Sous-ponderer",ph:"Late-Cycle",pf:"-15%",c:rd},{n:"Services Ind.",w:"Surponderer",ph:"Mid-Cycle",pf:"+10%",c:gn},{n:"Luxe",w:"Surponderer",ph:"Mid-Cycle",pf:"+10%",c:gn},{n:"Medias",w:"Sous-ponderer",ph:"Late",pf:"-5%",c:rd}];
+return React.createElement("div",null,
+React.createElement(MarketBlock,{data:CITADEL_MARKET,gradient:"linear-gradient(135deg,#065f46,#022c22)"}),
+React.createElement("div",{style:cs},s.map(x=>React.createElement("div",{key:x.n,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:"1px solid "+bd}},
+React.createElement("div",null,React.createElement("div",{style:{fontSize:13,fontWeight:600,color:tx}},x.n),React.createElement("div",{style:{fontSize:11,color:ts}},x.ph)),
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8}},React.createElement("span",{style:{fontSize:12,color:x.c,fontWeight:600}},x.pf),React.createElement("span",{style:{padding:"4px 10px",borderRadius:8,fontSize:11,fontWeight:700,background:x.w.includes("Sur")?gn:x.w.includes("Sous")?rd:"#f59e0b",color:"#fff"}},x.w))))))};
 
-const T7=()=>{const e=[{n:"PUBLICIS GROUPE",d:"17 Avr",su:"+3.2%",h:"5/6",im:"±4.5%",pos:"Conserver"},{n:"CAPGEMINI",d:"30 Avr",su:"+12.4%",h:"4/6",im:"±6.0%",pos:"Accumuler"},{n:"BNP PARIBAS",d:"Mai",su:"+2.1%",h:"5/6",im:"±5.0%",pos:"Conserver"},{n:"EIFFAGE",d:"Mai",su:"+4.0%",h:"5/6",im:"±3.5%",pos:"Achat"},{n:"RENAULT",d:"Avr",su:"+8.5%",h:"4/6",im:"±7.0%",pos:"Spéculatif"}];
-return<div><div style={{...cs,background:"linear-gradient(135deg,#1e3a5f,#0c2340)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>JPMorgan</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Earnings Analyzer</div></div>
-{e.map(x=><div key={x.n} style={cs}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}><div><div style={{fontSize:14,fontWeight:700,color:tx}}>{x.n}</div><div style={{fontSize:11,color:ts}}>Résultats: {x.d}</div></div>
-<span style={{padding:"4px 12px",borderRadius:8,fontSize:11,fontWeight:700,background:x.pos.includes("Achat")||x.pos.includes("Accumuler")?gn:"#f59e0b",color:"#fff"}}>{x.pos}</span></div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}}>
-<div><span style={{color:ts}}>Surprise</span><br/><span style={{fontWeight:600,color:x.su.startsWith("+")?gn:rd}}>{x.su}</span></div>
-<div><span style={{color:ts}}>Historique</span><br/><span style={{fontWeight:600}}>{x.h} battus</span></div>
-<div><span style={{color:ts}}>Move impl.</span><br/><span style={{fontWeight:600}}>{x.im}</span></div>
-</div></div>)}</div>};
+// JPMorgan
+const T7=()=>{const e=[{n:"PUBLICIS GROUPE",d:"17 Avr",su:"+3.2%",h:"5/6",im:"\u00b14.5%",pos:"Conserver"},{n:"CAPGEMINI",d:"30 Avr",su:"+12.4%",h:"4/6",im:"\u00b16.0%",pos:"Accumuler"},{n:"BNP PARIBAS",d:"Mai",su:"+2.1%",h:"5/6",im:"\u00b15.0%",pos:"Conserver"},{n:"EIFFAGE",d:"Mai",su:"+4.0%",h:"5/6",im:"\u00b13.5%",pos:"Achat"},{n:"RENAULT",d:"Avr",su:"+8.5%",h:"4/6",im:"\u00b17.0%",pos:"Speculatif"},{n:"TOTALENERGIES",d:"Avr",su:"-1.5%",h:"3/6",im:"\u00b14.0%",pos:"Conserver"},{n:"SEB",d:"Mars",su:"+2.0%",h:"3/6",im:"\u00b15.5%",pos:"Accumuler"},{n:"ACCOR",d:"Avr",su:"+5.1%",h:"4/6",im:"\u00b14.2%",pos:"Conserver"},{n:"ARKEMA",d:"Mai",su:"+6.2%",h:"3/6",im:"\u00b16.5%",pos:"Accumuler"}];
+return React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,#1e3a5f,#0c2340)",border:"none",color:"#fff"}},React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},"JPMorgan"),React.createElement("div",{style:{fontSize:20,fontWeight:700,marginTop:4}},"Earnings Analyzer")),
+e.map(x=>React.createElement("div",{key:x.n,style:cs},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}},React.createElement("div",null,React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx}},x.n),React.createElement("div",{style:{fontSize:11,color:ts}},"Resultats: "+x.d)),React.createElement("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:11,fontWeight:700,background:x.pos.includes("Achat")||x.pos.includes("Accumuler")?gn:"#f59e0b",color:"#fff"}},x.pos)),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,fontSize:11}},
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Surprise"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600,color:x.su.startsWith("+")?gn:rd}},x.su)),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Historique"),React.createElement("br"),React.createElement("span",{style:{fontWeight:600}},x.h+" battus")),
+React.createElement("div",null,React.createElement("span",{style:{color:ts}},"Move impl."),React.createElement("br"),React.createElement("span",{style:{fontWeight:600}},x.im))))))};
 
-const T8=()=><div>
-<div style={{...cs,background:"linear-gradient(135deg,#4c1d95,#1e1b4b)",border:"none",color:"#fff"}}><div style={{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}}>Briefing Hebdomadaire</div><div style={{fontSize:20,fontWeight:700,marginTop:4}}>Semaine du 3 Mars 2026</div></div>
-<div style={cs}><div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:8}}>🗓 Événements Macro</div>
-{[{e:"BCE — Taux directeur",d:"Jeudi",i:"Maintien 2.65%. Signal dovish = hausse EU."},{e:"Emploi US — NFP",d:"Vendredi",i:"Consensus +180K. Faible = baisse Fed = positif."},{e:"Tarifs US-UE",d:"En cours",i:"Menaces auto + chimie."}].map((x,i)=>
-<div key={i} style={{padding:"10px 0",borderBottom:`1px solid ${bd}`}}><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,fontWeight:600,color:tx}}>{x.e}</span><span style={{fontSize:11,color:ac,fontWeight:600}}>{x.d}</span></div><div style={{fontSize:12,color:ts,marginTop:4}}>{x.i}</div></div>)}
-</div>
-<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-<div style={{...cs,borderLeft:`4px solid ${gn}`}}><div style={{fontSize:11,color:gn,fontWeight:700}}>IDÉE LONG</div><div style={{fontSize:14,fontWeight:700,color:tx,marginTop:4}}>CAPGEMINI</div><div style={{fontSize:12,color:ts,marginTop:4}}>108€ → 140€ · Stop 95€</div></div>
-<div style={{...cs,borderLeft:`4px solid ${rd}`}}><div style={{fontSize:11,color:rd,fontWeight:700}}>COUVERTURE</div><div style={{fontSize:14,fontWeight:700,color:tx,marginTop:4}}>RENAULT</div><div style={{fontSize:12,color:ts,marginTop:4}}>Alléger ~30€ · Tarifs</div></div>
-</div>
-<div style={{...cs,borderLeft:"4px solid #f59e0b"}}><div style={{fontSize:11,color:"#f59e0b",fontWeight:700}}>⚠️ RISQUE</div><div style={{fontSize:14,fontWeight:700,color:tx,marginTop:4}}>Escalade tarifaire US-UE</div><div style={{fontSize:12,color:ts,marginTop:4}}>Impact Renault, Arkema, SEB. Couverture recommandée.</div></div>
-</div>;
+// RECO TAB - sorted by conviction (nb brokers * tier weight * % achat)
+const T8=()=>{
+const myTickers=all.map(p=>p.ticker);
+const scored=DAILY_RECO.map(r=>{
+const pctAchat=r.achat/r.nbBrokers;
+const tier1Count=r.topBrokers.filter(b=>TIER1.includes(b.broker)).length;
+const score=Math.round(r.nbBrokers*0.4+pctAchat*40+tier1Count*5);
+const upside=((r.targetMoy-r.cours)/r.cours)*100;
+const isMine=myTickers.includes(r.ticker);
+return{...r,score,upside,isMine}
+}).sort((a,b)=>b.score-a.score);
 
-const tabs=[T0,T1,T2,T3,T4,T5,T6,T7,T8];const TC=tabs[tab];
-return<div style={{background:bg,minHeight:"100vh",fontFamily:"'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",color:tx,maxWidth:520,margin:"0 auto"}}>
-<div style={{padding:"16px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-<div style={{fontSize:22,fontWeight:800,letterSpacing:-0.5}}>Portfolio <span style={{color:ac}}>Pro</span></div>
-<button onClick={()=>setDk(!dk)} style={{background:cr,border:`1px solid ${bd}`,borderRadius:10,padding:"6px 12px",fontSize:14,cursor:"pointer",color:tx}}>{dk?"☀️":"🌙"}</button>
-</div>
-<div style={{padding:"12px 20px",overflowX:"auto",display:"flex",gap:6,scrollbarWidth:"none"}}>
-{TABS.map((t,i)=><button key={t} onClick={()=>{setTab(i);setGs(null)}} style={{padding:"8px 16px",borderRadius:20,fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap",background:tab===i?ac:"transparent",color:tab===i?"#fff":ts,border:tab===i?"none":`1px solid ${bd}`}}>{t}</button>)}
-</div>
-<div style={{padding:"0 16px 100px"}}><TC/></div>
-<div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:520,background:cr,borderTop:`1px solid ${bd}`,display:"flex",justifyContent:"space-around",padding:"10px 0 24px",zIndex:10}}>
-{[{i:"📊",l:"Vue",t:0},{i:"📋",l:"Positions",t:1},{i:"🏦",l:"Analyses",t:2},{i:"📰",l:"Briefing",t:8}].map(n=>
-<button key={n.l} onClick={()=>{setTab(n.t);setGs(null)}} style={{background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:"pointer",color:tab===n.t?ac:ts,fontSize:10,fontWeight:600}}><span style={{fontSize:20}}>{n.i}</span>{n.l}</button>)}
-</div>
-</div>}
+const RecoCard=({r})=>React.createElement("div",{style:{...cs,borderLeft:"4px solid "+(r.isMine?acc:"#7c3aed")}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}},
+React.createElement("div",null,
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:8}},
+React.createElement("span",{style:{fontSize:15,fontWeight:700,color:tx}},r.action),
+React.createElement("span",{style:{padding:"2px 8px",borderRadius:6,fontSize:10,fontWeight:600,background:r.cap==="Large"?acc:r.cap==="Mid"?"#7c3aed":"#f59e0b",color:"#fff"}},r.cap),
+r.isMine&&React.createElement("span",{style:{padding:"2px 8px",borderRadius:6,fontSize:10,fontWeight:600,background:gn,color:"#fff"}},"MON PTF")),
+React.createElement("div",{style:{fontSize:11,color:ts,marginTop:2}},r.sector+" \u00b7 "+r.ticker)),
+React.createElement("div",{style:{textAlign:"right"}},
+React.createElement("div",{style:{fontSize:20,fontWeight:800,color:tx}},r.score),
+React.createElement("div",{style:{fontSize:10,color:ts}},"score conviction"))),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:8,marginBottom:10}},
+React.createElement("div",{style:{textAlign:"center",padding:8,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},React.createElement("div",{style:{fontSize:16,fontWeight:700,color:gn}},r.achat+"/"+r.nbBrokers),React.createElement("div",{style:{fontSize:9,color:ts}},"Achat")),
+React.createElement("div",{style:{textAlign:"center",padding:8,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},React.createElement("div",{style:{fontSize:16,fontWeight:700,color:acc}},f(r.targetMoy)),React.createElement("div",{style:{fontSize:9,color:ts}},"Obj moy")),
+React.createElement("div",{style:{textAlign:"center",padding:8,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},React.createElement("div",{style:{fontSize:16,fontWeight:700,color:r.upside>=0?gn:rd}},fp(r.upside)),React.createElement("div",{style:{fontSize:9,color:ts}},"Upside")),
+React.createElement("div",{style:{textAlign:"center",padding:8,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},React.createElement("div",{style:{fontSize:16,fontWeight:700,color:tx}},f(r.cours)),React.createElement("div",{style:{fontSize:9,color:ts}},"Cours"))),
+r.topBrokers.slice(0,3).map((b,i)=>React.createElement("div",{key:i,style:{padding:"8px 10px",background:dk?"#1e1f38":"#f8fafc",borderRadius:8,marginBottom:4}},
+React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}},
+React.createElement("span",{style:{fontSize:11,fontWeight:700,color:tx}},b.broker+(TIER1.includes(b.broker)?" \u2b50":"")),
+React.createElement("div",{style:{display:"flex",gap:4}},React.createElement(CB,{c:b.rating}),React.createElement("span",{style:{fontSize:10,color:acc,fontWeight:600}},f(b.target)))),
+React.createElement("div",{style:{fontSize:11,color:ts,lineHeight:1.4}},b.note))));
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+return React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,#7c3aed,#4c1d95)",border:"none",color:"#fff"}},
+React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},"Recommandations Analystes"),
+React.createElement("div",{style:{fontSize:20,fontWeight:700,marginTop:4}},"06 Mars 2026"),
+React.createElement("div",{style:{fontSize:12,opacity:0.8,marginTop:8,lineHeight:1.5}},"Classement par score de conviction : nombre de brokers x % a l achat x qualite (Tier 1 = GS, JPM, MS, UBS, DB, Bernstein, HSBC, Barclays, RBC, Citi, BofA). \u2b50 = broker Tier 1.")),
+React.createElement("div",{style:{fontSize:11,color:ts,marginBottom:12,padding:"8px 12px",background:dk?"#1e1f38":"#f1f5f9",borderRadius:10}},"Large = +10Mds | Mid = 1-10Mds | Small = <1Md. Les valeurs de votre portefeuille sont marquees MON PTF."),
+scored.map(r=>React.createElement(RecoCard,{key:r.ticker,r:r})))};
+
+// BRIEFING
+const T9=()=>React.createElement("div",null,
+React.createElement("div",{style:{...cs,background:"linear-gradient(135deg,#4c1d95,#1e1b4b)",border:"none",color:"#fff"}},React.createElement("div",{style:{fontSize:11,opacity:0.6,letterSpacing:2,textTransform:"uppercase"}},"Briefing Hebdomadaire"),React.createElement("div",{style:{fontSize:20,fontWeight:700,marginTop:4}},"Semaine du 3 Mars 2026")),
+React.createElement("div",{style:cs},React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:8}},"\ud83d\uddd3 Evenements Macro"),
+[{e:"BCE \u2014 Taux",d:"Jeudi",i:"Maintien 2.65%. Signal dovish = hausse EU."},{e:"NFP US",d:"Vendredi",i:"Consensus +180K. Faible = baisse Fed = positif."},{e:"Tarifs US-UE",d:"En cours",i:"Menaces auto + chimie. Impact Renault, Arkema."}].map((x,i)=>React.createElement("div",{key:i,style:{padding:"10px 0",borderBottom:"1px solid "+bd}},React.createElement("div",{style:{display:"flex",justifyContent:"space-between"}},React.createElement("span",{style:{fontSize:13,fontWeight:600,color:tx}},x.e),React.createElement("span",{style:{fontSize:11,color:acc,fontWeight:600}},x.d)),React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},x.i)))),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},
+React.createElement("div",{style:{...cs,borderLeft:"4px solid "+gn}},React.createElement("div",{style:{fontSize:11,color:gn,fontWeight:700}},"IDEE LONG"),React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"CAPGEMINI"),React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},"108\u20ac \u2192 140\u20ac \u00b7 Stop 95\u20ac")),
+React.createElement("div",{style:{...cs,borderLeft:"4px solid "+rd}},React.createElement("div",{style:{fontSize:11,color:rd,fontWeight:700}},"COUVERTURE"),React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"RENAULT"),React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},"Alleger ~30\u20ac \u00b7 Tarifs"))),
+React.createElement("div",{style:{...cs,borderLeft:"4px solid #f59e0b"}},React.createElement("div",{style:{fontSize:11,color:"#f59e0b",fontWeight:700}},"\u26a0\ufe0f RISQUE"),React.createElement("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"Escalade tarifaire US-UE"),React.createElement("div",{style:{fontSize:12,color:ts,marginTop:4}},"Impact Renault, Arkema, SEB.")));
+
+const tabs=[T0,T1,T2,T3,T4,T5,T6,T7,T8,T9];const TC=tabs[tab];
+return React.createElement("div",{style:{background:bg,minHeight:"100vh",fontFamily:"'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",color:tx,maxWidth:520,margin:"0 auto"}},
+React.createElement("div",{style:{padding:"16px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}},
+React.createElement("div",{style:{fontSize:22,fontWeight:800,letterSpacing:-0.5}},"Portfolio ",React.createElement("span",{style:{color:acc}},"Pro")),
+React.createElement("button",{onClick:()=>setDk(!dk),style:{background:cr,border:"1px solid "+bd,borderRadius:10,padding:"6px 12px",fontSize:14,cursor:"pointer",color:tx}},dk?"\u2600\ufe0f":"\ud83c\udf19")),
+React.createElement("div",{style:{padding:"12px 20px",overflowX:"auto",display:"flex",gap:6,scrollbarWidth:"none"}},
+TABS.map((t,i)=>React.createElement("button",{key:t,onClick:()=>{setTab(i);setGs(null);setBrokerView(null)},style:{padding:"8px 16px",borderRadius:20,fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap",background:tab===i?acc:"transparent",color:tab===i?"#fff":ts,border:tab===i?"none":"1px solid "+bd}},t))),
+React.createElement("div",{style:{padding:"0 16px 100px"}},React.createElement(TC)),
+React.createElement("div",{style:{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:520,background:cr,borderTop:"1px solid "+bd,display:"flex",justifyContent:"space-around",padding:"10px 0 24px",zIndex:10}},
+[{i:"\ud83d\udcca",l:"Vue",t:0},{i:"\ud83d\udccb",l:"Positions",t:1},{i:"\ud83c\udfe6",l:"Analyses",t:2},{i:"\ud83d\udca1",l:"Reco",t:8},{i:"\ud83d\udcf0",l:"Briefing",t:9}].map(n=>React.createElement("button",{key:n.l,onClick:()=>{setTab(n.t);setGs(null)},style:{background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:"pointer",color:tab===n.t?acc:ts,fontSize:10,fontWeight:600}},React.createElement("span",{style:{fontSize:20}},n.i),n.l))))}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 </script>
 </body>
 </html>
