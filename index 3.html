@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Portfolio Pro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+::-webkit-scrollbar{display:none}
+input,select,button{font-family:inherit}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/javascript">
+var h=React.createElement,us=React.useState,um=React.useMemo;
+var TIER1=["Goldman Sachs","JP Morgan","Morgan Stanley","UBS","Deutsche Bank","Bernstein","HSBC","Barclays","RBC","Citi","BofA","Jefferies","Kepler Cheuvreux"];
+var TABS=["Vue d'ensemble","Positions","Goldman Sachs","Morgan Stanley","Bridgewater","BlackRock","Citadel","JPMorgan","Reco","Briefing"];
+
+var PME=[
+{id:1,name:"NEURONES",ticker:"NRO",cours:34.40,pru:35.21,qty:9,sector:"Technologie",cons:"Achat Fort",target:52,ac:1,bn:[{b:"Portzamparc",r:"Achat Fort",t:52,n:"Resultats annuels demain 11 mars. Bilan net cash. Catalyseur."}]},
+{id:2,name:"ENTECH",ticker:"ENTE",cours:9.70,pru:7.86,qty:25,sector:"Energie Verte",cons:"N/A",target:null,ac:0,bn:[]},
+{id:27,name:"CRIT",ticker:"CEN",cours:58.20,pru:58.89,qty:4,sector:"Interim",cons:"Achat",target:85,ac:3,bn:[{b:"Portzamparc",r:"Achat Fort",t:90,n:"Leader interim. 6x PE. Treso nette = 40% capi."},{b:"Gilbert Dupont",r:"Achat",t:82,n:"Diversification aeroportuaire. FCF yield >10%."},{b:"Midcap Partners",r:"Achat",t:80,n:"Decote absurde vs Adecco/Randstad."}]},
+{id:3,name:"ABEO",ticker:"ABEO",cours:8.70,pru:8.74,qty:22,sector:"Loisirs",cons:"N/A",target:null,ac:0,bn:[]},
+{id:4,name:"TF1",ticker:"TFI",cours:7.13,pru:7.14,qty:21,sector:"Medias",cons:"Neutre",target:9.50,ac:5,bn:[{b:"Oddo BHF",r:"Neutre",t:9.5,n:"Pub TV en recul structurel."},{b:"Exane BNP",r:"Surperformance",t:10,n:"TF1+ catalyseur."}]},
+{id:5,name:"RISING STONE",ticker:"ALRS",cours:49.51,pru:58.30,qty:3,sector:"Immobilier",cons:"N/A",target:null,ac:0,bn:[]},
+{id:6,name:"SEMCO TECHNOLOGIES",ticker:"ALSEM",cours:30.82,pru:15.00,qty:4,sector:"Semi-conducteurs",cons:"N/A",target:null,ac:0,bn:[]}
+];
+
+var PEA=[
+{id:7,name:"ISHARES MSCI WORLD",ticker:"WPEA",cours:6.09,pru:5.97,qty:696,sector:"ETF Monde",cons:"ETF",target:null,ac:0,bn:[]},
+{id:8,name:"PUBLICIS GROUPE",ticker:"PUB",cours:75.44,pru:78.47,qty:29,sector:"Communication",cons:"Achat",target:108,ac:14,bn:[{b:"Goldman Sachs",r:"Achat",t:115,n:"Leader data-driven. Epsilon + Sapient."},{b:"Morgan Stanley",r:"Surponderer",t:112,n:"Digital 60%+ protege marges."},{b:"Oddo BHF",r:"Surperformance",t:108,n:"Attractif vs WPP/Omnicom."},{b:"Deutsche Bank",r:"Achat",t:105,n:"IA/data positionne."}]},
+{id:9,name:"AMUNDI MSCI EMERGING",ticker:"PAEEM",cours:29.95,pru:30.07,qty:52,sector:"ETF Emergents",cons:"ETF",target:null,ac:0,bn:[]},
+{id:10,name:"ACCOR",ticker:"AC",cours:42.11,pru:37.30,qty:30,sector:"Hotellerie",cons:"Achat",target:55,ac:18,bn:[{b:"Kepler Cheuvreux",r:"Achat",t:57,n:"7 mars : relevement. Pipeline record."},{b:"Citi",r:"Achat",t:56,n:"7 mars : objectif releve. Asset-light."},{b:"HSBC",r:"Achat",t:58,n:"Pipeline 1200 hotels."},{b:"Bernstein",r:"Surperformance",t:54,n:"Asie-Pacifique sous-estimee."}]},
+{id:11,name:"BNP PARIBAS",ticker:"BNP",cours:84.61,pru:74.31,qty:15,sector:"Banque",cons:"Achat",target:100.66,ac:19,bn:[{b:"Goldman Sachs",r:"Achat",t:105,n:"1ere banque zone euro. CET1 13.2%."},{b:"Deutsche Bank",r:"Achat",t:102,n:"Yield >5%."},{b:"UBS",r:"Achat",t:98,n:"Moins chere SBF120."},{b:"JP Morgan",r:"Surponderer",t:100,n:"CIB forte."}]},
+{id:12,name:"EIFFAGE",ticker:"FGR",cours:132.85,pru:114.09,qty:8,sector:"Construction",cons:"Achat",target:144.80,ac:17,bn:[{b:"Oddo BHF",r:"Surperformance",t:152,n:"APRR = 50% EBITDA."},{b:"Societe Generale",r:"Achat",t:145,n:"Modele integre."},{b:"Stifel",r:"Achat",t:140,n:"Transition energetique."}]},
+{id:13,name:"AMUNDI RUSSELL 2000",ticker:"RS2K",cours:321.69,pru:308.55,qty:3,sector:"ETF US Small",cons:"ETF",target:null,ac:0,bn:[]},
+{id:14,name:"SEB",ticker:"SK",cours:45.12,pru:66.80,qty:18,sector:"Consommation",cons:"Achat",target:75.36,ac:8,bn:[{b:"Oddo BHF",r:"Surperformance",t:82,n:"Leader mondial. Reprise Chine S2."},{b:"Bernstein",r:"Achat",t:75,n:"Valorisation historiquement basse."},{b:"Deutsche Bank",r:"Achat",t:70,n:"Innovation constante."}]},
+{id:15,name:"AMUNDI HEALTHCARE",ticker:"HLT",cours:149.14,pru:159.08,qty:5,sector:"ETF Sante",cons:"ETF",target:null,ac:0,bn:[]},
+{id:16,name:"ISHARES STOXX BANKS",ticker:"BNKE",cours:15.55,pru:14.75,qty:42,sector:"ETF Banques",cons:"ETF",target:null,ac:0,bn:[]},
+{id:17,name:"CAPGEMINI",ticker:"CAP",cours:109.10,pru:105.34,qty:6,sector:"Technologie",cons:"Achat",target:150,ac:16,bn:[{b:"Jefferies",r:"Conservation",t:115,n:"3 mars : obj abaisse 145->115. PER 10x."},{b:"Goldman Sachs",r:"Achat",t:165,n:"IA generative. Pipeline deals."},{b:"Morgan Stanley",r:"Surponderer",t:155,n:"Cycle IT point bas."},{b:"Oddo BHF",r:"Surperformance",t:180,n:"Sous-valorise vs Accenture."}]},
+{id:18,name:"AMUNDI LATAM",ticker:"ALAT",cours:26.17,pru:25.08,qty:24,sector:"ETF LatAm",cons:"ETF",target:null,ac:0,bn:[]},
+{id:19,name:"TOTALENERGIES",ticker:"TTE",cours:67.45,pru:52.64,qty:9,sector:"Energie",cons:"Achat",target:69.20,ac:22,bn:[{b:"Goldman Sachs",r:"Neutre",t:72,n:"Petrole en recul. Profits partiels."},{b:"Bernstein",r:"Surperformance",t:75,n:"Meme a 90$/b reste profitable."},{b:"JP Morgan",r:"Surponderer",t:70,n:"Renouvelable 35GW."},{b:"Societe Generale",r:"Achat",t:68,n:"Rendement 12%."}]},
+{id:20,name:"SPIE",ticker:"SPIE",cours:48.66,pru:43.61,qty:12,sector:"Services Ind.",cons:"Achat",target:54.50,ac:11,bn:[{b:"Portzamparc",r:"Renforcer",t:52,n:"3 mars : releve 50->52."},{b:"Oddo BHF",r:"Surperformance",t:56,n:"Leader multi-techniques."},{b:"Stifel",r:"Achat",t:54,n:"Croissance 4-5%."},{b:"Berenberg",r:"Achat",t:55,n:"Carnet 18 mois."}]},
+{id:21,name:"BNP EASY S&P 500",ticker:"ESE",cours:29.18,pru:25.54,qty:19,sector:"ETF US Large",cons:"ETF",target:null,ac:0,bn:[]},
+{id:22,name:"WENDEL",ticker:"MF",cours:81.20,pru:80.33,qty:5,sector:"Holding",cons:"Achat",target:118.50,ac:6,bn:[{b:"Oddo BHF",r:"Surperformance",t:125,n:"Decote 35%. IK Partners."},{b:"Societe Generale",r:"Achat",t:118,n:"NAV 130 vs cours 81."},{b:"Berenberg",r:"Achat",t:115,n:"Bureau Veritas + IK."}]},
+{id:23,name:"FDJ UNITED",ticker:"FDJ",cours:25.62,pru:28.13,qty:15,sector:"Jeux",cons:"Neutre",target:28,ac:11,bn:[{b:"Citi",r:"Neutre",t:26,n:"3 mars : abaisse 27.50->26."},{b:"Oddo BHF",r:"Neutre",t:30,n:"Monopole loterie."},{b:"Deutsche Bank",r:"Conservation",t:28,n:"Synergies Kindred."},{b:"JP Morgan",r:"Neutre",t:29,n:"Rendement 3.5%."}]},
+{id:24,name:"MERSEN",ticker:"MRN",cours:24.70,pru:22.63,qty:14,sector:"Materiaux",cons:"Achat",target:27.72,ac:7,bn:[{b:"Oddo BHF",r:"Surperformance",t:32,n:"SiC + EV critique."},{b:"Portzamparc",r:"Achat",t:28,n:"Megatendances."},{b:"Gilbert Dupont",r:"Achat",t:26,n:"SiC en expansion."}]},
+{id:25,name:"ARKEMA",ticker:"AKE",cours:52.25,pru:69.61,qty:5,sector:"Chimie",cons:"Achat",target:74.25,ac:16,bn:[{b:"Goldman Sachs",r:"Achat",t:80,n:"Transformation specialites."},{b:"Deutsche Bank",r:"Achat",t:75,n:"Point bas cyclique."},{b:"Oddo BHF",r:"Surperformance",t:72,n:"Construction, batteries, 5G."},{b:"JP Morgan",r:"Surponderer",t:74,n:"EBITDA margin recovery."}]},
+{id:26,name:"RENAULT",ticker:"RNO",cours:28.25,pru:37.10,qty:7,sector:"Automobile",cons:"Achat",target:45.74,ac:19,bn:[{b:"Goldman Sachs",r:"Achat",t:50,n:"futuREady 10 mars : 36 modeles, CA +4-6%/an."},{b:"Deutsche Bank",r:"Achat",t:48,n:"3.8x PE. -42% sur 1 an."},{b:"Oddo BHF",r:"Surperformance",t:44,n:"Ampere potentiel."},{b:"Bernstein",r:"Surperformance",t:42,n:"Restructuration reussie."}]}
+];
+
+function ff(n){return n!=null?n.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" \u20ac":"N/A"}
+function fp(n){return(n>=0?"+":"")+n.toFixed(2)+"%"}
+
+var GS_MKT={title:"Goldman Sachs",date:"10 Mars 2026",outlook:"Rebond technique",pts:["Trump : guerre quasiment terminee. Petrole recul 110->95$. Soulagement.","CAC 40 +1.9% a 8065 pts. Meilleure seance depuis 3 semaines.","Rotation : sortie refuges vers cycliques (Auto, Banques, Luxe).","Jefferies abaisse Capgemini 145->115. Citi abaisse FDJ 27.50->26. Kepler/Citi relevent Accor.","Objectif CAC 40 maintenu 8400 si desescalade confirmee."]};
+var MS_MKT={title:"Morgan Stanley",date:"10 Mars 2026",outlook:"Rebond \u2014 Opportunites selectives",pts:["VSTOXX baisse a 24 (vs 28 lundi). Detente rapide.","Petrole recul vers 95$. Cycliques en rebond.","Kepler et Citi relevent Accor malgre le contexte.","Portzamparc releve SPIE 50->52.","Renault +4% : plan futuREady 36 modeles, CA +4-6%/an, marge 5-7%."]};
+var CIT_MKT={title:"Citadel",date:"10 Mars 2026",outlook:"Desescalade \u2014 Retour cycliques",pts:["Rebonds post-choc historiquement violents (+5-10% en 2 sem).","Inflation attenuee si petrole <90$. BCE maintient baisses taux.","Rotation : revenir cycliques. Allegement Energie apres pic.","NEURONES resultats demain 11 mars. Catalyseur.","CRIT : indicateur avance marche emploi."]};
+
+var GS_D={
+"PUBLICIS GROUPE":{v:"Achat",cv:"Elevee",s:"Leader comm digitale. Epsilon + Sapient.",pe:13,pf:11.2,m:8,bull:130,bear:65},
+"BNP PARIBAS":{v:"Achat",cv:"Elevee",s:"1ere banque zone euro. ROE 12%+.",pe:7.5,pf:6.8,m:7,bull:110,bear:72},
+"ACCOR":{v:"Achat",cv:"Moyenne",s:"Asset-light. Kepler et Citi relevent.",pe:22.5,pf:18,m:7,bull:66,bear:35},
+"EIFFAGE":{v:"Achat",cv:"Elevee",s:"BTP + APRR. Cash-flow recurrent.",pe:12.2,pf:10.5,m:6,bull:172,bear:105},
+"CAPGEMINI":{v:"Achat",cv:"Moyenne",s:"PER 10x. Jefferies 115 mais GS 165. CA +6.5-8.5%.",pe:10,pf:9.5,m:7,bull:180,bear:85},
+"TOTALENERGIES":{v:"Achat",cv:"Elevee",s:"Petrole recul vers 95$ mais FCF excellent.",pe:8.5,pf:7.5,m:8,bull:85,bear:50},
+"ARKEMA":{v:"Achat",cv:"Moyenne",s:"Point bas. Petrole baisse = positif matieres.",pe:18.5,pf:12,m:6,bull:95,bear:42},
+"RENAULT":{v:"Achat",cv:"Moyenne",s:"futuREady +4%. 36 modeles. 3.8x PE.",pe:4.2,pf:3.8,m:5,bull:55,bear:18},
+"SEB":{v:"Achat",cv:"Moyenne",s:"-5.45% vendredi. Valo basse. Momentum negatif.",pe:14,pf:11.5,m:7,bull:95,bear:40},
+"WENDEL":{v:"Achat",cv:"Moyenne",s:"NAV 130 vs 81. Decote 35%.",pe:null,pf:null,m:6,bull:135,bear:70},
+"FDJ UNITED":{v:"Conservation",cv:"Faible",s:"Citi abaisse a 26. Kindred pese.",pe:16,pf:14.5,m:8,bull:35,bear:20},
+"SPIE":{v:"Achat",cv:"Moyenne",s:"Portzamparc releve a 52. Defensif.",pe:18,pf:15.5,m:6,bull:60,bear:38},
+"MERSEN":{v:"Achat",cv:"Moyenne",s:"Graphite + SiC. EV et semi.",pe:12,pf:10,m:6,bull:33,bear:18},
+"NEURONES":{v:"Achat",cv:"Moyenne",s:"RESULTATS DEMAIN. Net cash.",pe:16,pf:14,m:5,bull:52,bear:28},
+"TF1":{v:"Neutre",cv:"Faible",s:"Retire InvestingPro. Pub en recul.",pe:8,pf:7.5,m:5,bull:12,bear:5},
+"CRIT":{v:"Achat",cv:"Moyenne",s:"Treso 40% capi. 6x PE. 3 brokers unanimes.",pe:6,pf:5.5,m:5,bull:90,bear:40}
+};
+
+var RECO=[
+{a:"SCHNEIDER ELECTRIC",cap:"Large",nb:28,ach:24,obj:285,c:238,sec:"Industrie",top:[{b:"Goldman Sachs",r:"Achat",t:310,n:"Electrification + data centers."},{b:"JP Morgan",r:"Surponderer",t:295,n:"Marge EBITA vers 20%."}]},
+{a:"SAFRAN",cap:"Large",nb:22,ach:19,obj:265,c:225,sec:"Aero",top:[{b:"Exane BNP",r:"Surperformance",t:270,n:"Aftermarket LEAP boom."},{b:"Goldman Sachs",r:"Achat",t:280,n:"FCF acceleration."}]},
+{a:"LVMH",cap:"Large",nb:32,ach:24,obj:800,c:650,sec:"Luxe",top:[{b:"Goldman Sachs",r:"Achat",t:850,n:"Rebond Chine."},{b:"Morgan Stanley",r:"Surponderer",t:830,n:"Luxe structurel."}]},
+{a:"AIRBUS",cap:"Large",nb:26,ach:20,obj:178,c:155,sec:"Aero",top:[{b:"JP Morgan",r:"Surponderer",t:195,n:"A320neo. Carnet 8 ans."},{b:"Goldman Sachs",r:"Achat",t:190,n:"Duopole."}]},
+{a:"TOTALENERGIES",cap:"Large",nb:22,ach:17,obj:72,c:67.45,sec:"Energie",top:[{b:"Bernstein",r:"Surperformance",t:75,n:"FCF eleve meme si petrole baisse."},{b:"SG",r:"Achat",t:68,n:"Rendement 12%."}]},
+{a:"ASML",cap:"Large",nb:30,ach:24,obj:770,c:620,sec:"Semi",top:[{b:"Morgan Stanley",r:"Surponderer",t:820,n:"Monopole EUV."},{b:"Goldman Sachs",r:"Achat",t:800,n:"High-NA."}]},
+{a:"DASSAULT SYSTEMES",cap:"Large",nb:22,ach:14,obj:42,c:33,sec:"Logiciel",top:[{b:"Stifel",r:"Achat",t:45,n:"Cloud acceleration."},{b:"Goldman Sachs",r:"Achat",t:43,n:"Long terme."}]},
+{a:"SAINT-GOBAIN",cap:"Large",nb:20,ach:16,obj:102,c:82,sec:"Materiaux",top:[{b:"SG",r:"Achat",t:108,n:"Renovation energetique."},{b:"Deutsche Bank",r:"Achat",t:100,n:"Marge record."}]},
+{a:"INTERPARFUMS",cap:"Mid",nb:8,ach:7,obj:58,c:40,sec:"Luxe",top:[{b:"Oddo BHF",r:"Surperformance",t:62,n:"Pipeline licences."},{b:"Bryan Garnier",r:"Achat",t:56,n:"Asset-light."}]},
+{a:"THERMADOR",cap:"Mid",nb:5,ach:4,obj:98,c:78,sec:"BTP",top:[{b:"Portzamparc",r:"Achat Fort",t:105,n:"Plomberie. Treso nette."},{b:"Oddo BHF",r:"Surperformance",t:95,n:"Dividende +15 ans."}]},
+{a:"ESKER",cap:"Mid",nb:5,ach:5,obj:260,c:205,sec:"SaaS",top:[{b:"Oddo BHF",r:"Surperformance",t:275,n:"Digitalisation P2P."},{b:"Bryan Garnier",r:"Achat",t:255,n:"Retention >110%."}]},
+{a:"GERARD PERRIER",cap:"Small",nb:3,ach:3,obj:120,c:96,sec:"Electricite",top:[{b:"Portzamparc",r:"Achat Fort",t:128,n:"Nucleaire."},{b:"Gilbert Dupont",r:"Achat",t:115,n:"Plan nucleaire FR."}]}
+];
+
+function App(){
+var _t=us(0),tab=_t[0],sT=_t[1];
+var _pme=us(PME),pme=_pme[0],sPme=_pme[1];
+var _pea=us(PEA),pea=_pea[0],sPea=_pea[1];
+var _eid=us(null),eid=_eid[0],sEid=_eid[1];
+var _ev=us({}),ev=_ev[0],sEv=_ev[1];
+var _dk=us(false),dk=_dk[0],sDk=_dk[1];
+var _gs=us(null),gs=_gs[0],sGs=_gs[1];
+var _cd=us(null),cd=_cd[0],sCd=_cd[1];
+var _bv=us(null),bv=_bv[0],sBv=_bv[1];
+
+var all=um(function(){return pme.concat(pea)},[pme,pea]);
+var stk=um(function(){return all.filter(function(p){return p.cons!=="ETF"})},[all]);
+var tv=um(function(){return all.reduce(function(s,p){return s+p.cours*p.qty},0)},[all]);
+var tc=um(function(){return all.reduce(function(s,p){return s+p.pru*p.qty},0)},[all]);
+var tpnl=tv-tc,tpct=tc?(tpnl/tc)*100:0;
+var pv=um(function(){return pea.reduce(function(s,p){return s+p.cours*p.qty},0)},[pea]);
+var pmv=um(function(){return pme.reduce(function(s,p){return s+p.cours*p.qty},0)},[pme]);
+var pc=um(function(){return pea.reduce(function(s,p){return s+p.pru*p.qty},0)},[pea]);
+var pmc=um(function(){return pme.reduce(function(s,p){return s+p.pru*p.qty},0)},[pme]);
+
+var bg=dk?"#0a0a0f":"#f8f9fb",cr=dk?"#16172a":"#fff",tx=dk?"#e8e8f0":"#1a1a2e",ts=dk?"#8888a8":"#6b7280",bd=dk?"#2a2b45":"#e5e7eb",ac="#2563eb",gn="#10b981",rd="#ef4444";
+var cs={background:cr,borderRadius:16,padding:20,border:"1px solid "+bd,marginBottom:12};
+
+function Pnl(v){return h("span",{style:{color:v>=0?gn:rd,fontWeight:700,fontSize:13}},(v>=0?"\u25b2":"\u25bc")+" "+ff(Math.abs(v)))}
+function CB(c){var m={"Achat Fort":{b:"#059669",f:"#fff"},Achat:{b:gn,f:"#fff"},Surperformance:{b:gn,f:"#fff"},Surponderer:{b:gn,f:"#fff"},Renforcer:{b:"#7c3aed",f:"#fff"},Neutre:{b:"#f59e0b",f:"#000"},Conservation:{b:"#6b7280",f:"#fff"},"N/A":{b:bd,f:ts},ETF:{b:ac,f:"#fff"}}[c]||{b:bd,f:ts};return h("span",{style:{background:m.b,color:m.f,padding:"3px 10px",borderRadius:12,fontSize:11,fontWeight:600}},c)}
+function MB(d,g){return h("div",{style:Object.assign({},cs,{background:g,border:"none",color:"#fff",marginBottom:16})},h("div",{style:{fontSize:11,opacity:.6,letterSpacing:2,textTransform:"uppercase"}},d.title),h("div",{style:{display:"flex",justifyContent:"space-between",marginTop:8}},h("div",{style:{fontSize:18,fontWeight:700}},d.outlook),h("span",{style:{fontSize:11,opacity:.6}},d.date)),h("div",{style:{marginTop:12}},d.pts.map(function(p,i){return h("div",{key:i,style:{fontSize:12,opacity:.9,lineHeight:1.6,padding:"6px 0",borderTop:i?"1px solid rgba(255,255,255,.15)":"none"}},"\u2022 "+p)})))}
+
+function se(p){sEid(p.id);sEv({pru:String(p.pru),qty:String(p.qty),cours:String(p.cours)})}
+function sv(id){var u=function(l){return l.map(function(p){return p.id===id?Object.assign({},p,{pru:parseFloat(ev.pru)||p.pru,qty:parseInt(ev.qty)||p.qty,cours:parseFloat(ev.cours)||p.cours}):p})};sPme(u);sPea(u);sEid(null)}
+function dp(id){sPme(function(x){return x.filter(function(p){return p.id!==id})});sPea(function(x){return x.filter(function(p){return p.id!==id})});sCd(null)}
+
+function PR(p){
+var pnl=(p.cours-p.pru)*p.qty,pp=p.pru?((p.cours-p.pru)/p.pru)*100:0,ie=eid===p.id;
+var ip={width:"100%",padding:"8px 10px",borderRadius:8,border:"1px solid "+(ie?ac:bd),background:bg,color:tx,fontSize:13,outline:"none",boxSizing:"border-box"};
+return h("div",{style:Object.assign({},cs,{padding:14})},
+h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
+h("div",{style:{flex:1}},h("div",{style:{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}},h("span",{style:{fontSize:14,fontWeight:700,color:tx}},p.name),CB(p.cons)),
+ie?h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginTop:8}},["cours","pru","qty"].map(function(k){return h("div",{key:k},h("div",{style:{fontSize:10,color:ts}},k==="cours"?"Cours":k==="pru"?"PRU":"Qte"),h("input",{value:ev[k],onChange:function(x){var o={};o[k]=x.target.value;sEv(Object.assign({},ev,o))},style:ip}))})):
+h("div",{style:{fontSize:12,color:ts,marginTop:4}},"Cours: "+ff(p.cours)+" \u00b7 PRU: "+ff(p.pru)+" \u00b7 Qte: "+p.qty+(p.target?" \u00b7 Obj: ":""),p.target&&h("span",{style:{color:ac,fontWeight:600}},ff(p.target)))),
+h("div",{style:{textAlign:"right",minWidth:90}},h("div",{style:{fontSize:15,fontWeight:700,color:tx}},ff(p.cours*p.qty)),Pnl(pnl),h("div",{style:{fontSize:11,color:pp>=0?gn:rd}},fp(pp)))),
+h("div",{style:{display:"flex",gap:8,marginTop:8,justifyContent:"flex-end",flexWrap:"wrap"}},
+ie?h(React.Fragment,null,h("button",{onClick:function(){sv(p.id)},style:{padding:"5px 14px",borderRadius:8,background:gn,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"Save"),h("button",{onClick:function(){sEid(null)},style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:"1px solid "+bd,fontSize:11,cursor:"pointer"}},"Annuler")):
+h(React.Fragment,null,h("button",{onClick:function(){se(p)},style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:ac,border:"1px solid "+ac,fontSize:11,fontWeight:600,cursor:"pointer"}},"Modifier"),
+p.bn&&p.bn.length>0&&h("button",{onClick:function(){sBv(bv===p.id?null:p.id)},style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:"#7c3aed",border:"1px solid #7c3aed",fontSize:11,fontWeight:600,cursor:"pointer"}},bv===p.id?"Masquer":"Analystes"),
+cd===p.id?h(React.Fragment,null,h("button",{onClick:function(){dp(p.id)},style:{padding:"5px 14px",borderRadius:8,background:rd,color:"#fff",border:"none",fontSize:11,fontWeight:600,cursor:"pointer"}},"Confirmer"),h("button",{onClick:function(){sCd(null)},style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:ts,border:"1px solid "+bd,fontSize:11,cursor:"pointer"}},"Non")):h("button",{onClick:function(){sCd(p.id)},style:{padding:"5px 14px",borderRadius:8,background:"transparent",color:rd,border:"1px solid "+rd,fontSize:11,fontWeight:600,cursor:"pointer"}},"Supprimer"))),
+bv===p.id&&p.bn&&p.bn.length>0&&h("div",{style:{marginTop:10,width:"100%"}},p.bn.map(function(x,i){return h("div",{key:i,style:{padding:"10px 12px",background:dk?"#1e1f38":"#f1f5f9",borderRadius:10,marginBottom:6}},h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}},h("span",{style:{fontSize:12,fontWeight:700,color:tx}},x.b+(TIER1.indexOf(x.b)>=0?" \u2b50":"")),h("div",{style:{display:"flex",gap:6,alignItems:"center"}},CB(x.r),x.t&&h("span",{style:{fontSize:11,color:ac,fontWeight:600}},"Obj: "+ff(x.t)))),h("div",{style:{fontSize:12,color:ts,lineHeight:1.5}},x.n))})))}
+
+function T0(){return h("div",null,
+h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#059669,#065f46)",border:"none",color:"#fff",marginBottom:16})},h("div",{style:{fontSize:16,fontWeight:800}},"\u2705 REBOND MARCHE \u2014 10 Mars 2026"),h("div",{style:{fontSize:12,opacity:.9,marginTop:6,lineHeight:1.6}},"CAC 40 +1.9% a 8065 pts. Trump : guerre quasiment terminee. Petrole recul vers 95$. Renault +4% plan futuREady.")),
+h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,"+ac+",#7c3aed)",border:"none",color:"#fff"})},h("div",{style:{fontSize:13,opacity:.8}},"Valeur Totale"),h("div",{style:{fontSize:36,fontWeight:800}},ff(tv)),h("div",{style:{display:"flex",gap:20,marginTop:12}},h("div",null,h("span",{style:{opacity:.7,fontSize:12}},"P&L"),h("br"),h("span",{style:{fontSize:18,fontWeight:700}},(tpnl>=0?"+":"")+ff(tpnl))),h("div",null,h("span",{style:{opacity:.7,fontSize:12}},"Perf."),h("br"),h("span",{style:{fontSize:18,fontWeight:700}},fp(tpct))))),
+h("div",{style:Object.assign({},cs,{borderLeft:"4px solid "+gn})},h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:10}},"\ud83c\udfaf Plan d'Action \u2014 10 Mars"),
+[{a:"RENFORCER",c:gn,i:[{n:"CAPGEMINI",r:"PER 10x. GS 165, MS 155, Oddo 180. CA +6.5-8.5%.",s:"GS \u2b50, Oddo BHF"},{n:"CRIT (NOUVEAU)",r:"Treso nette 40% capi. 6x PE. 3 brokers unanimes.",s:"Portzamparc (90), Gilbert Dupont (82)"},{n:"ARKEMA",r:"Point bas. Petrole baisse = positif. 4 Tier 1 achat.",s:"GS \u2b50 (80), JPM \u2b50 (74)"},{n:"SEB",r:"Valo historiquement basse. Accumuler par paliers.",s:"Oddo (82), Bernstein \u2b50 (75)"}]},{a:"CONSERVER",c:ac,i:[{n:"BNP PARIBAS",r:"ROE 12%+, yield >5%. Banques rebondissent.",s:"GS \u2b50, UBS \u2b50, DB \u2b50"},{n:"EIFFAGE",r:"APRR cash-flow. Carnet record.",s:"Oddo (152), SG (145)"},{n:"ACCOR",r:"Kepler + Citi relevent. Asset-light.",s:"Kepler \u2b50 (57), Citi \u2b50 (56)"},{n:"SPIE",r:"Portzamparc releve 50->52. Defensif.",s:"Portzamparc, Oddo (56)"},{n:"PUBLICIS",r:"11x PE fwd. Digital protege.",s:"GS \u2b50 (115), MS \u2b50 (112)"},{n:"TOTALENERGIES",r:"Petrole recul. Profits partiels si >70.",s:"Bernstein \u2b50 (75)"}]},{a:"ALLEGER",c:"#f59e0b",i:[{n:"FDJ UNITED",r:"Citi abaisse 27.50->26. Kindred pese.",s:"Citi \u2b50 (26 \u2193)"},{n:"TF1",r:"Retire InvestingPro. Pub recul.",s:"Oddo (Neutre)"}]},{a:"SURVEILLER",c:rd,i:[{n:"RENAULT",r:"Rebond +4% futuREady mais -42% YTD. Observer.",s:"GS \u2b50 (50), DB \u2b50 (48)"},{n:"RISING STONE",r:"Aucune couverture. PV -15%.",s:"Pas de couverture"}]}].map(function(g){return h("div",{key:g.a,style:{marginBottom:12}},h("span",{style:{padding:"3px 10px",borderRadius:8,fontSize:11,fontWeight:700,background:g.c,color:"#fff"}},g.a),g.items||g.i&&g.i.map(function(it,i){return h("div",{key:i,style:{padding:"8px 10px",background:dk?"#1e1f38":"#f8fafc",borderRadius:8,marginBottom:4,marginTop:i===0?6:0}},h("div",{style:{fontSize:13,fontWeight:700,color:tx}},it.n),h("div",{style:{fontSize:11,color:ts,lineHeight:1.5,marginTop:2}},it.r),h("div",{style:{fontSize:10,color:ac,marginTop:2}},"\ud83d\udccc "+it.s))}))})),
+h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},[["PEA",pv,pc],["PEA-PME",pmv,pmc]].map(function(x){return h("div",{key:x[0],style:cs},h("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1}},x[0]),h("div",{style:{fontSize:22,fontWeight:700,color:tx,marginTop:4}},ff(x[1])),h("div",{style:{fontSize:12,color:(x[1]-x[2])>=0?gn:rd,fontWeight:600}},x[2]?fp(((x[1]-x[2])/x[2])*100):"\u2014"))})),
+h("div",{style:cs},h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Toutes les Positions"),all.slice().sort(function(a,b){return b.cours*b.qty-a.cours*a.qty}).map(function(p){var pnl=(p.cours-p.pru)*p.qty,pp=p.pru?((p.cours-p.pru)/p.pru)*100:0;return h("div",{key:p.id,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid "+bd}},h("div",null,h("div",{style:{fontSize:13,fontWeight:600,color:tx}},p.name),h("div",{style:{fontSize:11,color:ts}},p.sector+" \u00b7 "+ff(p.cours*p.qty))),h("div",{style:{textAlign:"right"}},Pnl(pnl),h("div",{style:{fontSize:11,color:pp>=0?gn:rd}},fp(pp))))})),
+h("div",{style:cs},h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Consensus \u2014 Objectifs 12M"),stk.filter(function(p){return p.target}).sort(function(a,b){return((b.target-b.cours)/b.cours)-((a.target-a.cours)/a.cours)}).map(function(p){var up=((p.target-p.cours)/p.cours)*100;return h("div",{key:p.id,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid "+bd}},h("div",null,h("div",{style:{fontSize:13,fontWeight:600,color:tx}},p.name),h("div",{style:{fontSize:11,color:ts}},p.ac+" analystes \u00b7 ",CB(p.cons))),h("div",{style:{textAlign:"right"}},h("div",{style:{fontSize:13,fontWeight:700,color:up>=0?gn:rd}},fp(up)),h("div",{style:{fontSize:11,color:ts}},"Obj: "+ff(p.target))))})))}
+
+function T1(){return h("div",null,h("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1,marginBottom:8}},"PEA-PME \u00b7 "+ff(pmv)),pme.map(function(p){return PR(p)}),h("div",{style:{fontSize:11,color:ts,fontWeight:600,textTransform:"uppercase",letterSpacing:1,marginBottom:8,marginTop:20}},"PEA \u00b7 "+ff(pv)),pea.map(function(p){return PR(p)}))}
+
+function T2(){
+var an=stk.filter(function(p){return GS_D[p.name]});
+if(gs&&GS_D[gs.name]){var a=GS_D[gs.name],p=gs;
+return h("div",null,h("button",{onClick:function(){sGs(null)},style:{background:"none",border:"none",color:ac,fontSize:13,fontWeight:600,cursor:"pointer",marginBottom:12}},"\u2190 Retour"),
+h("div",{style:cs},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("div",null,h("div",{style:{fontSize:20,fontWeight:800,color:tx}},p.name),h("div",{style:{fontSize:12,color:ts}},p.ticker)),h("span",{style:{padding:"6px 16px",borderRadius:10,fontSize:14,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Neutre"?"#f59e0b":"#6b7280",color:"#fff"}},a.v))),
+h("div",{style:cs},h("div",{style:{fontSize:13,color:ts,lineHeight:1.6}},a.s)),
+h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},[{l:"P/E",x:a.pe},{l:"P/E Fwd",x:a.pf},{l:"Moat",x:a.m+"/10"},{l:"Conviction",x:a.cv}].map(function(m,i){return h("div",{key:i,style:cs},h("div",{style:{fontSize:10,color:ts,textTransform:"uppercase"}},m.l),h("div",{style:{fontSize:18,fontWeight:700,color:tx,marginTop:2}},m.x||"N/A"))})),
+h("div",{style:cs},h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:12}},"Scenarios"),h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}},h("div",{style:{textAlign:"center"}},h("div",{style:{fontSize:10,color:rd}},"BEAR"),h("div",{style:{fontSize:20,fontWeight:700,color:rd}},ff(a.bear))),h("div",{style:{textAlign:"center"}},h("div",{style:{fontSize:10,color:ac}},"ACTUEL"),h("div",{style:{fontSize:20,fontWeight:700,color:tx}},ff(p.cours))),h("div",{style:{textAlign:"center"}},h("div",{style:{fontSize:10,color:gn}},"BULL"),h("div",{style:{fontSize:20,fontWeight:700,color:gn}},ff(a.bull))))))}
+return h("div",null,MB(GS_MKT,"linear-gradient(135deg,#1a1a2e,#16213e)"),an.map(function(p){var a=GS_D[p.name];return h("div",{key:p.id,onClick:function(){sGs(p)},style:Object.assign({},cs,{cursor:"pointer"})},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("div",null,h("div",{style:{fontSize:14,fontWeight:700,color:tx}},p.name),h("div",{style:{fontSize:12,color:ts}},p.sector)),h("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:700,background:a.v==="Achat"?gn:a.v==="Neutre"?"#f59e0b":"#6b7280",color:"#fff"}},a.v+" \u2192")))}))}
+
+function T3(){var td={"PUBLICIS GROUPE":{t:"Haussier",rsi:45,sg:"Accumuler"},"BNP PARIBAS":{t:"Haussier",rsi:58,sg:"Achat"},"ACCOR":{t:"Neutre",rsi:42,sg:"Conserver"},"EIFFAGE":{t:"Haussier",rsi:60,sg:"Achat"},"CAPGEMINI":{t:"Baissier",rsi:35,sg:"Attendre"},"TOTALENERGIES":{t:"Haussier",rsi:65,sg:"Profit-taking"},"SEB":{t:"Baissier",rsi:25,sg:"Eviter"},"ARKEMA":{t:"Baissier",rsi:33,sg:"Attendre"},"RENAULT":{t:"Neutre",rsi:38,sg:"Observer"},"WENDEL":{t:"Neutre",rsi:48,sg:"Conserver"},"MERSEN":{t:"Neutre",rsi:42,sg:"Accumuler"},"SPIE":{t:"Haussier",rsi:55,sg:"Achat"},"FDJ UNITED":{t:"Neutre",rsi:47,sg:"Conserver"},"NEURONES":{t:"Neutre",rsi:50,sg:"Conserver"},"TF1":{t:"Baissier",rsi:40,sg:"Eviter"},"CRIT":{t:"Neutre",rsi:45,sg:"Accumuler"}};
+return h("div",null,MB(MS_MKT,"linear-gradient(135deg,#1e3a5f,#0d2137)"),Object.keys(td).map(function(n){var d=td[n],p=all.find(function(x){return x.name===n});if(!p)return null;var c=d.t.indexOf("Haussier")>=0?gn:d.t.indexOf("Baissier")>=0?rd:ts;return h("div",{key:n,style:cs},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("div",null,h("div",{style:{fontSize:14,fontWeight:700,color:tx}},n),h("div",{style:{fontSize:12,color:ts}},ff(p.cours)+" \u00b7 RSI: "+d.rsi)),h("div",{style:{display:"flex",gap:6}},h("span",{style:{color:c,fontSize:12,fontWeight:600}},d.t),h("span",{style:{padding:"4px 10px",borderRadius:8,fontSize:11,fontWeight:700,background:d.sg==="Achat"?gn:d.sg==="Attendre"||d.sg==="Eviter"?rd:d.sg==="Accumuler"||d.sg==="Observer"?"#7c3aed":"#f59e0b",color:"#fff"}},d.sg))))}))}
+
+function T4(){return h("div",null,h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#7c2d12,#451a03)",border:"none",color:"#fff"})},h("div",{style:{fontSize:20,fontWeight:700}},"Bridgewater \u2014 Risques"),h("div",{style:{fontSize:12,opacity:.8,marginTop:8}},"Desescalade en cours. Risque residuel petrole. Surveiller auto/chimie.")),stk.map(function(p){var r=p.sector==="Automobile"||p.sector==="Chimie"?8:p.sector==="Consommation"?7:p.sector==="Energie"?4:5;return h("div",{key:p.id,style:Object.assign({},cs,{padding:14})},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("span",{style:{fontSize:13,fontWeight:600,color:tx}},p.name),h("span",{style:{fontSize:12,fontWeight:700,color:r>=8?rd:r>=6?"#f59e0b":gn}},r+"/10")))}))}
+
+function T5(){return h("div",null,h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#000,#1a1a2e)",border:"none",color:"#fff"})},h("div",{style:{fontSize:20,fontWeight:700}},"BlackRock \u2014 Dividendes")),[{n:"BNP PARIBAS",y:5.8},{n:"TOTALENERGIES",y:5.2},{n:"TF1",y:5.0},{n:"PUBLICIS",y:4.1},{n:"SPIE",y:3.8},{n:"FDJ UNITED",y:3.5},{n:"EIFFAGE",y:3.3},{n:"CAPGEMINI",y:3.3},{n:"SEB",y:2.8},{n:"WENDEL",y:2.5},{n:"MERSEN",y:2.2},{n:"ACCOR",y:2.0}].map(function(x){return h("div",{key:x.n,style:Object.assign({},cs,{padding:14})},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("span",{style:{fontSize:13,fontWeight:600,color:tx}},x.n),h("span",{style:{fontSize:18,fontWeight:800,color:gn}},x.y+"%")))}))}
+
+function T6(){return h("div",null,MB(CIT_MKT,"linear-gradient(135deg,#065f46,#022c22)"),[{n:"Banques",w:"SURPONDERER",c:gn},{n:"Luxe",w:"SURPONDERER",c:gn},{n:"Services Ind.",w:"SURPONDERER",c:gn},{n:"Energie",w:"NEUTRE (profit-taking)",c:"#f59e0b"},{n:"Tech/SSII",w:"NEUTRE",c:"#f59e0b"},{n:"Construction",w:"NEUTRE",c:"#f59e0b"},{n:"Auto",w:"NEUTRE (rebond)",c:"#f59e0b"},{n:"Chimie",w:"NEUTRE",c:"#f59e0b"},{n:"Consommation",w:"SOUS-PONDERER",c:rd}].map(function(x){return h("div",{key:x.n,style:{display:"flex",justifyContent:"space-between",padding:"12px 16px",borderBottom:"1px solid "+bd}},h("span",{style:{fontSize:13,fontWeight:600,color:tx}},x.n),h("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:11,fontWeight:700,background:x.c,color:"#fff"}},x.w))}))}
+
+function T7(){return h("div",null,h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#1e3a5f,#0c2340)",border:"none",color:"#fff"})},h("div",{style:{fontSize:20,fontWeight:700}},"JPMorgan \u2014 Earnings")),[{n:"NEURONES",d:"Demain 11 Mars",p:"CATALYSEUR",no:"Resultats annuels. Net cash. Obj 39."},{n:"RENAULT",d:"10 Mars",p:"futuREady",no:"36 modeles. CA +4-6%/an. Rebond +4%."},{n:"PUBLICIS",d:"17 Avr",p:"Conserver",no:"T1 solide attendu."},{n:"CAPGEMINI",d:"30 Avr",p:"Accumuler",no:"PER 10x. Guidance donnee."},{n:"BNP PARIBAS",d:"Mai",p:"Conserver",no:"ROE 12%+."}].map(function(x){return h("div",{key:x.n,style:Object.assign({},cs,{borderLeft:x.n==="NEURONES"?"4px solid #f59e0b":"none"})},h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}},h("div",null,h("div",{style:{fontSize:14,fontWeight:700,color:tx}},x.n),h("div",{style:{fontSize:11,color:ts}},x.d)),h("span",{style:{padding:"4px 12px",borderRadius:8,fontSize:11,fontWeight:700,background:x.p==="CATALYSEUR"||x.p==="futuREady"?"#f59e0b":gn,color:"#fff"}},x.p)),h("div",{style:{fontSize:12,color:ts}},x.no))}))}
+
+function T8(){var myT=all.map(function(p){return p.ticker});
+var scored=RECO.map(function(r){var pA=r.ach/r.nb;var t1=r.top.filter(function(x){return TIER1.indexOf(x.b)>=0}).length;var sc=Math.round(r.nb*.4+pA*40+t1*5);var up=((r.obj-r.c)/r.c)*100;var mine=myT.indexOf(r.ticker)>=0;return Object.assign({},r,{sc:sc,up:up,mine:mine})}).sort(function(a,b){return b.sc-a.sc});
+return h("div",null,h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#7c3aed,#4c1d95)",border:"none",color:"#fff"})},h("div",{style:{fontSize:20,fontWeight:700}},"Reco \u2014 10 Mars 2026"),h("div",{style:{fontSize:12,opacity:.8,marginTop:8}},"Score = brokers x % achat x Tier 1.")),
+scored.map(function(r){return h("div",{key:r.ticker,style:Object.assign({},cs,{borderLeft:"4px solid "+(r.mine?ac:"#7c3aed")})},
+h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:8}},h("div",null,h("div",{style:{display:"flex",alignItems:"center",gap:8}},h("span",{style:{fontSize:15,fontWeight:700,color:tx}},r.a),h("span",{style:{padding:"2px 8px",borderRadius:6,fontSize:10,fontWeight:600,background:r.cap==="Large"?ac:r.cap==="Mid"?"#7c3aed":"#f59e0b",color:"#fff"}},r.cap),r.mine&&h("span",{style:{padding:"2px 8px",borderRadius:6,fontSize:10,fontWeight:600,background:gn,color:"#fff"}},"PTF")),h("div",{style:{fontSize:11,color:ts}},r.sec)),h("div",{style:{textAlign:"right"}},h("div",{style:{fontSize:20,fontWeight:800,color:tx}},r.sc),h("div",{style:{fontSize:10,color:ts}},"score"))),
+h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:8,marginBottom:10}},h("div",{style:{textAlign:"center",padding:6,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},h("div",{style:{fontSize:14,fontWeight:700,color:gn}},r.ach+"/"+r.nb),h("div",{style:{fontSize:9,color:ts}},"Achat")),h("div",{style:{textAlign:"center",padding:6,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},h("div",{style:{fontSize:14,fontWeight:700,color:ac}},ff(r.obj)),h("div",{style:{fontSize:9,color:ts}},"Obj")),h("div",{style:{textAlign:"center",padding:6,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},h("div",{style:{fontSize:14,fontWeight:700,color:r.up>=0?gn:rd}},fp(r.up)),h("div",{style:{fontSize:9,color:ts}},"Upside")),h("div",{style:{textAlign:"center",padding:6,background:dk?"#1e1f38":"#f1f5f9",borderRadius:8}},h("div",{style:{fontSize:14,fontWeight:700,color:tx}},ff(r.c)),h("div",{style:{fontSize:9,color:ts}},"Cours"))),
+r.top.map(function(x,i){return h("div",{key:i,style:{padding:"6px 10px",background:dk?"#1e1f38":"#f8fafc",borderRadius:8,marginBottom:3}},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("span",{style:{fontSize:11,fontWeight:700,color:tx}},x.b+(TIER1.indexOf(x.b)>=0?" \u2b50":"")),h("div",{style:{display:"flex",gap:4}},CB(x.r),h("span",{style:{fontSize:10,color:ac,fontWeight:600}},ff(x.t)))),h("div",{style:{fontSize:11,color:ts}},x.n))}))}))}
+
+function T9(){return h("div",null,h("div",{style:Object.assign({},cs,{background:"linear-gradient(135deg,#2563eb,#1e40af)",border:"none",color:"#fff"})},h("div",{style:{fontSize:20,fontWeight:700}},"Briefing \u2014 10 Mars 2026"),h("div",{style:{fontSize:14,fontWeight:700,marginTop:8}},"\u2705 REBOND \u2014 Desescalade")),
+h("div",{style:cs},h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginBottom:8}},"\ud83d\uddd3 Evenements"),
+[{e:"Desescalade Iran-US",d:"En cours",i:"Trump : guerre terminee. Petrole 95$."},{e:"Renault futuREady",d:"10 Mars",i:"36 modeles, CA +4-6%/an. +4%."},{e:"NEURONES resultats",d:"Demain 11",i:"ESN net cash. Catalyseur PEA-PME."},{e:"CPI US",d:"Mercredi",i:"Inflation petrole = report Fed."},{e:"Adobe resultats",d:"Jeudi",i:"Indicateur IA/cloud."}].map(function(x,i){return h("div",{key:i,style:{padding:"10px 0",borderBottom:"1px solid "+bd}},h("div",{style:{display:"flex",justifyContent:"space-between"}},h("span",{style:{fontSize:13,fontWeight:600,color:tx}},x.e),h("span",{style:{fontSize:11,color:ac,fontWeight:600}},x.d)),h("div",{style:{fontSize:12,color:ts,marginTop:4}},x.i))})),
+h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}},h("div",{style:Object.assign({},cs,{borderLeft:"4px solid "+gn})},h("div",{style:{fontSize:11,color:gn,fontWeight:700}},"IDEE LONG"),h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"RENAULT"),h("div",{style:{fontSize:12,color:ts,marginTop:4}},"futuREady = catalyseur.")),h("div",{style:Object.assign({},cs,{borderLeft:"4px solid "+rd})},h("div",{style:{fontSize:11,color:rd,fontWeight:700}},"PROFIT-TAKING"),h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"TOTALENERGIES"),h("div",{style:{fontSize:12,color:ts,marginTop:4}},"Prendre profits si >70."))),
+h("div",{style:Object.assign({},cs,{borderLeft:"4px solid #f59e0b"})},h("div",{style:{fontSize:11,color:"#f59e0b",fontWeight:700}},"\ud83d\udcc5 DEMAIN"),h("div",{style:{fontSize:14,fontWeight:700,color:tx,marginTop:4}},"NEURONES \u2014 Resultats 11 Mars"),h("div",{style:{fontSize:12,color:ts,marginTop:4}},"Si bons = renforcer PEA-PME. Obj 39 (+13%).")))}
+
+var tabs=[T0,T1,T2,T3,T4,T5,T6,T7,T8,T9];
+return h("div",{style:{background:bg,minHeight:"100vh",color:tx,maxWidth:520,margin:"0 auto"}},
+h("div",{style:{padding:"16px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center"}},h("div",{style:{fontSize:22,fontWeight:800}},"Portfolio ",h("span",{style:{color:ac}},"Pro")),h("button",{onClick:function(){sDk(!dk)},style:{background:cr,border:"1px solid "+bd,borderRadius:10,padding:"6px 12px",fontSize:14,cursor:"pointer",color:tx}},dk?"\u2600\ufe0f":"\ud83c\udf19")),
+h("div",{style:{padding:"12px 20px",overflowX:"auto",display:"flex",gap:6}},TABS.map(function(t,i){return h("button",{key:t,onClick:function(){sT(i);sGs(null);sBv(null)},style:{padding:"8px 16px",borderRadius:20,fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap",background:tab===i?ac:"transparent",color:tab===i?"#fff":ts,border:tab===i?"none":"1px solid "+bd}},t)})),
+h("div",{style:{padding:"0 16px 140px"}},h(tabs[tab])),
+h("div",{style:{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:520,background:cr,borderTop:"1px solid "+bd,display:"flex",justifyContent:"space-around",padding:"10px 0 24px",zIndex:10}},
+[{i:"\ud83d\udcca",l:"Vue",t:0},{i:"\ud83d\udccb",l:"Positions",t:1},{i:"\ud83c\udfe6",l:"Analyses",t:2},{i:"\ud83d\udca1",l:"Reco",t:8},{i:"\ud83d\udcf0",l:"Briefing",t:9}].map(function(n){return h("button",{key:n.l,onClick:function(){sT(n.t);sGs(null)},style:{background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:"pointer",color:tab===n.t?ac:ts,fontSize:10,fontWeight:600}},h("span",{style:{fontSize:20}},n.i),n.l)})))}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+</script>
+</body>
+</html>
